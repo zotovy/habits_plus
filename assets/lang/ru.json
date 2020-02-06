@@ -1,0 +1,27 @@
+{
+
+    "email": "Email",
+    "password": "Пароль",
+    "username": "Username",
+    "forgot_password": "Забыли пароль?",
+
+    "intro_skip": "Пропустить",
+    "intro_first_title": "Улучшайте себя.",
+    "intro_first_subtitle": "Позвольте себя сосредоточиться на своей рутине, комбинируя TODO-List и трекер привычек",
+    "intro_second_title": "Планируйте свой день.",
+    "intro_second_subtitle": "Визуализируйте месечный и недельный план. Находите идеальное время для выших занятий.",
+    "intro_third_title": "Достигайте новых целей.",
+    "intro_third_subtitle": "Следите за вашим прогрессом в различных областях. Позвольте себе получить большего, путем создания идеальной системы",
+    "intro_next": "Далее",
+
+    "login_title": "Вход",
+    "login_link": "Зарегестрироваться",
+    "login_email_error": "Вы должны ввести email",
+    "login_password_error ": "Вы должны ввести пароль",
+
+    "signup_title": "Регистрация",
+    "signup_link": "Войти",
+    "signup_email_error": "Пожалуйста, введите email",
+    "signup_password_error": "Неверный формат. Минимальная длина пароля 6 символов",
+    "signup_login_error": "Пожалуйста, введите логин"
+}

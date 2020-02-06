@@ -1,0 +1,29 @@
+{
+
+    "email": "Email",
+    "username": " Username",
+    "password": "Password",
+    "forgot_password": "Forgot password?",
+
+    "intro_skip": "SKIP",
+    "intro_first_title": "Make Yourself better you.",
+    "intro_first_subtitle": "It lets you focus on the routines you will have to do today. Combining both Goal tracker and Habits tracker.",
+    "intro_second_title": "Plan you everyday.",
+    "intro_second_subtitle": "View your plans for month, weeks, use the daily planner and schedule. Find the most suitable time for future tasks.",
+    "intro_third_title": "Achieve your goals.",
+    "intro_third_subtitle": "Follow you progress in various areas. Improve your productivity by creating a flexible system of skills.",
+    "intro_next": "Next",
+
+
+    "login_title": "Login",
+    "login_link": "Sign up",
+    "login_email_error": "Please, enter your email",
+    "login_password_error ": "Please, enter your password",
+
+    "signup_title": "Sign Up",
+    "signup_link": "Login",
+    "signup_email_error": "Please, enter your email",
+    "signup_password_error": "Invalid password: Min length is 6",
+    "signup_username_error": "Please, enter your login"
+
+}
