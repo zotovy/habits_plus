@@ -1,11 +1,18 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:habits_plus/localization.dart';
 import 'package:habits_plus/models/user.dart';
 import 'package:habits_plus/models/userData.dart';
 import 'package:habits_plus/services/database.dart';
 import 'package:habits_plus/ui/home.dart';
+import 'package:habits_plus/ui/signup.dart';
+import 'package:habits_plus/util/constant.dart';
+import 'package:http/http.dart' as http;
 
 import 'package:provider/provider.dart';
 
@@ -16,53 +23,31 @@ class AuthService {
   static dynamic signUpUser(
     BuildContext context,
     String email,
-    String _username,
+    String name,
+    String profileImg,
     String password,
     GlobalKey<ScaffoldState> scaffoldKey,
   ) async {
     try {
-      // Unique username check
-      bool isUsernameExists = await DatabaseServices.isUsernameUsed(_username);
-
-      if (isUsernameExists) {
-        scaffoldKey.currentState.showSnackBar(
-          SnackBar(
-            behavior: SnackBarBehavior.floating,
-            backgroundColor: Colors.redAccent,
-            elevation: 0,
-            content: Container(
-              height: 25,
-              child: Center(
-                child: Text(
-                  AppLocalizations.of(context)
-                      .translate('error_username_already_exists'),
-                ),
-              ),
-            ),
-          ),
-        );
-        return null;
-      }
-
       // Register user in Firebase Auth system
+      FirebaseUser signedInUser;
       AuthResult authResult = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+      signedInUser = authResult.user;
 
       // Register user in Firebase storage system
-      FirebaseUser signedInUser = authResult.user;
       if (signedInUser != null) {
         _firestore.collection('/users').document(signedInUser.uid).setData({
           'email': email,
-          'profileImageUrl': '',
-          'username': _username,
+          'name': name,
+          'profileImageUrl': profileImg,
         });
         Provider.of<UserData>(context, listen: false).currentUserId =
             signedInUser.uid;
 
-        User user =
-            User.fromDoc(await DatabaseServices.getUserById(signedInUser.uid));
+        User user = await DatabaseServices.getUserById(signedInUser.uid);
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -190,6 +175,157 @@ class AuthService {
         print(
             'Login error: $message \nTime:${DateTime.now()}\nVariables: \n   email: $email\n   password:$password');
       }
+    }
+  }
+
+  // Sign in user by google
+  // If success return
+  // {
+  //   'error': false,
+  //   'errorMessage': null,
+  //   'data': FirebaseUser,
+  // }
+  // else
+  // {
+  //   'error': true,
+  //   'errorMessage': String,
+  //   'data': null,
+  // }
+  static Future<Map<String, dynamic>> signInByGoogle(
+      BuildContext context) async {
+    GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
+    GoogleSignInAuthentication googleSignInAuthentication =
+        await googleSignInAccount.authentication;
+
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+      accessToken: googleSignInAuthentication.accessToken,
+      idToken: googleSignInAuthentication.idToken,
+    );
+    final FirebaseUser fireUser =
+        (await auth.signInWithCredential(credential)).user;
+    final FirebaseUser currentUser = await _auth.currentUser();
+
+    // Check new user
+    if (fireUser.email == null) {
+      print('Invalid Email');
+      return {
+        'error': true,
+        'error_message': "User hasn't email",
+        'data': null,
+      };
+    }
+    if (fireUser.displayName == null) {
+      print('Invalid name');
+      return {
+        'error': true,
+        'error_message': "User hasn't name",
+        'data': null,
+      };
+    }
+    if (fireUser.isAnonymous) {
+      print('Anonymous user');
+      return {
+        'error': true,
+        'error_message': "User is an anonymous",
+        'data': null,
+      };
+    }
+    if (await fireUser.getIdToken() == null) {
+      print('User id token is null');
+      return {
+        'error': true,
+        'error_message': "Invalid token",
+        'data': null,
+      };
+    }
+    if (fireUser.uid != currentUser.uid) {
+      print('Invalid user');
+      return {
+        'error': true,
+        'error_message': "Invalid user",
+        'data': null,
+      };
+    }
+
+    if (await DatabaseServices.isUserExists(fireUser.uid)) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => HomePage(),
+        ),
+      );
+
+      return {
+        'error': false,
+        'error_message': null,
+        'data': fireUser,
+      };
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => GoogleSignUpPage(
+            email: googleSignInAccount.email,
+            name: googleSignInAccount.displayName,
+            profileImg: googleSignInAccount.photoUrl,
+          ),
+        ),
+      );
+    }
+
+    // Success
+  }
+
+  static Future<Map<String, dynamic>> signInByFacebook(
+      BuildContext context) async {
+    final result = await facebookSignIn.logIn(['email', 'public_profile']);
+
+    switch (result.status) {
+      case FacebookLoginStatus.loggedIn:
+        print('success');
+        final AuthCredential credential = FacebookAuthProvider.getCredential(
+          accessToken: result.accessToken.token,
+        );
+        FirebaseUser fireUser =
+            (await auth.signInWithCredential(credential)).user;
+
+        if (await DatabaseServices.isUserExists(fireUser.uid)) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => HomePage(),
+            ),
+          );
+
+          return {
+            'error': false,
+            'errorMessage': null,
+            'data': fireUser,
+          };
+        } else {
+          final responce = await http.get(
+            'https://graph.facebook.com/v2.12/me?fields=name,email&access_token=${result.accessToken.token}',
+          );
+          String name = json.decode(responce.body)['name'];
+
+          // Continue registration
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => FacebookSignUpPage(
+                name: name,
+              ),
+            ),
+          );
+        }
+
+        break;
+      case FacebookLoginStatus.cancelledByUser:
+        print('canceled');
+        break;
+      case FacebookLoginStatus.error:
+        print('Error: ${result.errorMessage}');
+        break;
     }
   }
 }

@@ -5,7 +5,11 @@ class User {
   String name;
   String profileImg;
 
-  User({this.email, this.name, this.profileImg});
+  User({
+    this.email,
+    this.name,
+    this.profileImg,
+  });
 
   factory User.fromDoc(DocumentSnapshot doc) {
     User user = User(

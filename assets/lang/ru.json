@@ -2,8 +2,13 @@
 
     "email": "Email",
     "password": "Пароль",
-    "username": "Username",
+    "name": "Имя",
     "forgot_password": "Забыли пароль?",
+
+    "error_email_bad_formated": "Неверный формат email",
+    "error_incorrect_password": "Неверный пароль или логин",
+    "error_username_already_exists": "Этот логин уже используется, выберите другой",
+    "error_email_already_exists": "Этот email уже используется, выберите другой",
 
     "intro_skip": "Пропустить",
     "intro_first_title": "Улучшайте себя.",
@@ -23,5 +28,5 @@
     "signup_link": "Войти",
     "signup_email_error": "Пожалуйста, введите email",
     "signup_password_error": "Неверный формат. Минимальная длина пароля 6 символов",
-    "signup_login_error": "Пожалуйста, введите логин"
+    "signup_name_error": "Пожалуйста, введите имя"
 }

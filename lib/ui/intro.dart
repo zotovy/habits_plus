@@ -171,12 +171,15 @@ class _IntroPageState extends State<IntroPage>
           Positioned(
             top: 30,
             right: 28,
-            child: Text(
-              AppLocalizations.of(context).translate('intro_skip'),
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.w300,
+            child: GestureDetector(
+              onTap: () => Navigator.pushNamed(context, 'login_page'),
+              child: Text(
+                AppLocalizations.of(context).translate('intro_skip'),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.w300,
+                ),
               ),
             ),
           ),

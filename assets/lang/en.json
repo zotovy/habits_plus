@@ -1,9 +1,15 @@
 {
 
     "email": "Email",
-    "username": " Username",
+    "name": " Name",
     "password": "Password",
     "forgot_password": "Forgot password?",
+
+    "error_email_bad_formated": "The email address is badly formatted",
+    "error_incorrect_password": "Invalid email or password",
+    "error_username_already_exists": "This username is already in used. Please, choose another username",
+    "error_email_already_exists": "This email is already in used. Please, choose another email",
+
 
     "intro_skip": "SKIP",
     "intro_first_title": "Make Yourself better you.",
@@ -24,6 +30,6 @@
     "signup_link": "Login",
     "signup_email_error": "Please, enter your email",
     "signup_password_error": "Invalid password: Min length is 6",
-    "signup_username_error": "Please, enter your login"
+    "signup_name_error": "Please, enter your name"
 
 }

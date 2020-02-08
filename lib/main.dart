@@ -5,6 +5,7 @@ import 'package:habits_plus/models/userData.dart';
 import 'package:habits_plus/ui/home.dart';
 import 'package:habits_plus/ui/intro.dart';
 import 'package:habits_plus/ui/login.dart';
+import 'package:habits_plus/ui/signup.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -81,6 +82,7 @@ class MainApp extends StatelessWidget {
       routes: {
         HomePage.id: (_) => HomePage(),
         LoginPage.id: (_) => LoginPage(),
+        SignUpPage.id: (_) => SignUpPage(),
       },
     );
   }
