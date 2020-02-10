@@ -35,6 +35,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<ThemeModel>(
           create: (_) => ThemeModel(ThemeData(
             primaryColor: Color(0xFF6C3CD1),
+            disabledColor: Colors.black26,
+            backgroundColor: Colors.white,
           )),
         ),
         ChangeNotifierProvider<UserData>(
@@ -78,7 +80,7 @@ class MainApp extends StatelessWidget {
       },
       debugShowCheckedModeBanner: false,
       title: 'Habits+',
-      home: IntroPage(),
+      home: HomePage(),
       routes: {
         HomePage.id: (_) => HomePage(),
         LoginPage.id: (_) => LoginPage(),
