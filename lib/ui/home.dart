@@ -83,7 +83,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
               // Add habit
               GestureDetector(
-                onTap: () => print('Create new habit'),
+                onTap: () => Navigator.pushNamed(context, 'createHabit_page'),
                 child: Container(
                   margin: EdgeInsets.symmetric(),
                   width: 90,

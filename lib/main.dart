@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:habits_plus/models/theme.dart';
 import 'package:habits_plus/models/userData.dart';
+import 'package:habits_plus/ui/create_habit.dart';
 import 'package:habits_plus/ui/home.dart';
 import 'package:habits_plus/ui/intro.dart';
 import 'package:habits_plus/ui/login.dart';
@@ -33,11 +34,14 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<ThemeModel>(
-          create: (_) => ThemeModel(ThemeData(
-            primaryColor: Color(0xFF6C3CD1),
-            disabledColor: Colors.black26,
-            backgroundColor: Colors.white,
-          )),
+          create: (_) => ThemeModel(
+            ThemeData(
+              primaryColor: Color(0xFF6C3CD1),
+              disabledColor: Colors.black26,
+              backgroundColor: Colors.white,
+              textSelectionColor: Color(0xFF565656),
+            ),
+          ),
         ),
         ChangeNotifierProvider<UserData>(
           create: (_) => UserData(),
@@ -85,6 +89,7 @@ class MainApp extends StatelessWidget {
         HomePage.id: (_) => HomePage(),
         LoginPage.id: (_) => LoginPage(),
         SignUpPage.id: (_) => SignUpPage(),
+        CreateHabitPage.id: (_) => CreateHabitPage(),
       },
     );
   }
