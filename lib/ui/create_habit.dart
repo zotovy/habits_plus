@@ -1,6 +1,7 @@
 import 'package:date_util/date_util.dart';
 import 'package:flutter/material.dart';
 import 'package:habits_plus/localization.dart';
+import 'package:habits_plus/util/constant.dart';
 
 class CreateHabitPage extends StatefulWidget {
   static final String id = 'createHabit_page';
@@ -16,6 +17,19 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
   // Form
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String _title = '';
+  String _description = '';
+  // List<Color> colors = [
+  //   Color.fromARGB(100, 0, 122, 255),
+  //   Color.fromARGB(100, 90, 200, 250),
+  //   Color.fromARGB(100, 52, 199, 89),
+  //   Color.fromARGB(100, 88, 86, 214),
+  //   Color.fromARGB(100, 255, 149, 0),
+  //   Color.fromARGB(100, 255, 45, 85),
+  //   Color.fromARGB(100, 175, 82, 222),
+  //   Color.fromARGB(100, 255, 59, 48),
+  //   Color.fromARGB(100, 255, 204, 0),
+  // ];
+  int currentColorIndex = 0;
   List<String> _days = [];
   List<bool> _enabledDays = [false, false, false, false, false, false, false];
   bool isEveryDay = true;
@@ -114,6 +128,51 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
     );
   }
 
+  Widget _buildColorBox(int i) {
+    double size =
+        (MediaQuery.of(context).size.width - 28 - (colors.length * 10)) /
+            colors.length;
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          currentColorIndex = i;
+        });
+      },
+      child: AnimatedContainer(
+        width: size,
+        height: size,
+        duration: Duration(milliseconds: 250),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(
+            width: currentColorIndex == i ? 1.5 : 0,
+            color: currentColorIndex == i
+                ? colors[i]
+                : Theme.of(context).backgroundColor,
+          ),
+        ),
+        child: Center(
+          child: Container(
+            width: size - 7,
+            height: size - 7,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: colors[i],
+            ),
+            child: AnimatedOpacity(
+              opacity: currentColorIndex == i ? 1 : 0,
+              duration: Duration(milliseconds: 250),
+              child: Icon(
+                Icons.done,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildHabitPage() {
     if (mounted) {
       setState(() {
@@ -174,14 +233,27 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
               // ),
             ),
             validator: (String value) =>
-                value.trim() == '' ? 'Please, enter title' : null,
+                value.trim() == '' ? 'Please, enter description' : null,
             onSaved: (String value) {
               setState(() {
-                _title = value;
+                _description = value;
               });
             },
           ),
           SizedBox(height: 20),
+
+          // Color picker
+          Container(
+            height: 50,
+            width: MediaQuery.of(context).size.width - 56,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: List.generate(
+                colors.length,
+                (int i) => _buildColorBox(i),
+              ),
+            ),
+          ),
 
           // Days
           Container(

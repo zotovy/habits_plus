@@ -5,10 +5,8 @@ class Habit {
   String description;
   int amount; // 0 is no amount type
   bool isDisable; // firstly - false
-  DateTime startTime;
-  DateTime endTime;
+  DateTime timeStamp;
   int percentage;
-  bool isTimeHasCome; // firstly - false
   bool isSuccessed; // firstly - false
   int colorCode; // more info on github
   List<bool> repeatDays;
@@ -19,10 +17,8 @@ class Habit {
     this.description,
     this.amount,
     this.isDisable,
-    this.startTime,
-    this.endTime,
+    this.timeStamp,
     this.percentage,
-    this.isTimeHasCome,
     this.isSuccessed,
     this.colorCode,
     this.repeatDays,
@@ -43,10 +39,8 @@ class Habit {
       description: doc['description'],
       amount: doc['amount'],
       isDisable: doc['isDisable'],
-      startTime: (doc['startTime'] as Timestamp).toDate(),
-      endTime: (doc['endTime'] as Timestamp).toDate(),
+      timeStamp: (doc['timeStamp'] as Timestamp).toDate(),
       percentage: doc['percentage'],
-      isTimeHasCome: doc['isTimeHasCome'],
       isSuccessed: doc['isSuccessed'],
       colorCode: doc['colorCode'],
       repeatDays: repeatDays,
