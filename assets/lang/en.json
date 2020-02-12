@@ -30,6 +30,14 @@
     "signup_link": "Login",
     "signup_email_error": "Please, enter your email",
     "signup_password_error": "Invalid password: Min length is 6",
-    "signup_name_error": "Please, enter your name"
+    "signup_name_error": "Please, enter your name",
+
+    "createHabit_task": "Task",
+    "createHabit_habit": "Habit",
+    "createHabit_title": "Title",
+    "createHabit_description": "Description",
+    "createHabit_calendar": "Calendar",
+    "createHabit_everyday": "Everyday",
+    "createHabit_days": ["M", "T", "W", "T", "F", "S", "S"]
 
 }

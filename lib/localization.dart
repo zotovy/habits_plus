@@ -17,7 +17,7 @@ class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
-  Map<String, String> _localizedStrings;
+  Map<String, dynamic> _localizedStrings;
 
   Future<bool> load() async {
     // Load the language JSON file from the "lang" folder
@@ -26,6 +26,9 @@ class AppLocalizations {
     Map<String, dynamic> jsonMap = json.decode(jsonString);
 
     _localizedStrings = jsonMap.map((key, value) {
+      if (value is List) {
+        return MapEntry(key, value.map((model) => model.toString()).toList());
+      }
       return MapEntry(key, value.toString());
     });
 
@@ -33,7 +36,7 @@ class AppLocalizations {
   }
 
   // This method will be called from every widget which needs a localized text
-  String translate(String key) {
+  dynamic translate(String key) {
     return _localizedStrings[key];
   }
 }

@@ -28,5 +28,13 @@
     "signup_link": "Войти",
     "signup_email_error": "Пожалуйста, введите email",
     "signup_password_error": "Неверный формат. Минимальная длина пароля 6 символов",
-    "signup_name_error": "Пожалуйста, введите имя"
+    "signup_name_error": "Пожалуйста, введите имя",
+
+    "createHabit_task": "Задание",
+    "createHabit_habit": "Привычка",
+    "createHabit_title": "Название",
+    "createHabit_description": "Описание",
+    "createHabit_calendar": "Календарь",
+    "createHabit_everyday": "Каждый день",
+    "createHabit_days": ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
 }

@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Habit {
   String title;
   String description;
+  int amount; // 0 is no amount type
   bool isDisable; // firstly - false
   DateTime startTime;
   DateTime endTime;
@@ -16,6 +17,7 @@ class Habit {
   Habit({
     this.title,
     this.description,
+    this.amount,
     this.isDisable,
     this.startTime,
     this.endTime,
@@ -39,6 +41,7 @@ class Habit {
     return Habit(
       title: doc['title'],
       description: doc['description'],
+      amount: doc['amount'],
       isDisable: doc['isDisable'],
       startTime: (doc['startTime'] as Timestamp).toDate(),
       endTime: (doc['endTime'] as Timestamp).toDate(),

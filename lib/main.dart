@@ -40,6 +40,7 @@ class MyApp extends StatelessWidget {
               disabledColor: Colors.black26,
               backgroundColor: Colors.white,
               textSelectionColor: Color(0xFF565656),
+              textSelectionHandleColor: Color(0xFF282828),
             ),
           ),
         ),
