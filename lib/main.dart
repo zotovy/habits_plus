@@ -41,6 +41,7 @@ class MyApp extends StatelessWidget {
               backgroundColor: Colors.white,
               textSelectionColor: Color(0xFF565656),
               textSelectionHandleColor: Color(0xFF282828),
+              accentColor: Color(0xFF6C3CD1),
             ),
           ),
         ),

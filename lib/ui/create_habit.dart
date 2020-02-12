@@ -18,17 +18,6 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String _title = '';
   String _description = '';
-  // List<Color> colors = [
-  //   Color.fromARGB(100, 0, 122, 255),
-  //   Color.fromARGB(100, 90, 200, 250),
-  //   Color.fromARGB(100, 52, 199, 89),
-  //   Color.fromARGB(100, 88, 86, 214),
-  //   Color.fromARGB(100, 255, 149, 0),
-  //   Color.fromARGB(100, 255, 45, 85),
-  //   Color.fromARGB(100, 175, 82, 222),
-  //   Color.fromARGB(100, 255, 59, 48),
-  //   Color.fromARGB(100, 255, 204, 0),
-  // ];
   int currentColorIndex = 0;
   List<String> _days = [];
   List<bool> _enabledDays = [false, false, false, false, false, false, false];
@@ -36,15 +25,13 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
   bool isNums = false;
   bool hasReminder = false;
   TimeOfDay timeRemind;
+  String timeADay = '1';
 
   Widget _buildTaskPage() {
     return Text('task');
   }
 
-  @override
-  void initState() {
-    super.initState();
-  }
+  _submitHabit() async {}
 
   Widget _buildDayBox(String name, bool isEnable, int i) {
     int elemInRow =
@@ -55,7 +42,11 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
       onTap: () {
         setState(() {
           _enabledDays[i] = !_enabledDays[i];
-          isEveryDay = false;
+          if (_enabledDays.contains(true)) {
+            isEveryDay = false;
+          } else {
+            isEveryDay = true;
+          }
         });
       },
       child: AnimatedContainer(
@@ -153,6 +144,7 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
         ),
         child: Center(
           child: Container(
+            padding: EdgeInsets.all(3),
             width: size - 7,
             height: size - 7,
             decoration: BoxDecoration(
@@ -342,7 +334,7 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
           ),
 
           // Amount
-          SizedBox(height: 30),
+          SizedBox(height: 25),
           Text(
             'Amount',
             style: TextStyle(
@@ -446,7 +438,7 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
               ],
             ),
           ),
-          SizedBox(height: 30),
+          SizedBox(height: 25),
 
           // Reminder
           GestureDetector(
@@ -545,6 +537,110 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
                     ],
                   ),
           ),
+          SizedBox(height: 7),
+          Container(
+            child: Row(
+              children: <Widget>[
+                Text(
+                  'Times a day',
+                  style: TextStyle(
+                    color: hasReminder
+                        ? Theme.of(context).textSelectionHandleColor
+                        : Theme.of(context).disabledColor,
+                    fontSize: 18,
+                  ),
+                ),
+                SizedBox(width: 15),
+                DropdownButton(
+                  value: timeADay,
+                  items: <String>['1', '2', '3', '4', '5', '6', '7', '8', '9']
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value.toString(),
+                      child: Text(value.toString()),
+                    );
+                  }).toList(),
+                  iconSize: 24,
+                  elevation: 16,
+                  style: TextStyle(
+                    color: Colors.deepPurple,
+                    fontSize: 16,
+                  ),
+                  disabledHint: Text(
+                    timeADay,
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                  onChanged: hasReminder
+                      ? (String newValue) {
+                          setState(() {
+                            timeADay = newValue;
+                          });
+                        }
+                      : null,
+                ),
+              ],
+            ),
+          ),
+
+          // Submit
+          SizedBox(height: 5),
+          Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(
+                      color: Theme.of(context).textSelectionHandleColor,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(),
+                  width: 90,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor,
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(100),
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(100),
+                      onTap: _submitHabit,
+                      splashColor: Colors.white12,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(
+                            Icons.add,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                          SizedBox(width: 4),
+                          Text(
+                            'Add',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 10),
         ],
       ),
     );
@@ -555,11 +651,11 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        body: Container(
-          padding: EdgeInsets.only(left: 28, right: 28, top: 36),
-          child: Form(
-            key: _formKey,
-            child: SingleChildScrollView(
+        body: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            child: Container(
+              padding: EdgeInsets.only(left: 28, right: 28, top: 36),
               child: Column(
                 children: <Widget>[
                   // Task/Habit
