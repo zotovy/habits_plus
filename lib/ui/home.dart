@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habits_plus/localization.dart';
 import 'package:habits_plus/ui/habits.dart';
 import 'package:provider/provider.dart';
 
@@ -17,42 +18,20 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _pages = [
-      Container(
-        color: Colors.red,
-      ),
-      HabitsPage(),
-    ];
-    _pageController = PageController();
-  }
 
-  Widget _buildStoriesBox() {
-    return Padding(
-      padding: EdgeInsets.only(right: 16),
-      child: Container(
-        width: 50,
-        height: 50,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(width: 1, color: Colors.blueAccent),
-        ),
-        child: Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(width: 1, color: Colors.white),
-          ),
-          width: 47,
-          height: 47,
-          child: CircleAvatar(
-            backgroundImage: AssetImage('assets/images/logo.png'),
-          ),
-        ),
-      ),
-    );
+    _pageController = PageController();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (mounted) {
+      _pages = [
+        Container(
+          color: Theme.of(context).backgroundColor,
+        ),
+        HabitsPage(),
+      ];
+    }
     return Scaffold(
       bottomNavigationBar: BottomAppBar(
         color: Theme.of(context).backgroundColor,
@@ -68,7 +47,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   _pageController.jumpToPage(_currentPage);
                 }),
                 icon: Icon(Icons.home),
-                color: _currentPage == 0 ? Colors.black : Colors.black26,
+                color: _currentPage == 0
+                    ? Theme.of(context).textSelectionHandleColor
+                    : Theme.of(context).disabledColor.withOpacity(0.25),
               ),
 
               // Home page
@@ -78,7 +59,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   _pageController.jumpToPage(_currentPage);
                 }),
                 icon: Icon(Icons.search),
-                color: _currentPage == 1 ? Colors.black : Colors.black26,
+                color: _currentPage == 1
+                    ? Theme.of(context).textSelectionHandleColor
+                    : Theme.of(context).disabledColor.withOpacity(0.25),
               ),
 
               // Add habit
@@ -86,7 +69,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 onTap: () => Navigator.pushNamed(context, 'createHabit_page'),
                 child: Container(
                   margin: EdgeInsets.symmetric(),
-                  width: 90,
+                  width: AppLocalizations.of(context).lang == 'ru' ? 125 : 90,
                   height: 40,
                   decoration: BoxDecoration(
                     color: Theme.of(context).primaryColor,
@@ -107,7 +90,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           ),
                           SizedBox(width: 4),
                           Text(
-                            'Add',
+                            AppLocalizations.of(context).translate('add'),
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 16,

@@ -4,6 +4,8 @@
     "name": " Name",
     "password": "Password",
     "forgot_password": "Forgot password?",
+    "cancel": "Cancel",
+    "add": "Add",
 
     "error_email_bad_formated": "The email address is badly formatted",
     "error_incorrect_password": "Invalid email or password",
@@ -38,6 +40,17 @@
     "createHabit_description": "Description",
     "createHabit_calendar": "Calendar",
     "createHabit_everyday": "Everyday",
-    "createHabit_days": ["M", "T", "W", "T", "F", "S", "S"]
+    "createHabit_days": ["M", "T", "W", "T", "F", "S", "S"],
+    "createHabit_amount": "Amount",
+    "createHabit_yes_or_no_title": "Yes or No",
+    "createHabit_yes_or_no_subtitle": "Mark whether you completed the task today",
+    "createHabit_number_title": "Number",
+    "createHabit_number_subtitle": "Write down number in your habit",
+    "createHabit_reminder": "Reminder",
+    "createHabit_reminder_button": "Choose time",
+    "createHabit_reminder_clear": "Clear",
+    "createHabit_reminder_time": "Time A Day"
+
+
 
 }

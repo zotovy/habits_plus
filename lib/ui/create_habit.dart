@@ -82,7 +82,7 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
     return AnimatedContainer(
       duration: Duration(milliseconds: 200),
       height: 45,
-      width: 135,
+      width: AppLocalizations.of(context).lang == 'ru' ? 150 : 135,
       decoration: BoxDecoration(
         color: hasReminder
             ? Theme.of(context).primaryColor.withOpacity(0.85)
@@ -90,8 +90,10 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
         borderRadius: BorderRadius.circular(10),
       ),
       child: Material(
+        borderRadius: BorderRadius.circular(10),
         color: Colors.transparent,
         child: InkWell(
+          borderRadius: BorderRadius.circular(10),
           onTap: () async {
             if (hasReminder) {
               TimeOfDay time = await showTimePicker(
@@ -107,7 +109,8 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
           },
           child: Center(
             child: Text(
-              'Choose time',
+              AppLocalizations.of(context)
+                  .translate('createHabit_reminder_button'),
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 18,
@@ -246,6 +249,7 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
               ),
             ),
           ),
+          SizedBox(height: 10),
 
           // Days
           Container(
@@ -257,7 +261,8 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
                 ),
                 SizedBox(width: 7),
                 Text(
-                  'Calendar',
+                  AppLocalizations.of(context)
+                      .translate('createHabit_calendar'),
                   style: TextStyle(
                     color: Theme.of(context).textSelectionHandleColor,
                     fontSize: 18,
@@ -336,7 +341,7 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
           // Amount
           SizedBox(height: 25),
           Text(
-            'Amount',
+            AppLocalizations.of(context).translate('createHabit_amount'),
             style: TextStyle(
               color: Theme.of(context).textSelectionHandleColor,
               fontSize: 18,
@@ -371,7 +376,8 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          'Yes or No',
+                          AppLocalizations.of(context)
+                              .translate('createHabit_yes_or_no_title'),
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 22,
@@ -380,7 +386,8 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
                         ),
                         SizedBox(height: 10),
                         Text(
-                          'Mark whether you completed the task today',
+                          AppLocalizations.of(context)
+                              .translate('createHabit_yes_or_no_subtitle'),
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.white,
@@ -415,7 +422,8 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          'Number',
+                          AppLocalizations.of(context)
+                              .translate('createHabit_number_title'),
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 22,
@@ -424,7 +432,8 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
                         ),
                         SizedBox(height: 10),
                         Text(
-                          'Write down number in your habit',
+                          AppLocalizations.of(context)
+                              .translate('createHabit_number_subtitle'),
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.white,
@@ -475,7 +484,8 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
                   SizedBox(width: 10),
                   Container(
                     child: Text(
-                      'Reminder',
+                      AppLocalizations.of(context)
+                          .translate('createHabit_reminder'),
                       style: TextStyle(
                         color: Theme.of(context).textSelectionHandleColor,
                         fontSize: 18,
@@ -522,7 +532,8 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
                         },
                         child: AnimatedDefaultTextStyle(
                           duration: Duration(milliseconds: 250),
-                          child: Text('Clear'),
+                          child: Text(AppLocalizations.of(context)
+                              .translate('createHabit_reminder_clear')),
                           style: hasReminder
                               ? TextStyle(
                                   color: Theme.of(context).primaryColor,
@@ -541,16 +552,6 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
           Container(
             child: Row(
               children: <Widget>[
-                Text(
-                  'Times a day',
-                  style: TextStyle(
-                    color: hasReminder
-                        ? Theme.of(context).textSelectionHandleColor
-                        : Theme.of(context).disabledColor,
-                    fontSize: 18,
-                  ),
-                ),
-                SizedBox(width: 15),
                 DropdownButton(
                   value: timeADay,
                   items: <String>['1', '2', '3', '4', '5', '6', '7', '8', '9']
@@ -580,6 +581,17 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
                         }
                       : null,
                 ),
+                SizedBox(width: 15),
+                Text(
+                  AppLocalizations.of(context)
+                      .translate('createHabit_reminder_time'),
+                  style: TextStyle(
+                    color: hasReminder
+                        ? Theme.of(context).textSelectionHandleColor
+                        : Theme.of(context).textSelectionColor,
+                    fontSize: 18,
+                  ),
+                ),
               ],
             ),
           ),
@@ -593,7 +605,7 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
                 GestureDetector(
                   onTap: () => Navigator.pop(context),
                   child: Text(
-                    'Cancel',
+                    AppLocalizations.of(context).translate('cancel'),
                     style: TextStyle(
                       color: Theme.of(context).textSelectionHandleColor,
                       fontSize: 24,
@@ -603,7 +615,7 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
                 ),
                 Container(
                   margin: EdgeInsets.symmetric(),
-                  width: 90,
+                  width: AppLocalizations.of(context).lang == 'ru' ? 125 : 90,
                   height: 40,
                   decoration: BoxDecoration(
                     color: Theme.of(context).primaryColor,
@@ -626,7 +638,7 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
                           ),
                           SizedBox(width: 4),
                           Text(
-                            'Add',
+                            AppLocalizations.of(context).translate('add'),
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 16,
@@ -651,6 +663,7 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
+        backgroundColor: Theme.of(context).backgroundColor,
         body: Form(
           key: _formKey,
           child: SingleChildScrollView(

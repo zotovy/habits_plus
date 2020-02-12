@@ -18,6 +18,7 @@ class AppLocalizations {
   }
 
   Map<String, dynamic> _localizedStrings;
+  String lang;
 
   Future<bool> load() async {
     // Load the language JSON file from the "lang" folder
@@ -31,6 +32,7 @@ class AppLocalizations {
       }
       return MapEntry(key, value.toString());
     });
+    lang = locale.languageCode;
 
     return true;
   }

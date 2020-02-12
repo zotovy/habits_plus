@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:habits_plus/models/theme.dart';
 
 final auth = FirebaseAuth.instance;
 final GoogleSignIn googleSignIn = GoogleSignIn();
@@ -11,6 +12,29 @@ final FacebookLogin facebookSignIn = FacebookLogin();
 final _firestore = Firestore.instance;
 final storageRef = FirebaseStorage.instance.ref();
 final userRef = _firestore.collection('users');
+
+// UI
+ThemeModel lightMode = ThemeModel(
+  ThemeData(
+    primaryColor: Color(0xFF6C3CD1),
+    disabledColor: Colors.black26,
+    backgroundColor: Colors.white,
+    textSelectionColor: Color(0xFF565656),
+    textSelectionHandleColor: Color(0xFF282828),
+    accentColor: Color(0xFF6C3CD1),
+  ),
+);
+ThemeModel darkMode = ThemeModel(
+  ThemeData(
+    brightness: Brightness.dark,
+    primaryColor: Color(0xFF6C3CD1),
+    disabledColor: Colors.white12,
+    backgroundColor: Colors.black,
+    textSelectionColor: Colors.white70,
+    textSelectionHandleColor: Colors.white,
+    accentColor: Color(0xFF6C3CD1),
+  ),
+);
 final List<Color> colors = [
   Colors.blue.withOpacity(0.85),
   Colors.lightBlue.withOpacity(0.85),

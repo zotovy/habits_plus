@@ -4,6 +4,8 @@
     "password": "Пароль",
     "name": "Имя",
     "forgot_password": "Забыли пароль?",
+    "cancel": "Отмена",
+    "add": "Добавить",
 
     "error_email_bad_formated": "Неверный формат email",
     "error_incorrect_password": "Неверный пароль или логин",
@@ -36,5 +38,14 @@
     "createHabit_description": "Описание",
     "createHabit_calendar": "Календарь",
     "createHabit_everyday": "Каждый день",
-    "createHabit_days": ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
+    "createHabit_days": ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"],
+    "createHabit_amount": "Тип отслеживания",
+    "createHabit_yes_or_no_title": "Да или Нет",
+    "createHabit_yes_or_no_subtitle": "Отмечайте выполненные привычки каждый день",
+    "createHabit_number_title": "Кол-во",
+    "createHabit_number_subtitle": "Записывайте количество в вашей привычке",
+    "createHabit_reminder": "Уведомление",
+    "createHabit_reminder_button": "Выбрать время",
+    "createHabit_reminder_clear": "Очистить",
+    "createHabit_reminder_time": "Раз в день"
 }

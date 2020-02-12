@@ -7,6 +7,7 @@ import 'package:habits_plus/ui/home.dart';
 import 'package:habits_plus/ui/intro.dart';
 import 'package:habits_plus/ui/login.dart';
 import 'package:habits_plus/ui/signup.dart';
+import 'package:habits_plus/util/constant.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -34,16 +35,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<ThemeModel>(
-          create: (_) => ThemeModel(
-            ThemeData(
-              primaryColor: Color(0xFF6C3CD1),
-              disabledColor: Colors.black26,
-              backgroundColor: Colors.white,
-              textSelectionColor: Color(0xFF565656),
-              textSelectionHandleColor: Color(0xFF282828),
-              accentColor: Color(0xFF6C3CD1),
-            ),
-          ),
+          create: (_) => darkMode,
         ),
         ChangeNotifierProvider<UserData>(
           create: (_) => UserData(),
