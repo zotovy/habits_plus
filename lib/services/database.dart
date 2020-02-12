@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:habits_plus/models/habit.dart';
 import 'package:habits_plus/models/user.dart';
 import 'package:habits_plus/util/constant.dart';
+import 'package:uuid/uuid.dart';
 
 class DatabaseServices {
   static Future<bool> isUserExists(String id) async {
@@ -26,6 +29,45 @@ class DatabaseServices {
       DocumentSnapshot snap = await userRef.document(id).get();
       User user = User.fromDoc(snap);
       return user;
+    }
+    return false;
+  }
+
+  // Pass new habit to Firebase
+  static Future<bool> createHabit(
+      Habit habit, String userId, String timeOfDay) async {
+    bool isExists = await isUserExists(userId);
+    print(userId);
+    if (isExists) {
+      // generate document ID
+      String docId = Uuid().v4();
+
+      // rewrite List<bool> -> binary String '1110001'
+      String days = '';
+      for (var i = 0; i < habit.repeatDays.length; i++) {
+        if (habit.repeatDays[i])
+          days += '1';
+        else
+          days += '0';
+      }
+
+      // Write document into DB
+      habitsRef.document(userId).collection('habits').document(docId).setData(
+        {
+          'colorCode': habit.colorCode,
+          'description': habit.description,
+          'disable': false,
+          'hasReminder': habit.hasReminder,
+          'repeatDays': days,
+          'timeStamp': Timestamp.now(),
+          'timeToRemind': timeOfDay,
+          'timesADay': habit.timesADay,
+          'title': habit.title,
+          'type': habit.type,
+        },
+      );
+
+      return true;
     }
     return false;
   }

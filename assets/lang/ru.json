@@ -9,8 +9,9 @@
 
     "error_email_bad_formated": "Неверный формат email",
     "error_incorrect_password": "Неверный пароль или логин",
-    "error_username_already_exists": "Этот логин уже используется, выберите другой",
     "error_email_already_exists": "Этот email уже используется, выберите другой",
+    "error_user_doent_exists": "Ошибка: Пользователь не существует",
+
 
     "intro_skip": "Пропустить",
     "intro_first_title": "Улучшайте себя.",

@@ -6,12 +6,14 @@ import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:habits_plus/models/theme.dart';
 
+// Firebase
 final auth = FirebaseAuth.instance;
 final GoogleSignIn googleSignIn = GoogleSignIn();
 final FacebookLogin facebookSignIn = FacebookLogin();
 final _firestore = Firestore.instance;
 final storageRef = FirebaseStorage.instance.ref();
 final userRef = _firestore.collection('users');
+final habitsRef = _firestore.collection('habits');
 
 // UI
 ThemeModel lightMode = ThemeModel(

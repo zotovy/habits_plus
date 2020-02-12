@@ -1,0 +1,12 @@
+Type
+ 0: yes/no
+ 1: number
+Color
+ 0: blue
+ 1: light blue 
+ 2: green
+ 3: indigo
+ 4: orange
+ 5: pink
+ 6: violet
+ 7: red

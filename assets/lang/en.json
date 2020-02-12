@@ -9,8 +9,8 @@
 
     "error_email_bad_formated": "The email address is badly formatted",
     "error_incorrect_password": "Invalid email or password",
-    "error_username_already_exists": "This username is already in used. Please, choose another username",
     "error_email_already_exists": "This email is already in used. Please, choose another email",
+    "error_user_doent_exists": "Invalid error: User does not exist",
 
 
     "intro_skip": "SKIP",

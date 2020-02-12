@@ -16,6 +16,25 @@ import 'localization.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<ThemeModel>(
+          create: (_) => lightMode,
+        ),
+        ChangeNotifierProvider<UserData>(
+          create: (_) => UserData(),
+        ),
+      ],
+      child: MainApp(),
+    );
+  }
+}
+
+class MainApp extends StatelessWidget {
+  const MainApp({Key key}) : super(key: key);
+
   Widget _getPage() {
     return StreamBuilder<FirebaseUser>(
       stream: FirebaseAuth.instance.onAuthStateChanged,
@@ -29,25 +48,6 @@ class MyApp extends StatelessWidget {
       },
     );
   }
-
-  @override
-  Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<ThemeModel>(
-          create: (_) => darkMode,
-        ),
-        ChangeNotifierProvider<UserData>(
-          create: (_) => UserData(),
-        ),
-      ],
-      child: MainApp(),
-    );
-  }
-}
-
-class MainApp extends StatelessWidget {
-  const MainApp({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +78,7 @@ class MainApp extends StatelessWidget {
       },
       debugShowCheckedModeBanner: false,
       title: 'Habits+',
-      home: HomePage(),
+      home: _getPage(),
       routes: {
         HomePage.id: (_) => HomePage(),
         LoginPage.id: (_) => LoginPage(),

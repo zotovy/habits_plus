@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 class Habit {
   String title;
   String description;
-  int amount; // 0 is no amount type
+  int type; // 0 is uncountable type; 1 is an countable
   bool isDisable; // firstly - false
+  bool hasReminder;
   DateTime timeStamp;
-  int percentage;
-  bool isSuccessed; // firstly - false
+  TimeOfDay timeOfDay;
   int colorCode; // more info on github
   List<bool> repeatDays;
   int timesADay;
@@ -15,11 +16,11 @@ class Habit {
   Habit({
     this.title,
     this.description,
-    this.amount,
+    this.type,
     this.isDisable,
+    this.hasReminder,
     this.timeStamp,
-    this.percentage,
-    this.isSuccessed,
+    this.timeOfDay,
     this.colorCode,
     this.repeatDays,
     this.timesADay,
@@ -37,11 +38,11 @@ class Habit {
     return Habit(
       title: doc['title'],
       description: doc['description'],
-      amount: doc['amount'],
+      type: doc['type'],
       isDisable: doc['isDisable'],
+      hasReminder: doc['hasReminder'],
       timeStamp: (doc['timeStamp'] as Timestamp).toDate(),
-      percentage: doc['percentage'],
-      isSuccessed: doc['isSuccessed'],
+      timeOfDay: doc['timeOfDay'],
       colorCode: doc['colorCode'],
       repeatDays: repeatDays,
       timesADay: doc['timesADay'],

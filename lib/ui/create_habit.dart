@@ -1,7 +1,11 @@
 import 'package:date_util/date_util.dart';
 import 'package:flutter/material.dart';
 import 'package:habits_plus/localization.dart';
+import 'package:habits_plus/models/habit.dart';
+import 'package:habits_plus/models/userData.dart';
+import 'package:habits_plus/services/database.dart';
 import 'package:habits_plus/util/constant.dart';
+import 'package:provider/provider.dart';
 
 class CreateHabitPage extends StatefulWidget {
   static final String id = 'createHabit_page';
@@ -13,6 +17,7 @@ class CreateHabitPage extends StatefulWidget {
 class _CreateHabitPageState extends State<CreateHabitPage> {
   // Services
   int _currentPage = 1; // 0 - Tasks, 1 - Habit
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   // Form
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -25,13 +30,56 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
   bool isNums = false;
   bool hasReminder = false;
   TimeOfDay timeRemind;
-  String timeADay = '1';
+  String timesADay = '1';
 
   Widget _buildTaskPage() {
     return Text('task');
   }
 
-  _submitHabit() async {}
+  _submitHabit() async {
+    if (_formKey.currentState.validate()) {
+      _formKey.currentState.save();
+
+      // Create new habit
+      Habit habit = Habit(
+        colorCode: currentColorIndex,
+        description: _description,
+        hasReminder: hasReminder,
+        isDisable: false,
+        repeatDays: isEveryDay
+            ? [true, true, true, true, true, true, true]
+            : _enabledDays,
+        timeOfDay: timeRemind,
+        timesADay: int.parse(timesADay),
+        timeStamp: DateTime.now(),
+        title: _title,
+        type: isNums ? 1 : 0,
+      );
+
+      String _timeRemindLocal = '';
+
+      if (timeRemind != null && hasReminder) {
+        _timeRemindLocal = timeRemind.format(context);
+      }
+
+      if (!await DatabaseServices.createHabit(
+        habit,
+        Provider.of<UserData>(context, listen: false).currentUserId,
+        _timeRemindLocal,
+      )) {
+        _scaffoldKey.currentState.showSnackBar(
+          SnackBar(
+            content: Text(
+              AppLocalizations.of(context).translate('error_user_doent_exists'),
+            ),
+            backgroundColor: Colors.redAccent,
+          ),
+        );
+      } else {
+        Navigator.pop(context);
+      }
+    }
+  }
 
   Widget _buildDayBox(String name, bool isEnable, int i) {
     int elemInRow =
@@ -553,7 +601,7 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
             child: Row(
               children: <Widget>[
                 DropdownButton(
-                  value: timeADay,
+                  value: timesADay,
                   items: <String>['1', '2', '3', '4', '5', '6', '7', '8', '9']
                       .map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
@@ -568,7 +616,7 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
                     fontSize: 16,
                   ),
                   disabledHint: Text(
-                    timeADay,
+                    timesADay,
                     style: TextStyle(
                       fontSize: 16,
                     ),
@@ -576,7 +624,7 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
                   onChanged: hasReminder
                       ? (String newValue) {
                           setState(() {
-                            timeADay = newValue;
+                            timesADay = newValue;
                           });
                         }
                       : null,
@@ -663,6 +711,7 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
+        key: _scaffoldKey,
         backgroundColor: Theme.of(context).backgroundColor,
         body: Form(
           key: _formKey,
