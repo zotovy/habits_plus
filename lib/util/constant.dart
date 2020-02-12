@@ -31,7 +31,7 @@ ThemeModel darkMode = ThemeModel(
     brightness: Brightness.dark,
     primaryColor: Color(0xFF6C3CD1),
     disabledColor: Colors.white12,
-    backgroundColor: Colors.black,
+    backgroundColor: Color(0xFF161616),
     textSelectionColor: Colors.white70,
     textSelectionHandleColor: Colors.white,
     accentColor: Color(0xFF6C3CD1),
