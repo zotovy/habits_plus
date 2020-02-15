@@ -54,6 +54,9 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
         timeStamp: DateTime.now(),
         title: _title,
         type: isNums ? 1 : 0,
+        progressBin: [],
+        progressBinByDate: {},
+        progressDateTimeById: [],
       );
 
       String _timeRemindLocal = '';
@@ -717,7 +720,7 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
           key: _formKey,
           child: SingleChildScrollView(
             child: Container(
-              padding: EdgeInsets.only(left: 28, right: 28, top: 36),
+              padding: EdgeInsets.only(left: 20, right: 20, top: 36),
               child: Column(
                 children: <Widget>[
                   // Task/Habit

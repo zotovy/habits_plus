@@ -48,12 +48,7 @@ class AuthService {
             signedInUser.uid;
 
         User user = await DatabaseServices.getUserById(signedInUser.uid);
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => HomePage(),
-          ),
-        );
+        Navigator.pop(context);
       }
     } catch (error) {
       bool isReceptive = true;
@@ -123,12 +118,7 @@ class AuthService {
 
       var getResult = await DatabaseServices.getUserById(result.user.uid);
 
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => HomePage(),
-        ),
-      );
+      Navigator.pop(context);
     } catch (e) {
       bool isReceptive = true;
       String message = '';
@@ -248,12 +238,7 @@ class AuthService {
     }
 
     if (await DatabaseServices.isUserExists(fireUser.uid)) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => HomePage(),
-        ),
-      );
+      Navigator.pop(context);
 
       return {
         'error': false,
@@ -290,12 +275,7 @@ class AuthService {
             (await auth.signInWithCredential(credential)).user;
 
         if (await DatabaseServices.isUserExists(fireUser.uid)) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => HomePage(),
-            ),
-          );
+          Navigator.pop(context);
 
           return {
             'error': false,

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:habits_plus/models/theme.dart';
+import 'package:intl/intl.dart';
 
 // Firebase
 final auth = FirebaseAuth.instance;
@@ -14,6 +15,7 @@ final _firestore = Firestore.instance;
 final storageRef = FirebaseStorage.instance.ref();
 final userRef = _firestore.collection('users');
 final habitsRef = _firestore.collection('habits');
+final DateFormat dateFormater = DateFormat('yyyy-MM-dd');
 
 // UI
 ThemeModel lightMode = ThemeModel(

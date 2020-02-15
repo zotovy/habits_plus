@@ -1,36 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:habits_plus/localization.dart';
+import 'package:habits_plus/models/habit.dart';
 import 'package:habits_plus/ui/habits.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
-  static final String id = 'home_page';
+  List<Habit> habits;
+
+  HomePage(this.habits);
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
-  int _currentPage = 0;
-  List<Widget> _pages;
+class _HomePageState extends State<HomePage> {
+  int _currentPage = 1;
+  List<Widget> _pages = [Container(), Container(), Container()];
   PageController _pageController;
 
   @override
   void initState() {
     super.initState();
-
-    _pageController = PageController();
+    _pageController = PageController(initialPage: _currentPage);
   }
 
   @override
   Widget build(BuildContext context) {
     if (mounted) {
-      _pages = [
-        Container(
-          color: Theme.of(context).backgroundColor,
-        ),
-        HabitsPage(),
-      ];
+      setState(() {
+        _pages = [
+          Container(
+            color: Theme.of(context).backgroundColor,
+          ),
+          HabitsPage(widget.habits),
+        ];
+      });
     }
     return Scaffold(
       bottomNavigationBar: BottomAppBar(
@@ -46,7 +50,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   _currentPage = 0;
                   _pageController.jumpToPage(_currentPage);
                 }),
-                icon: Icon(Icons.home),
+                icon: Icon(Icons.multiline_chart),
                 color: _currentPage == 0
                     ? Theme.of(context).textSelectionHandleColor
                     : Theme.of(context).disabledColor.withOpacity(0.25),
@@ -58,7 +62,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   _currentPage = 1;
                   _pageController.jumpToPage(_currentPage);
                 }),
-                icon: Icon(Icons.search),
+                icon: Icon(Icons.apps),
                 color: _currentPage == 1
                     ? Theme.of(context).textSelectionHandleColor
                     : Theme.of(context).disabledColor.withOpacity(0.25),

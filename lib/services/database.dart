@@ -64,11 +64,23 @@ class DatabaseServices {
           'timesADay': habit.timesADay,
           'title': habit.title,
           'type': habit.type,
+          'progressBin': [],
+          'progressBinByDate': {},
+          'progressDateTimeById': [],
         },
       );
 
       return true;
     }
     return false;
+  }
+
+  static Future<List<Habit>> getAllHabitsById(String id) async {
+    QuerySnapshot snap =
+        await habitsRef.document(id).collection('habits').getDocuments();
+    List<Habit> habits = snap.documents
+        .map((DocumentSnapshot doc) => Habit.fromDoc(doc))
+        .toList();
+    return habits;
   }
 }

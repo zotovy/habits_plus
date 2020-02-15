@@ -11,6 +11,9 @@ class Habit {
   TimeOfDay timeOfDay;
   int colorCode; // more info on github
   List<bool> repeatDays;
+  List<dynamic> progressBin;
+  Map progressBinByDate;
+  List progressDateTimeById;
   int timesADay;
 
   Habit({
@@ -24,6 +27,9 @@ class Habit {
     this.colorCode,
     this.repeatDays,
     this.timesADay,
+    this.progressBin,
+    this.progressBinByDate,
+    this.progressDateTimeById,
   });
 
   factory Habit.fromDoc(DocumentSnapshot doc) {
@@ -46,6 +52,9 @@ class Habit {
       colorCode: doc['colorCode'],
       repeatDays: repeatDays,
       timesADay: doc['timesADay'],
+      progressBin: doc['progressBin'].toList(),
+      progressBinByDate: doc['progressBinByDate'],
+      progressDateTimeById: doc['progressDateTimeById'],
     );
   }
 }

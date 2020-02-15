@@ -48,5 +48,11 @@
     "createHabit_reminder": "Уведомление",
     "createHabit_reminder_button": "Выбрать время",
     "createHabit_reminder_clear": "Очистить",
-    "createHabit_reminder_time": "Раз в день"
+    "createHabit_reminder_time": "Раз в день",
+
+    "habits_for_today": "Привычки на сегодня",
+    "habits_span_1": "Всего ",
+    "habits_span_2": " привычки ",
+    "habits_span_3": "на сегодня!"
+
 }

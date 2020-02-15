@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:habits_plus/localization.dart';
 import 'package:habits_plus/models/theme.dart';
@@ -8,7 +10,30 @@ class IntroPage extends StatefulWidget {
   _IntroPageState createState() => _IntroPageState();
 }
 
-class _IntroPageState extends State<IntroPage>
+class _IntroPageState extends State<IntroPage> {
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: Future.delayed(
+        Duration(milliseconds: 1),
+        () => _IntroPage(),
+      ),
+      builder: (BuildContext context, snapshot) {
+        if (snapshot.hasData) {
+          return snapshot.data;
+        }
+        return Text('loading');
+      },
+    );
+  }
+}
+
+class _IntroPage extends StatefulWidget {
+  @override
+  __IntroPageState createState() => __IntroPageState();
+}
+
+class __IntroPageState extends State<_IntroPage>
     with SingleTickerProviderStateMixin {
   // Pages
   PageController pageController;

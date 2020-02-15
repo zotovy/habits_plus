@@ -49,7 +49,12 @@
     "createHabit_reminder": "Reminder",
     "createHabit_reminder_button": "Choose time",
     "createHabit_reminder_clear": "Clear",
-    "createHabit_reminder_time": "Time A Day"
+    "createHabit_reminder_time": "Time A Day",
+
+    "habits_for_today": "Habits for today",
+    "habits_span_1": "Your only ",
+    "habits_span_2": " habits ",
+    "habits_span_3": "to do today!"
 
 
 

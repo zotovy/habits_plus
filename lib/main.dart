@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:habits_plus/models/theme.dart';
 import 'package:habits_plus/models/userData.dart';
+import 'package:habits_plus/services/auth.dart';
+import 'package:habits_plus/services/database.dart';
 import 'package:habits_plus/ui/create_habit.dart';
 import 'package:habits_plus/ui/home.dart';
 import 'package:habits_plus/ui/intro.dart';
@@ -13,7 +15,9 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'localization.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -21,7 +25,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<ThemeModel>(
-          create: (_) => darkMode,
+          create: (_) => lightMode,
         ),
         ChangeNotifierProvider<UserData>(
           create: (_) => UserData(),
@@ -35,16 +39,49 @@ class MyApp extends StatelessWidget {
 class MainApp extends StatelessWidget {
   const MainApp({Key key}) : super(key: key);
 
-  Widget _getPage() {
+  Widget _buildLoadingScreen(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
+      body: Center(
+        child: FlutterLogo(size: 100),
+      ),
+    );
+  }
+
+  Widget _getPage(BuildContext context) {
     return StreamBuilder<FirebaseUser>(
       stream: FirebaseAuth.instance.onAuthStateChanged,
       builder: (BuildContext context, snapshot) {
-        if (snapshot.hasData) {
-          Provider.of<UserData>(context).currentUserId = snapshot.data.uid;
-          return HomePage();
-        } else {
-          return LoginPage();
+        try {
+          String id = snapshot.data.uid;
+          Provider.of<UserData>(context).currentUserId = id;
+          return FutureBuilder(
+            future: DatabaseServices.getAllHabitsById(id),
+            builder: (BuildContext context, futureSnapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.waiting:
+                  return _buildLoadingScreen(context);
+                default:
+                  if (snapshot.hasError)
+                    return Container(
+                      child: Text(snapshot.error),
+                    );
+                  else {
+                    if (futureSnapshot.data != null) {
+                      return HomePage(futureSnapshot.data);
+                    } else if (futureSnapshot.hasData) {
+                      return HomePage([]);
+                    } else {
+                      return _buildLoadingScreen(context);
+                    }
+                  }
+              }
+            },
+          );
+        } catch (e) {
+          return IntroPage();
         }
+        // return _buildLoadingScreen(context);
       },
     );
   }
@@ -78,9 +115,8 @@ class MainApp extends StatelessWidget {
       },
       debugShowCheckedModeBanner: false,
       title: 'Habits+',
-      home: _getPage(),
+      home: _getPage(context),
       routes: {
-        HomePage.id: (_) => HomePage(),
         LoginPage.id: (_) => LoginPage(),
         SignUpPage.id: (_) => SignUpPage(),
         CreateHabitPage.id: (_) => CreateHabitPage(),
