@@ -2,6 +2,7 @@ import 'package:date_util/date_util.dart';
 import 'package:flutter/material.dart';
 import 'package:habits_plus/localization.dart';
 import 'package:habits_plus/models/habit.dart';
+import 'package:habits_plus/models/task.dart';
 import 'package:habits_plus/models/userData.dart';
 import 'package:habits_plus/services/database.dart';
 import 'package:habits_plus/util/constant.dart';
@@ -447,7 +448,17 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
 
   _submitTask() async {
     if (_formKey.currentState.validate()) {
+      // Save title & desc form
       _formKey.currentState.save();
+
+      // Create new Task obj
+      Task task = Task(
+        title: _title,
+        description: _description,
+        timestamp: DateTime.now(), // Creation date
+        date: date,
+        time: timeRemind,
+      );
     }
   }
 

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:habits_plus/models/habit.dart';
+import 'package:habits_plus/models/task.dart';
 import 'package:habits_plus/models/user.dart';
 import 'package:habits_plus/util/constant.dart';
 import 'package:uuid/uuid.dart';
@@ -67,6 +68,31 @@ class DatabaseServices {
           'progressBin': [],
           'progressBinByDate': {},
           'progressDateTimeById': [],
+        },
+      );
+
+      return true;
+    }
+    return false;
+  }
+
+  // Create new habit and pass it to Firebase
+  static Future<bool> createTask(
+      Task task, String userId, String timeOfDay) async {
+    // Check user id
+    bool isExists = await isUserExists(userId);
+    if (isExists) {
+      // generate document ID
+      String docId = Uuid().v4();
+
+      // Write document into DB
+      tasksRef.document(userId).collection('tasks').document(docId).setData(
+        {
+          'title': task.title,
+          'description': task.description,
+          'time': task.time,
+          'date': task.date,
+          'timeStamp': task.timestamp,
         },
       );
 

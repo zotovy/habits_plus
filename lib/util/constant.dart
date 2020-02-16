@@ -15,6 +15,7 @@ final _firestore = Firestore.instance;
 final storageRef = FirebaseStorage.instance.ref();
 final userRef = _firestore.collection('users');
 final habitsRef = _firestore.collection('habits');
+final tasksRef = _firestore.collection('tasks');
 final DateFormat dateFormater = DateFormat('yyyy-MM-dd');
 final TimeOfDay nullTime = TimeOfDay(hour: 3, minute: 59);
 
