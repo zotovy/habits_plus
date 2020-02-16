@@ -7,6 +7,27 @@
     "cancel": "Отмена",
     "add": "Добавить",
 
+    "Mon": "Пн",
+    "Tue": "Вт",
+    "Wed": "Ср",
+    "Thr": "Чт",
+    "Fri": "Пт",
+    "Sat": "Сб",
+    "Sun": "Вс",
+
+    "January": "Января",
+    "February": "Февраля",
+    "March": "Марта",
+    "April": "Апреля",
+    "May": "Мая",
+    "June": "Июня",
+    "July": "Июля",
+    "August": "Августа",
+    "September": "Сентября",
+    "October": "Октября",
+    "November": "Ноября",
+    "December": "Декабря",
+
     "error_email_bad_formated": "Неверный формат email",
     "error_incorrect_password": "Неверный пароль или логин",
     "error_email_already_exists": "Этот email уже используется, выберите другой",
@@ -53,6 +74,12 @@
     "habits_for_today": "Привычки на сегодня",
     "habits_span_1": "Всего ",
     "habits_span_2": " привычки ",
-    "habits_span_3": "на сегодня!"
+    "habits_span_3": "на сегодня!",
+
+    "todos_title": "Ваши задания на сегодня",
+    "todos_reminder": "Весь день",
+    "todos_choose_date": "Выберите день"
+
+
 
 }

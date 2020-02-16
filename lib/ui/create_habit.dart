@@ -6,6 +6,7 @@ import 'package:habits_plus/models/userData.dart';
 import 'package:habits_plus/services/database.dart';
 import 'package:habits_plus/util/constant.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class CreateHabitPage extends StatefulWidget {
   static final String id = 'createHabit_page';
@@ -30,10 +31,368 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
   bool isNums = false;
   bool hasReminder = false;
   TimeOfDay timeRemind;
+  DateTime date;
   String timesADay = '1';
 
   Widget _buildTaskPage() {
-    return Text('task');
+    return Container(
+      child: Column(
+        children: <Widget>[
+          // Title
+          TextFormField(
+            style: TextStyle(
+              fontSize: 18,
+            ),
+            decoration: InputDecoration(
+              labelText:
+                  AppLocalizations.of(context).translate('createHabit_title'),
+              labelStyle: TextStyle(
+                fontSize: 18,
+              ),
+              // enabledBorder: OutlineInputBorder(
+              //   borderSide: BorderSide(color: Colors.black26, width: 1),
+              //   borderRadius: BorderRadius.circular(10),
+              // ),
+              // border: OutlineInputBorder(
+              //   borderRadius: BorderRadius.circular(10),
+              // ),
+            ),
+            validator: (String value) =>
+                value.trim() == '' ? 'Please, enter title' : null,
+            onSaved: (String value) {
+              setState(() {
+                _title = value;
+              });
+            },
+          ),
+          SizedBox(height: 20),
+
+          // Description
+          TextFormField(
+            keyboardType: TextInputType.multiline,
+            style: TextStyle(
+              fontSize: 18,
+            ),
+            decoration: InputDecoration(
+              labelText: AppLocalizations.of(context)
+                  .translate('createHabit_description'),
+              labelStyle: TextStyle(
+                fontSize: 18,
+              ),
+              // enabledBorder: OutlineInputBorder(
+              //   borderSide: BorderSide(color: Colors.black26, width: 1),
+              //   borderRadius: BorderRadius.circular(10),
+              // ),
+              // border: OutlineInputBorder(
+              //   borderRadius: BorderRadius.circular(10),
+              // ),
+            ),
+            validator: (String value) => null,
+            onSaved: (String value) {
+              setState(() {
+                _description = value;
+              });
+            },
+          ),
+          SizedBox(height: 20),
+
+          // Days
+          Container(
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () async {
+                  if (!isEveryDay) {
+                    DateTime _date;
+                    try {
+                      _date = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate:
+                            DateTime.now().subtract(Duration(days: 1000)),
+                        lastDate: DateTime.now().add(Duration(days: 1000)),
+                      );
+                    } catch (e) {
+                      _date = null;
+                      _scaffoldKey.currentState.showSnackBar(
+                        SnackBar(
+                          content: Text('Invalid date, please pick another'),
+                          backgroundColor: Colors.redAccent,
+                        ),
+                      );
+                    }
+                    setState(() {
+                      date = _date;
+                    });
+                  }
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Container(
+                        child: Row(
+                          children: <Widget>[
+                            Icon(
+                              Icons.date_range,
+                              size: 24,
+                              color: !isEveryDay
+                                  ? Theme.of(context).textSelectionColor
+                                  : Theme.of(context).disabledColor,
+                            ),
+                            SizedBox(width: 10),
+                            Text(
+                              date == null
+                                  ? AppLocalizations.of(context)
+                                      .translate('todos_choose_date')
+                                  : '${date.day} ${AppLocalizations.of(context).translate(DateFormat("MMMM").format(date))}',
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: !isEveryDay
+                                    ? Theme.of(context).textSelectionHandleColor
+                                    : Theme.of(context).disabledColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Icon(
+                        Icons.navigate_next,
+                        size: 24,
+                        color: !isEveryDay
+                            ? Theme.of(context).textSelectionColor
+                            : Theme.of(context).disabledColor,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 5),
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                isEveryDay = !isEveryDay;
+                _enabledDays = [
+                  false,
+                  false,
+                  false,
+                  false,
+                  false,
+                  false,
+                  false
+                ];
+              });
+            },
+            child: Container(
+              child: Row(
+                children: <Widget>[
+                  // CheckBox
+                  AnimatedContainer(
+                    duration: Duration(milliseconds: 150),
+                    padding: EdgeInsets.all(3),
+                    width: 25,
+                    height: 25,
+                    decoration: BoxDecoration(
+                      color: isEveryDay
+                          ? Theme.of(context).primaryColor
+                          : Theme.of(context).disabledColor,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: AnimatedOpacity(
+                      duration: Duration(milliseconds: 100),
+                      opacity: isEveryDay ? 1 : 0,
+                      child: Icon(
+                        Icons.done,
+                        color: Colors.white,
+                        size: 16,
+                      ),
+                    ),
+                  ),
+
+                  SizedBox(width: 10),
+                  Text(
+                    AppLocalizations.of(context)
+                        .translate('createHabit_everyday'),
+                    style: TextStyle(
+                      color: Theme.of(context).textSelectionHandleColor,
+                      fontSize: 18,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(height: 15),
+
+          // Reminder
+          Container(
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () async {
+                  TimeOfDay _time = timeRemind = await showTimePicker(
+                    context: context,
+                    initialTime:
+                        timeRemind == null ? TimeOfDay.now() : timeRemind,
+                  );
+                  setState(() {
+                    timeRemind = _time;
+                  });
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Container(
+                        child: Row(
+                          children: <Widget>[
+                            Icon(
+                              Icons.timelapse,
+                              size: 24,
+                              color: !hasReminder
+                                  ? Theme.of(context).textSelectionColor
+                                  : Theme.of(context).disabledColor,
+                            ),
+                            SizedBox(width: 10),
+                            Text(
+                              timeRemind == null
+                                  ? AppLocalizations.of(context)
+                                      .translate('createHabit_reminder_button')
+                                  : timeRemind.format(context),
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: !hasReminder
+                                    ? Theme.of(context).textSelectionHandleColor
+                                    : Theme.of(context).disabledColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Icon(
+                        Icons.navigate_next,
+                        size: 24,
+                        color: !hasReminder
+                            ? Theme.of(context).textSelectionColor
+                            : Theme.of(context).disabledColor,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 5),
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                hasReminder = !hasReminder;
+              });
+            },
+            child: Container(
+              child: Row(
+                children: <Widget>[
+                  // CheckBox
+                  AnimatedContainer(
+                    duration: Duration(milliseconds: 150),
+                    padding: EdgeInsets.all(3),
+                    width: 25,
+                    height: 25,
+                    decoration: BoxDecoration(
+                      color: hasReminder
+                          ? Theme.of(context).primaryColor
+                          : Theme.of(context).disabledColor,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: AnimatedOpacity(
+                      duration: Duration(milliseconds: 100),
+                      opacity: hasReminder ? 1 : 0,
+                      child: Icon(
+                        Icons.done,
+                        color: Colors.white,
+                        size: 16,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Container(
+                    child: Text(
+                      AppLocalizations.of(context).translate('todos_reminder'),
+                      style: TextStyle(
+                        color: Theme.of(context).textSelectionHandleColor,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // Submit
+          SizedBox(height: 20),
+          Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: Text(
+                    AppLocalizations.of(context).translate('cancel'),
+                    style: TextStyle(
+                      color: Theme.of(context).textSelectionHandleColor,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(),
+                  width: AppLocalizations.of(context).lang == 'ru' ? 125 : 90,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor,
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(100),
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(100),
+                      onTap: _submitTask,
+                      splashColor: Colors.white12,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(
+                            Icons.add,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                          SizedBox(width: 4),
+                          Text(
+                            AppLocalizations.of(context).translate('add'),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 10),
+        ],
+      ),
+    );
   }
 
   _submitHabit() async {
@@ -84,6 +443,12 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
     }
   }
 
+  _submitTask() async {
+    if (_formKey.currentState.validate()) {
+      _formKey.currentState.save();
+    }
+  }
+
   Widget _buildDayBox(String name, bool isEnable, int i) {
     int elemInRow =
         ((MediaQuery.of(context).size.width - 56) / (45 + 6)).floor();
@@ -122,50 +487,6 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
             style: TextStyle(
               color: Colors.white,
               fontSize: 16,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildChooseTimeButton() {
-    return AnimatedContainer(
-      duration: Duration(milliseconds: 200),
-      height: 45,
-      width: AppLocalizations.of(context).lang == 'ru' ? 150 : 135,
-      decoration: BoxDecoration(
-        color: hasReminder
-            ? Theme.of(context).primaryColor.withOpacity(0.85)
-            : Theme.of(context).disabledColor,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Material(
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(10),
-          onTap: () async {
-            if (hasReminder) {
-              TimeOfDay time = await showTimePicker(
-                context: context,
-                initialTime: TimeOfDay.fromDateTime(
-                  DateTime.now(),
-                ),
-              );
-              setState(() {
-                timeRemind = time;
-              });
-            }
-          },
-          child: Center(
-            child: Text(
-              AppLocalizations.of(context)
-                  .translate('createHabit_reminder_button'),
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-              ),
             ),
           ),
         ),
@@ -278,8 +599,7 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
               //   borderRadius: BorderRadius.circular(10),
               // ),
             ),
-            validator: (String value) =>
-                value.trim() == '' ? 'Please, enter description' : null,
+            validator: (String value) => null,
             onSaved: (String value) {
               setState(() {
                 _description = value;
@@ -549,55 +869,62 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
           ),
           SizedBox(height: 7),
           Container(
-            child: timeRemind == null
-                ? Row(
-                    children: <Widget>[
-                      _buildChooseTimeButton(),
-                    ],
-                  )
-                : Row(
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () async {
+                  TimeOfDay _time = timeRemind = await showTimePicker(
+                    context: context,
+                    initialTime:
+                        timeRemind == null ? TimeOfDay.now() : timeRemind,
+                  );
+                  setState(() {
+                    timeRemind = _time;
+                  });
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Container(
-                        child: AnimatedDefaultTextStyle(
-                          duration: Duration(milliseconds: 250),
-                          child: Text(timeRemind.format(context)),
-                          style: hasReminder
-                              ? TextStyle(
-                                  color: Theme.of(context).textSelectionColor,
-                                  fontSize: 28,
-                                )
-                              : TextStyle(
-                                  color: Theme.of(context).disabledColor,
-                                  fontSize: 28,
-                                ),
+                        child: Row(
+                          children: <Widget>[
+                            Icon(
+                              Icons.timelapse,
+                              size: 24,
+                              color: hasReminder
+                                  ? Theme.of(context).textSelectionColor
+                                  : Theme.of(context).disabledColor,
+                            ),
+                            SizedBox(width: 10),
+                            Text(
+                              timeRemind == null
+                                  ? AppLocalizations.of(context)
+                                      .translate('createHabit_reminder_button')
+                                  : timeRemind.format(context),
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: hasReminder
+                                    ? Theme.of(context).textSelectionHandleColor
+                                    : Theme.of(context).disabledColor,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      SizedBox(width: 25),
-                      GestureDetector(
-                        onTap: () {
-                          if (hasReminder) {
-                            setState(() {
-                              timeRemind = null;
-                            });
-                          }
-                        },
-                        child: AnimatedDefaultTextStyle(
-                          duration: Duration(milliseconds: 250),
-                          child: Text(AppLocalizations.of(context)
-                              .translate('createHabit_reminder_clear')),
-                          style: hasReminder
-                              ? TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                  fontSize: 18,
-                                )
-                              : TextStyle(
-                                  color: Theme.of(context).disabledColor,
-                                  fontSize: 18,
-                                ),
-                        ),
+                      Icon(
+                        Icons.navigate_next,
+                        size: 24,
+                        color: hasReminder
+                            ? Theme.of(context).textSelectionColor
+                            : Theme.of(context).disabledColor,
                       ),
                     ],
                   ),
+                ),
+              ),
+            ),
           ),
           SizedBox(height: 7),
           Container(

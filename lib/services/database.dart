@@ -83,4 +83,38 @@ class DatabaseServices {
         .toList();
     return habits;
   }
+
+  static Future updateHabit(Habit habit, String userId) {
+    // rewrite List<bool> -> binary String '1110001'
+    String days = '';
+    for (var i = 0; i < habit.repeatDays.length; i++) {
+      if (habit.repeatDays[i])
+        days += '1';
+      else
+        days += '0';
+    }
+
+    // Update data in firebase
+    habitsRef
+        .document(userId)
+        .collection('habits')
+        .document(habit.id)
+        .updateData(
+      {
+        'colorCode': habit.colorCode,
+        'description': habit.description,
+        'disable': habit.isDisable,
+        'hasReminder': habit.hasReminder,
+        'repeatDays': days,
+        'timeStamp': habit.timeStamp,
+        'timeToRemind': habit.timeOfDay,
+        'timesADay': habit.timesADay,
+        'title': habit.title,
+        'type': habit.type,
+        'progressBin': habit.progressBin,
+        'progressBinByDate': habit.progressBinByDate,
+        'progressDateTimeById': habit.progressDateTimeById,
+      },
+    );
+  }
 }

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Habit {
+  String id;
   String title;
   String description;
   int type; // 0 is uncountable type; 1 is an countable
@@ -17,6 +18,7 @@ class Habit {
   int timesADay;
 
   Habit({
+    this.id,
     this.title,
     this.description,
     this.type,
@@ -42,6 +44,7 @@ class Habit {
 
     // Create habit
     return Habit(
+      id: doc.documentID,
       title: doc['title'],
       description: doc['description'],
       type: doc['type'],

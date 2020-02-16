@@ -2,8 +2,11 @@ import 'package:calendar_strip/calendar_strip.dart';
 import 'package:flutter/material.dart';
 import 'package:habits_plus/localization.dart';
 import 'package:habits_plus/models/habit.dart';
+import 'package:habits_plus/models/userData.dart';
+import 'package:habits_plus/services/database.dart';
 import 'package:habits_plus/util/constant.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class HabitsPage extends StatefulWidget {
   List<Habit> habits;
@@ -53,7 +56,6 @@ class HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
 
   setTodayHabits(DateTime date) {
     todayHabits = [];
-    print(dateFormater.parse(date.toString()));
     for (var i = 0; i < habits.length; i++) {
       for (var j = 0; j < habitsDate[i].length; j++) {
         if (habitsDate[i][j] == dateFormater.parse(date.toString())) {
@@ -118,14 +120,29 @@ class HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
                     onTap: () {
                       setState(() {
                         todayHabits[index].progressBin[currentItem] = 1;
+                        DatabaseServices.updateHabit(
+                          todayHabits[index],
+                          Provider.of<UserData>(context, listen: false)
+                              .currentUserId,
+                        );
                       });
                     },
                     onLongPress: () {
                       setState(() {
                         if (habits[index].progressBin[currentItem] == 1) {
                           todayHabits[index].progressBin[currentItem] = 0;
+                          DatabaseServices.updateHabit(
+                            todayHabits[index],
+                            Provider.of<UserData>(context, listen: false)
+                                .currentUserId,
+                          );
                         } else {
                           todayHabits[index].progressBin[currentItem] = -1;
+                          DatabaseServices.updateHabit(
+                            todayHabits[index],
+                            Provider.of<UserData>(context, listen: false)
+                                .currentUserId,
+                          );
                         }
                       });
                     },
@@ -151,6 +168,11 @@ class HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
                     onTap: () {
                       setState(() {
                         todayHabits[index].progressBin.add(1);
+                        DatabaseServices.updateHabit(
+                          todayHabits[index],
+                          Provider.of<UserData>(context, listen: false)
+                              .currentUserId,
+                        );
                         if (todayHabits[index].progressBin.length % 7 == 0) {
                           showDialog(
                             context: context,
@@ -247,6 +269,12 @@ class HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
                                     setState(() {
                                       todayHabits[index]
                                           .progressBin[currentProgressItem] = 1;
+                                      DatabaseServices.updateHabit(
+                                        todayHabits[index],
+                                        Provider.of<UserData>(context,
+                                                listen: false)
+                                            .currentUserId,
+                                      );
                                     });
                                   },
                                   onLongPress: () {
@@ -256,9 +284,21 @@ class HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
                                           1) {
                                         todayHabits[index].progressBin[
                                             currentProgressItem] = 0;
+                                        DatabaseServices.updateHabit(
+                                          todayHabits[index],
+                                          Provider.of<UserData>(context,
+                                                  listen: false)
+                                              .currentUserId,
+                                        );
                                       } else {
                                         todayHabits[index].progressBin[
                                             currentProgressItem] = -1;
+                                        DatabaseServices.updateHabit(
+                                          todayHabits[index],
+                                          Provider.of<UserData>(context,
+                                                  listen: false)
+                                              .currentUserId,
+                                        );
                                       }
                                     });
                                   },
@@ -286,6 +326,12 @@ class HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
                                   onTap: () {
                                     setState(() {
                                       todayHabits[index].progressBin.add(1);
+                                      DatabaseServices.updateHabit(
+                                        todayHabits[index],
+                                        Provider.of<UserData>(context,
+                                                listen: false)
+                                            .currentUserId,
+                                      );
                                       if (todayHabits[index]
                                                   .progressBin
                                                   .length %
@@ -347,6 +393,9 @@ class HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
       fontSize: 17,
       color: Colors.white,
     );
+
+    // Translate day
+    dayName = AppLocalizations.of(context).translate(dayName);
 
     // Name of Day Style
     TextStyle dayNameStyle = TextStyle(
@@ -569,6 +618,27 @@ class HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
                 ],
               ),
             ),
+            SizedBox(height: 20),
+
+            // TODOs for today
+            Container(
+              child: Row(
+                children: <Widget>[
+                  Text(
+                    AppLocalizations.of(context)
+                        .translate('todos_title')
+                        .toUpperCase(),
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Theme.of(context)
+                          .textSelectionColor
+                          .withOpacity(0.75),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            )
           ],
         ),
       ),

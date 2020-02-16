@@ -7,6 +7,27 @@
     "cancel": "Cancel",
     "add": "Add",
 
+    "Mon": "Mon",
+    "Tue": "Tue",
+    "Wed": "Wed",
+    "Thr": "Thr",
+    "Fri": "Fri",
+    "Sat": "Sat",
+    "Sun": "Sun",
+
+    "January": "January",
+    "February": "February",
+    "March": "March",
+    "April": "April",
+    "May": "May",
+    "June": "June",
+    "July": "July",
+    "August": "August",
+    "September": "September",
+    "October": "October",
+    "November": "November",
+    "December": "December",
+
     "error_email_bad_formated": "The email address is badly formatted",
     "error_incorrect_password": "Invalid email or password",
     "error_email_already_exists": "This email is already in used. Please, choose another email",
@@ -54,7 +75,11 @@
     "habits_for_today": "Habits for today",
     "habits_span_1": "Your only ",
     "habits_span_2": " habits ",
-    "habits_span_3": "to do today!"
+    "habits_span_3": "to do today!",
+
+    "todos_title": "Your Tasks for today",
+    "todos_reminder": "All day",
+    "todos_choose_date": "Choose date"
 
 
 
