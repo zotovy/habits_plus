@@ -42,6 +42,8 @@ class Habit {
       repeatDays.add(str[i] == '1' ? true : false);
     }
 
+    print(doc['timeToRemind']);
+
     // Create habit
     return Habit(
       id: doc.documentID,
@@ -51,7 +53,9 @@ class Habit {
       isDisable: doc['isDisable'],
       hasReminder: doc['hasReminder'],
       timeStamp: (doc['timeStamp'] as Timestamp).toDate(),
-      timeOfDay: doc['timeOfDay'],
+      timeOfDay: doc['timeToRemind'] != '' && doc['timeToRemind'] != null
+          ? TimeOfDay.fromDateTime(DateTime.parse(doc['timeToRemind']))
+          : null,
       colorCode: doc['colorCode'],
       repeatDays: repeatDays,
       timesADay: doc['timesADay'],
