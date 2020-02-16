@@ -22,7 +22,9 @@ class Task {
       description: doc['description'],
       date: (doc['date'] as Timestamp).toDate(),
       timestamp: (doc['timeStamp'] as Timestamp).toDate(),
-      time: doc['timeOfDay'],
+      time: doc['time'] != '' && doc['time'] != null
+          ? TimeOfDay.fromDateTime(DateTime.parse(doc['time']))
+          : null,
     );
   }
 }
