@@ -57,6 +57,7 @@
     "createHabit_task": "Задание",
     "createHabit_habit": "Привычка",
     "createHabit_title": "Название",
+    "createHabit_title_error": "Пожалуйста, введите название",
     "createHabit_description": "Описание",
     "createHabit_calendar": "Календарь",
     "createHabit_everyday": "Каждый день",

@@ -58,6 +58,7 @@
     "createHabit_task": "Task",
     "createHabit_habit": "Habit",
     "createHabit_title": "Title",
+    "createHabit_title_error": "Please, enter a title",
     "createHabit_description": "Description",
     "createHabit_calendar": "Calendar",
     "createHabit_everyday": "Everyday",

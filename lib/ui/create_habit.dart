@@ -57,8 +57,10 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
               //   borderRadius: BorderRadius.circular(10),
               // ),
             ),
-            validator: (String value) =>
-                value.trim() == '' ? 'Please, enter title' : null,
+            validator: (String value) => value.trim() == ''
+                ? AppLocalizations.of(context)
+                    .translate('createHabit_title_error')
+                : null,
             onSaved: (String value) {
               setState(() {
                 _title = value;
@@ -569,8 +571,10 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
               //   borderRadius: BorderRadius.circular(10),
               // ),
             ),
-            validator: (String value) =>
-                value.trim() == '' ? 'Please, enter title' : null,
+            validator: (String value) => value.trim() == ''
+                ? AppLocalizations.of(context)
+                    .translate('createHabit_title_error')
+                : null,
             onSaved: (String value) {
               setState(() {
                 _title = value;
