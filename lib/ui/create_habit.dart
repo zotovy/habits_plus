@@ -6,6 +6,7 @@ import 'package:habits_plus/models/task.dart';
 import 'package:habits_plus/models/userData.dart';
 import 'package:habits_plus/services/database.dart';
 import 'package:habits_plus/util/constant.dart';
+import 'package:habits_plus/widgets/progress_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
@@ -20,6 +21,7 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
   // Services
   int _currentPage = 1; // 0 - Tasks, 1 - Habit
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  bool isLoading = false;
 
   // Form
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -178,15 +180,6 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
             onTap: () {
               setState(() {
                 isEveryDay = !isEveryDay;
-                _enabledDays = [
-                  false,
-                  false,
-                  false,
-                  false,
-                  false,
-                  false,
-                  false
-                ];
               });
             },
             child: Container(
@@ -451,6 +444,23 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
       // Save title & desc form
       _formKey.currentState.save();
 
+      // Check date != null and is not every day
+      if (date == null && !isEveryDay) {
+        // Show warning message
+        _scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Text(
+              AppLocalizations.of(context).translate('todos_date_warning')),
+        ));
+
+        // Exit from function _submitTask
+        return null;
+      }
+
+      // Enable progress loading bar
+      setState(() {
+        isLoading = true;
+      });
+
       // Create new Task obj
       Task task = Task(
         title: _title,
@@ -458,7 +468,33 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
         timestamp: DateTime.now(), // Creation date
         date: date,
         time: timeRemind,
+        hasTime: timeRemind != null ? true : false,
+        isEveryDay: isEveryDay,
       );
+
+      // Push data to DB
+      bool dbCode = await DatabaseServices.createTask(
+          task, Provider.of<UserData>(context, listen: false).currentUserId);
+
+      // Disable progress loading bar
+      setState(() {
+        isLoading = false;
+      });
+
+      // Check DataBase Code (dbCode)
+      if (!dbCode) {
+        // If operation has error -> make failed message
+        _scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Text(AppLocalizations.of(context)
+              .translate('error_user_doent_exists')),
+        ));
+
+        // Exit from function _submitTask
+        return null;
+      }
+
+      // Return Navigator to home page
+      Navigator.pop(context);
     }
   }
 
@@ -1056,6 +1092,7 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
+        appBar: isLoading ? ProgressBar() : null,
         key: _scaffoldKey,
         backgroundColor: Theme.of(context).backgroundColor,
         body: Form(

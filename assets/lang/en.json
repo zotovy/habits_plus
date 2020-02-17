@@ -80,7 +80,8 @@
 
     "todos_title": "Your Tasks for today",
     "todos_reminder": "All day",
-    "todos_choose_date": "Choose date"
+    "todos_choose_date": "Choose date",
+    "todos_date_warning": "Please, pick date"
 
 
 

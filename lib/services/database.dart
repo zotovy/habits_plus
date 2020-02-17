@@ -77,8 +77,7 @@ class DatabaseServices {
   }
 
   // Create new habit and pass it to Firebase
-  static Future<bool> createTask(
-      Task task, String userId, String timeOfDay) async {
+  static Future<bool> createTask(Task task, String userId) async {
     // Check user id
     bool isExists = await isUserExists(userId);
     if (isExists) {
@@ -93,6 +92,8 @@ class DatabaseServices {
           'time': task.time,
           'date': task.date,
           'timeStamp': task.timestamp,
+          'isEveryDay': task.isEveryDay,
+          'hasTime': task.hasTime,
         },
       );
 
