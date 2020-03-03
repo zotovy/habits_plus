@@ -470,6 +470,7 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
         time: timeRemind,
         hasTime: timeRemind != null ? true : false,
         isEveryDay: isEveryDay,
+        done: false,
       );
 
       // Push data to DB

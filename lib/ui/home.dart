@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:habits_plus/localization.dart';
 import 'package:habits_plus/models/habit.dart';
+import 'package:habits_plus/models/task.dart';
 import 'package:habits_plus/ui/habits.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   List<Habit> habits;
 
-  HomePage(this.habits);
+  HomePage({
+    this.habits,
+  });
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -32,7 +35,9 @@ class _HomePageState extends State<HomePage> {
           Container(
             color: Theme.of(context).backgroundColor,
           ),
-          HabitsPage(widget.habits),
+          HabitsPage(
+            habits: widget.habits,
+          ),
         ];
       });
     }

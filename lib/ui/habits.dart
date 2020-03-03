@@ -2,16 +2,22 @@ import 'package:calendar_strip/calendar_strip.dart';
 import 'package:flutter/material.dart';
 import 'package:habits_plus/localization.dart';
 import 'package:habits_plus/models/habit.dart';
+import 'package:habits_plus/models/task.dart';
+import 'package:habits_plus/models/taskData.dart';
 import 'package:habits_plus/models/userData.dart';
 import 'package:habits_plus/services/database.dart';
+import 'package:habits_plus/ui/task_list.dart';
 import 'package:habits_plus/util/constant.dart';
+import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class HabitsPage extends StatefulWidget {
   List<Habit> habits;
 
-  HabitsPage(this.habits);
+  HabitsPage({
+    this.habits,
+  });
 
   @override
   HabitsPageState createState() => HabitsPageState();
@@ -20,10 +26,24 @@ class HabitsPage extends StatefulWidget {
 class HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
   // Calendar
   List<DateTime> markedDates = [];
+
+  // Habits
   Map<int, List<DateTime>> habitsDate = {};
   List<Habit> habits = [];
   List<Habit> todayHabits = [];
   List<bool> openedHabits = [false, false];
+
+  // Tasks
+  List<Task> tasks = [];
+  List<Task> todayTasks = [];
+  List<Task> doneTodayTasks = [];
+  List<Task> notDoneTodayTasks = [];
+  List<bool> notDoneTickAnimation = [];
+  List<bool> notDoneAnimation = [];
+  List<bool> doneTickAnimation = [];
+  List<bool> doneAnimation = [];
+  bool hasNotDoneTasks = false;
+  bool hasDoneTasks = false;
 
   void initHabits() {
     // Init markedDates
@@ -54,6 +74,27 @@ class HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
     }
   }
 
+  void initTasks() {
+    // Init markedDates
+    DateTime today = DateTime.now();
+    DateTime _firstDayOfTheweek = DateTime.now();
+    if (today.weekday != 1) {
+      _firstDayOfTheweek = today.subtract(
+        new Duration(days: today.weekday - 1),
+      );
+    }
+    _firstDayOfTheweek = _firstDayOfTheweek.subtract(
+      new Duration(days: 210),
+    );
+    for (var i = 0; i < tasks.length; i++) {
+      if (tasks[i].date != null) {
+        markedDates.add(tasks[i].date);
+      }
+    }
+
+    markedDates = markedDates.toSet().toList();
+  }
+
   setTodayHabits(DateTime date) {
     todayHabits = [];
     for (var i = 0; i < habits.length; i++) {
@@ -65,16 +106,107 @@ class HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
     }
   }
 
+  setTodayTasks(DateTime date) {
+    todayTasks = [];
+    for (var i = 0; i < tasks.length; i++) {
+      if (tasks[i].date != null) {
+        if (dateFormater.format(tasks[i].date) == dateFormater.format(date)) {
+          todayTasks.add(tasks[i]);
+          if (tasks[i].done) {
+            doneTodayTasks.add(tasks[i]);
+          } else {
+            notDoneTodayTasks.add(tasks[i]);
+          }
+        }
+      } else {
+        todayTasks.add(tasks[i]);
+        if (tasks[i].done) {
+          doneTodayTasks.add(tasks[i]);
+        } else {
+          notDoneTodayTasks.add(tasks[i]);
+        }
+      }
+
+      // Set section view
+      if (!tasks[i].done) {
+        hasNotDoneTasks = true;
+      } else {
+        hasDoneTasks = true;
+      }
+    }
+  }
+
+  _reloadTasks() {
+    setState(() {
+      notDoneTodayTasks =
+          Provider.of<TaskData>(context, listen: false).notDoneTasks;
+      doneTodayTasks = Provider.of<TaskData>(context, listen: false).doneTasks;
+
+      // Animations
+      notDoneAnimation = List.generate(notDoneTodayTasks.length, (i) => false);
+      notDoneTickAnimation =
+          List.generate(notDoneTodayTasks.length, (i) => false);
+      doneAnimation = List.generate(doneTodayTasks.length, (i) => false);
+      doneTickAnimation = List.generate(doneTodayTasks.length, (i) => false);
+    });
+  }
+
   @override
   void initState() {
     super.initState();
 
-    // Init habits
+    // Init habits & tasks
     habits = widget.habits;
+    tasks = Provider.of<TaskData>(context, listen: false).tasks;
 
     initHabits();
+    initTasks();
 
     setTodayHabits(DateTime.now());
+    setTodayTasks(DateTime.now());
+
+    // Tasks
+    Provider.of<TaskData>(context, listen: false).notDoneTasks =
+        notDoneTodayTasks;
+    Provider.of<TaskData>(context, listen: false).doneTasks = doneTodayTasks;
+    // Animations
+    notDoneAnimation = List.generate(notDoneTodayTasks.length, (i) => false);
+    notDoneTickAnimation =
+        List.generate(notDoneTodayTasks.length, (i) => false);
+    doneAnimation = List.generate(doneTodayTasks.length, (i) => false);
+    doneTickAnimation = List.generate(doneTodayTasks.length, (i) => false);
+  }
+
+  Widget _buildTodayTasks() {
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+              TaskList(
+                isDone: false,
+                header: AppLocalizations.of(context)
+                    .translate('todos_title')
+                    .toUpperCase(),
+                callback: _reloadTasks,
+                tasks: notDoneTodayTasks,
+                doneAnimation: notDoneAnimation,
+                tickAnimation: notDoneTickAnimation,
+              )
+            ] +
+            [
+              TaskList(
+                isDone: true,
+                header: AppLocalizations.of(context)
+                    .translate('todos_done')
+                    .toUpperCase(),
+                callback: _reloadTasks,
+                tasks: doneTodayTasks,
+                doneAnimation: doneAnimation,
+                tickAnimation: doneTickAnimation,
+              )
+            ],
+      ),
+    );
   }
 
   Widget _buildClosedProgressRow(int index) {
@@ -578,6 +710,7 @@ class HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
                 onDateSelected: (DateTime date) {
                   setState(() {
                     setTodayHabits(date);
+                    setTodayTasks(date);
                   });
                 },
                 dateTileBuilder: dateTileBuilder,
@@ -618,27 +751,9 @@ class HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
                 ],
               ),
             ),
-            SizedBox(height: 20),
+            // SizedBox(height: 0),
 
-            // TODOs for today
-            Container(
-              child: Row(
-                children: <Widget>[
-                  Text(
-                    AppLocalizations.of(context)
-                        .translate('todos_title')
-                        .toUpperCase(),
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Theme.of(context)
-                          .textSelectionColor
-                          .withOpacity(0.75),
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            )
+            _buildTodayTasks(),
           ],
         ),
       ),

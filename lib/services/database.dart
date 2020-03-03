@@ -8,10 +8,19 @@ import 'package:habits_plus/util/constant.dart';
 import 'package:uuid/uuid.dart';
 
 class DatabaseServices {
+  static Future setupApp(String userId) async {
+    List<Habit> habits = await DatabaseServices.getAllHabitsById(userId);
+    List<Task> tasks = await DatabaseServices.getAllTasksById(userId);
+
+    return {
+      'habits': habits,
+      'tasks': tasks,
+    };
+  }
+
   static Future<bool> isUserExists(String id) async {
     try {
       final user = await userRef.document(id).get();
-      print(user.data);
       if (user.data != null) {
         return true;
       } else {
@@ -38,7 +47,6 @@ class DatabaseServices {
   static Future<bool> createHabit(
       Habit habit, String userId, String timeOfDay) async {
     bool isExists = await isUserExists(userId);
-    print(userId);
     if (isExists) {
       // generate document ID
       String docId = Uuid().v4();
@@ -94,6 +102,7 @@ class DatabaseServices {
           'timeStamp': task.timestamp,
           'isEveryDay': task.isEveryDay,
           'hasTime': task.hasTime,
+          'done': task.done,
         },
       );
 
@@ -109,6 +118,15 @@ class DatabaseServices {
         .map((DocumentSnapshot doc) => Habit.fromDoc(doc))
         .toList();
     return habits;
+  }
+
+  static Future<List<Task>> getAllTasksById(String id) async {
+    QuerySnapshot snap =
+        await tasksRef.document(id).collection('tasks').getDocuments();
+    List<Task> tasks = snap.documents
+        .map((DocumentSnapshot doc) => Task.fromDoc(doc))
+        .toList();
+    return tasks;
   }
 
   static Future updateHabit(Habit habit, String userId) {

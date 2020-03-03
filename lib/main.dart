@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:habits_plus/models/taskData.dart';
 import 'package:habits_plus/models/theme.dart';
 import 'package:habits_plus/models/userData.dart';
 import 'package:habits_plus/services/auth.dart';
@@ -30,6 +31,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<UserData>(
           create: (_) => UserData(),
         ),
+        ChangeNotifierProvider<TaskData>(
+          create: (_) => TaskData(),
+        )
       ],
       child: MainApp(),
     );
@@ -56,8 +60,9 @@ class MainApp extends StatelessWidget {
           String id = snapshot.data.uid;
           Provider.of<UserData>(context).currentUserId = id;
           return FutureBuilder(
-            future: DatabaseServices.getAllHabitsById(id),
+            future: DatabaseServices.setupApp(id),
             builder: (BuildContext context, futureSnapshot) {
+              Provider.of<TaskData>(context, listen: false).tasks = [];
               switch (snapshot.connectionState) {
                 case ConnectionState.waiting:
                   return _buildLoadingScreen(context);
@@ -68,9 +73,16 @@ class MainApp extends StatelessWidget {
                     );
                   else {
                     if (futureSnapshot.data != null) {
-                      return HomePage(futureSnapshot.data);
+                      Provider.of<TaskData>(context, listen: false).tasks =
+                          futureSnapshot.data['tasks'];
+                      return HomePage(
+                        habits: futureSnapshot.data['habits'],
+                      );
                     } else if (futureSnapshot.hasData) {
-                      return HomePage([]);
+                      Provider.of<TaskData>(context, listen: false).tasks = [];
+                      return HomePage(
+                        habits: [],
+                      );
                     } else {
                       return _buildLoadingScreen(context);
                     }
