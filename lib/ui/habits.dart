@@ -6,6 +6,7 @@ import 'package:habits_plus/models/task.dart';
 import 'package:habits_plus/models/taskData.dart';
 import 'package:habits_plus/models/userData.dart';
 import 'package:habits_plus/services/database.dart';
+import 'package:habits_plus/ui/task_ListView.dart';
 import 'package:habits_plus/ui/task_list.dart';
 import 'package:habits_plus/util/constant.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
@@ -38,10 +39,6 @@ class HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
   List<Task> todayTasks = [];
   List<Task> doneTodayTasks = [];
   List<Task> notDoneTodayTasks = [];
-  List<bool> notDoneTickAnimation = [];
-  List<bool> notDoneAnimation = [];
-  List<bool> doneTickAnimation = [];
-  List<bool> doneAnimation = [];
   bool hasNotDoneTasks = false;
   bool hasDoneTasks = false;
 
@@ -107,10 +104,21 @@ class HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
   }
 
   setTodayTasks(DateTime date) {
-    todayTasks = [];
-    for (var i = 0; i < tasks.length; i++) {
-      if (tasks[i].date != null) {
-        if (dateFormater.format(tasks[i].date) == dateFormater.format(date)) {
+    setState(() {
+      todayTasks = [];
+      doneTodayTasks = [];
+      notDoneTodayTasks = [];
+      for (var i = 0; i < tasks.length; i++) {
+        if (tasks[i].date != null) {
+          if (dateFormater.format(tasks[i].date) == dateFormater.format(date)) {
+            todayTasks.add(tasks[i]);
+            if (tasks[i].done) {
+              doneTodayTasks.add(tasks[i]);
+            } else {
+              notDoneTodayTasks.add(tasks[i]);
+            }
+          }
+        } else {
           todayTasks.add(tasks[i]);
           if (tasks[i].done) {
             doneTodayTasks.add(tasks[i]);
@@ -118,36 +126,14 @@ class HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
             notDoneTodayTasks.add(tasks[i]);
           }
         }
-      } else {
-        todayTasks.add(tasks[i]);
-        if (tasks[i].done) {
-          doneTodayTasks.add(tasks[i]);
+
+        // Set section view
+        if (!tasks[i].done) {
+          hasNotDoneTasks = true;
         } else {
-          notDoneTodayTasks.add(tasks[i]);
+          hasDoneTasks = true;
         }
       }
-
-      // Set section view
-      if (!tasks[i].done) {
-        hasNotDoneTasks = true;
-      } else {
-        hasDoneTasks = true;
-      }
-    }
-  }
-
-  _reloadTasks() {
-    setState(() {
-      notDoneTodayTasks =
-          Provider.of<TaskData>(context, listen: false).notDoneTasks;
-      doneTodayTasks = Provider.of<TaskData>(context, listen: false).doneTasks;
-
-      // Animations
-      notDoneAnimation = List.generate(notDoneTodayTasks.length, (i) => false);
-      notDoneTickAnimation =
-          List.generate(notDoneTodayTasks.length, (i) => false);
-      doneAnimation = List.generate(doneTodayTasks.length, (i) => false);
-      doneTickAnimation = List.generate(doneTodayTasks.length, (i) => false);
     });
   }
 
@@ -164,49 +150,6 @@ class HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
 
     setTodayHabits(DateTime.now());
     setTodayTasks(DateTime.now());
-
-    // Tasks
-    Provider.of<TaskData>(context, listen: false).notDoneTasks =
-        notDoneTodayTasks;
-    Provider.of<TaskData>(context, listen: false).doneTasks = doneTodayTasks;
-    // Animations
-    notDoneAnimation = List.generate(notDoneTodayTasks.length, (i) => false);
-    notDoneTickAnimation =
-        List.generate(notDoneTodayTasks.length, (i) => false);
-    doneAnimation = List.generate(doneTodayTasks.length, (i) => false);
-    doneTickAnimation = List.generate(doneTodayTasks.length, (i) => false);
-  }
-
-  Widget _buildTodayTasks() {
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-              TaskList(
-                isDone: false,
-                header: AppLocalizations.of(context)
-                    .translate('todos_title')
-                    .toUpperCase(),
-                callback: _reloadTasks,
-                tasks: notDoneTodayTasks,
-                doneAnimation: notDoneAnimation,
-                tickAnimation: notDoneTickAnimation,
-              )
-            ] +
-            [
-              TaskList(
-                isDone: true,
-                header: AppLocalizations.of(context)
-                    .translate('todos_done')
-                    .toUpperCase(),
-                callback: _reloadTasks,
-                tasks: doneTodayTasks,
-                doneAnimation: doneAnimation,
-                tickAnimation: doneTickAnimation,
-              )
-            ],
-      ),
-    );
   }
 
   Widget _buildClosedProgressRow(int index) {
@@ -708,10 +651,10 @@ class HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
                 startDate: DateTime.utc(2015),
                 endDate: DateTime.utc(2030),
                 onDateSelected: (DateTime date) {
-                  setState(() {
-                    setTodayHabits(date);
-                    setTodayTasks(date);
-                  });
+                  // setState(() {
+                  setTodayHabits(date);
+                  setTodayTasks(date);
+                  // });
                 },
                 dateTileBuilder: dateTileBuilder,
                 iconColor: Theme.of(context).disabledColor,
@@ -753,7 +696,10 @@ class HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
             ),
             // SizedBox(height: 0),
 
-            _buildTodayTasks(),
+            TaskListView(
+              doneTasks: doneTodayTasks,
+              notDoneTasks: notDoneTodayTasks,
+            ),
           ],
         ),
       ),

@@ -162,4 +162,25 @@ class DatabaseServices {
       },
     );
   }
+
+  static Future updateTask(Task task, String userId) {
+    // Update data in firebase
+    tasksRef.document(userId).collection('tasks').document(task.id).updateData(
+      {
+        'title': task.title,
+        'description': task.description,
+        'time': task.time,
+        'date': task.date,
+        'timeStamp': task.timestamp,
+        'isEveryDay': task.isEveryDay,
+        'hasTime': task.hasTime,
+        'done': task.done,
+      },
+    );
+  }
+
+  static Future deleteTask(String taskId, String userId) {
+    // Delete firebase
+    tasksRef.document(userId).collection('tasks').document(taskId).delete();
+  }
 }

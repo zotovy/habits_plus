@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:habits_plus/models/task.dart';
 import 'package:habits_plus/models/taskData.dart';
+import 'package:habits_plus/models/userData.dart';
+import 'package:habits_plus/services/database.dart';
 import 'package:provider/provider.dart';
 
 class TaskList extends StatefulWidget {
@@ -76,9 +78,19 @@ class _TaskListState extends State<TaskList> with TickerProviderStateMixin {
         }
       },
     );
-
     // Callback
     widget.callback();
+  }
+
+  // This function push new task in DB
+  _updateTaskInDB(Task task) async {
+    DatabaseServices.updateTask(
+        task, Provider.of<UserData>(context, listen: false).currentUserId);
+  }
+
+  _deleteTaskInDB(Task task) async {
+    DatabaseServices.deleteTask(
+        task.id, Provider.of<UserData>(context, listen: false).currentUserId);
   }
 
   Widget _buildText(i) {
@@ -176,6 +188,9 @@ class _TaskListState extends State<TaskList> with TickerProviderStateMixin {
                           .add(widget.tasks[i]);
                     }
 
+                    // Update done property in database
+                    _updateTaskInDB(widget.tasks[i]);
+
                     // Remove extra task from the lists of Tasks and animations
                     widget.doneAnimation.removeAt(i);
                     widget.tasks.removeAt(i);
@@ -228,11 +243,15 @@ class _TaskListState extends State<TaskList> with TickerProviderStateMixin {
               onDismissed: (DismissDirection direction) {
                 // Remove task action
                 if (direction == DismissDirection.startToEnd) {
+                  // Delete task in database
+                  _deleteTaskInDB(widget.tasks[i]);
+
                   setState(() {
                     widget.tasks.removeAt(i);
                     widget.doneAnimation.removeAt(i);
                     widget.tickAnimation.removeAt(i);
                   });
+                  print(widget.tasks.length);
                   // Submit task active
                 } else if (direction == DismissDirection.endToStart) {
                   setState(() {
@@ -246,6 +265,9 @@ class _TaskListState extends State<TaskList> with TickerProviderStateMixin {
                           .doneTasks
                           .add(widget.tasks[i]);
                     }
+
+                    // Update task in DB
+                    _updateTaskInDB(widget.tasks[i]);
 
                     widget.tasks.removeAt(i);
                     widget.doneAnimation.removeAt(i);

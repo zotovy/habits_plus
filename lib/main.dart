@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:habits_plus/models/taskData.dart';
 import 'package:habits_plus/models/theme.dart';
 import 'package:habits_plus/models/userData.dart';
-import 'package:habits_plus/services/auth.dart';
 import 'package:habits_plus/services/database.dart';
 import 'package:habits_plus/ui/create_habit.dart';
 import 'package:habits_plus/ui/home.dart';

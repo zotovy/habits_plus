@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Task {
+  String id;
   String title;
   String description;
   DateTime date;
@@ -12,6 +13,7 @@ class Task {
   bool done;
 
   Task({
+    this.id,
     this.title,
     this.description,
     this.date,
@@ -24,6 +26,7 @@ class Task {
 
   factory Task.fromDoc(DocumentSnapshot doc) {
     return Task(
+      id: doc.documentID,
       title: doc['title'],
       description: doc['description'],
       date: doc['date'] != null ? (doc['date'] as Timestamp).toDate() : null,
