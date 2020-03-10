@@ -1,10 +1,13 @@
+import 'package:async/async.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:habits_plus/models/taskData.dart';
 import 'package:habits_plus/models/theme.dart';
 import 'package:habits_plus/models/userData.dart';
+import 'package:habits_plus/notifiers/task.dart';
 import 'package:habits_plus/services/database.dart';
 import 'package:habits_plus/ui/create_habit.dart';
+import 'package:habits_plus/ui/habits.dart';
 import 'package:habits_plus/ui/home.dart';
 import 'package:habits_plus/ui/intro.dart';
 import 'package:habits_plus/ui/login.dart';
@@ -15,9 +18,18 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'localization.dart';
 
+import 'dart:async';
+
+import 'models/habit.dart';
+import 'models/task.dart';
+
 void main() {
   runApp(MyApp());
 }
+
+GlobalKey<HabitsPageState> habitsPageKey = GlobalKey<HabitsPageState>();
+bool isHabitsPageBuild = false;
+bool isTaskListWidgetBuild = false;
 
 class MyApp extends StatelessWidget {
   @override
@@ -32,7 +44,7 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<TaskData>(
           create: (_) => TaskData(),
-        )
+        ),
       ],
       child: MainApp(),
     );
@@ -58,34 +70,23 @@ class MainApp extends StatelessWidget {
         try {
           String id = snapshot.data.uid;
           Provider.of<UserData>(context).currentUserId = id;
+
           return FutureBuilder(
-            future: DatabaseServices.setupApp(id),
-            builder: (BuildContext context, futureSnapshot) {
-              Provider.of<TaskData>(context, listen: false).tasks = [];
-              switch (snapshot.connectionState) {
-                case ConnectionState.waiting:
-                  return _buildLoadingScreen(context);
-                default:
-                  if (snapshot.hasError)
-                    return Container(
-                      child: Text(snapshot.error),
-                    );
-                  else {
-                    if (futureSnapshot.data != null) {
-                      Provider.of<TaskData>(context, listen: false).tasks =
-                          futureSnapshot.data['tasks'];
-                      return HomePage(
-                        habits: futureSnapshot.data['habits'],
-                      );
-                    } else if (futureSnapshot.hasData) {
-                      Provider.of<TaskData>(context, listen: false).tasks = [];
-                      return HomePage(
-                        habits: [],
-                      );
-                    } else {
-                      return _buildLoadingScreen(context);
-                    }
-                  }
+            future: DatabaseServices.setupApp(
+              Provider.of<UserData>(context, listen: false).currentUserId,
+            ),
+            builder: (BuildContext context, snapshot) {
+              if (snapshot.hasData) {
+                TaskData taskNotifier = Provider.of<TaskData>(context);
+
+                // Update provider
+                taskNotifier.allTasks = snapshot.data['tasks'];
+
+                return HomePage(
+                  habits: snapshot.data['habits'],
+                );
+              } else {
+                return _buildLoadingScreen(context);
               }
             },
           );

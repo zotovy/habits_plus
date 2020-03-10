@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:habits_plus/localization.dart';
+import 'package:habits_plus/main.dart';
 import 'package:habits_plus/models/habit.dart';
 import 'package:habits_plus/models/task.dart';
 import 'package:habits_plus/ui/habits.dart';
 import 'package:provider/provider.dart';
+
+GlobalKey<_HomePageState> homePageKey = GlobalKey<_HomePageState>();
 
 class HomePage extends StatefulWidget {
   List<Habit> habits;
@@ -13,6 +16,9 @@ class HomePage extends StatefulWidget {
   });
 
   @override
+  Key get key => homePageKey;
+
+  @override
   _HomePageState createState() => _HomePageState();
 }
 
@@ -20,6 +26,11 @@ class _HomePageState extends State<HomePage> {
   int _currentPage = 1;
   List<Widget> _pages = [Container(), Container(), Container()];
   PageController _pageController;
+
+  // This data use only for child widget
+  List<Task> notDoneTodayTasks = [];
+  List<Task> doneTodayTasks = [];
+  DateTime date;
 
   @override
   void initState() {

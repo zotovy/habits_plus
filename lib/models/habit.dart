@@ -42,8 +42,6 @@ class Habit {
       repeatDays.add(str[i] == '1' ? true : false);
     }
 
-    print(doc['timeToRemind']);
-
     // Create habit
     return Habit(
       id: doc.documentID,

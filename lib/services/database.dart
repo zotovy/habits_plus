@@ -183,4 +183,12 @@ class DatabaseServices {
     // Delete firebase
     tasksRef.document(userId).collection('tasks').document(taskId).delete();
   }
+
+  static Stream habitStream(String userId) {
+    return habitsRef.document(userId).collection('habits').snapshots();
+  }
+
+  static Stream taskStream(String userId) {
+    return tasksRef.document(userId).collection('tasks').snapshots();
+  }
 }

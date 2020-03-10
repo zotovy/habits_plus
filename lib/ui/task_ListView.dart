@@ -2,29 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:habits_plus/localization.dart';
 import 'package:habits_plus/models/task.dart';
 import 'package:habits_plus/models/userData.dart';
+import 'package:habits_plus/notifiers/task.dart';
 import 'package:habits_plus/services/database.dart';
 import 'package:provider/provider.dart';
+import 'package:habits_plus/main.dart';
 
 class TaskListView extends StatefulWidget {
-  List<Task> doneTasks;
-  List<Task> notDoneTasks;
-  bool hasDoneTasks;
-  bool hasNotDoneTasks;
-
-  TaskListView({
-    this.doneTasks,
-    this.notDoneTasks,
-  }) {
-    hasDoneTasks = doneTasks.length > 0 ? true : false;
-    hasNotDoneTasks = notDoneTasks.length > 0 ? true : false;
-  }
-
   @override
   _TaskListViewState createState() => _TaskListViewState();
 }
 
 class _TaskListViewState extends State<TaskListView>
     with TickerProviderStateMixin {
+  // Provider
+  TaskData taskNotifier;
+
+  // Tasks
+  // List<Task> doneTasks = [];
+  // List<Task> notDoneTasks = [];
+  // bool hasDoneTasks = false;
+  // bool hasNotDoneTasks = fыalse;
+
   // Animation
   GlobalKey<AnimatedListState> _keyDoneTask = GlobalKey<AnimatedListState>();
   GlobalKey<AnimatedListState> _keyNotDoneTask = GlobalKey<AnimatedListState>();
@@ -35,36 +33,8 @@ class _TaskListViewState extends State<TaskListView>
   void initState() {
     super.initState();
 
-    /**
-     * Init list of AnimationController to make apperance animation.
-     * Length of [doneAnimationController] is the same as [widget.doneTasks]
-     * Length of [notDoneAnimationController] is the same as [widget.notDoneTasks]
-     * Duration is [300ms]
-    **/
-    doneAnimationController = List.generate(
-      widget.doneTasks.length,
-      (int i) => AnimationController(
-        vsync: this,
-        duration: Duration(milliseconds: 300),
-      ),
-    );
-    notDoneAnimationController = List.generate(
-      widget.notDoneTasks.length,
-      (int i) => AnimationController(
-        vsync: this,
-        duration: Duration(milliseconds: 300),
-      ),
-    );
-
-    /**
-     * Init list of bool, which used in [text-strikethrough]
-     * and in boxButtonTick animation
-     * Length of [doneAnimationController] is the same as [widget.doneTasks]
-     * Length of [notDoneAnimationController] is the same as [widget.notDoneTasks]
-     * True -> tile has got [text-strikethrough] and [boxButtonTick] animation
-     * False -> tile hasn't got [text-strikethrough] and [boxButtonTick] animation
-     * Default: all values is false
-     */
+    // Init provider
+    taskNotifier = Provider.of<TaskData>(context);
 
     /// Activate apperance animation
     _startDoneTaskAnimation();
@@ -77,7 +47,7 @@ class _TaskListViewState extends State<TaskListView>
     /// We need Future to wait, when [build] method is done
     Future.delayed(Duration(milliseconds: 100)).then(
       (value) async {
-        for (var i = 0; i < widget.doneTasks.length; i++) {
+        for (var i = 0; i < doneTasks.length; i++) {
           _keyDoneTask.currentState.insertItem(i);
           await Future.delayed(Duration(milliseconds: 250));
         }
@@ -91,7 +61,7 @@ class _TaskListViewState extends State<TaskListView>
     /// We need Future to wait, when [build] method is done
     Future.delayed(Duration(milliseconds: 100)).then(
       (value) async {
-        for (var i = 0; i < widget.notDoneTasks.length; i++) {
+        for (var i = 0; i < notDoneTasks.length; i++) {
           _keyNotDoneTask.currentState.insertItem(i);
           await Future.delayed(Duration(milliseconds: 250));
         }
@@ -101,13 +71,13 @@ class _TaskListViewState extends State<TaskListView>
 
   /// This function push new task in DB
   _updateTaskInDB(Task task) async {
-    DatabaseServices.updateTask(
+    await DatabaseServices.updateTask(
         task, Provider.of<UserData>(context, listen: false).currentUserId);
   }
 
   /// This function delete task from DB
   _deleteTaskInDB(Task task) async {
-    DatabaseServices.deleteTask(
+    await DatabaseServices.deleteTask(
         task.id, Provider.of<UserData>(context, listen: false).currentUserId);
   }
 
@@ -126,7 +96,7 @@ class _TaskListViewState extends State<TaskListView>
               duration: Duration(milliseconds: 200),
               style: !isDone
                   ? TextStyle(
-                      color: Theme.of(context).textSelectionColor,
+                      color: Theme.of(context).disabledColor.withOpacity(0.5),
                       fontSize: 18,
                       decoration: TextDecoration.lineThrough,
                     )
@@ -146,7 +116,9 @@ class _TaskListViewState extends State<TaskListView>
             Text(
               desc,
               style: TextStyle(
-                color: Theme.of(context).textSelectionColor,
+                color: !isDone
+                    ? Theme.of(context).disabledColor.withOpacity(0.5)
+                    : Theme.of(context).textSelectionColor,
                 fontSize: 14,
               ),
             ),
@@ -241,7 +213,7 @@ class _TaskListViewState extends State<TaskListView>
       ),
       child: Icon(
         Icons.done,
-        color: Colors.white,
+        color: Theme.of(context).backgroundColor,
         size: 16,
       ),
     );
@@ -258,9 +230,9 @@ class _TaskListViewState extends State<TaskListView>
         // Remove task action
         if (direction == DismissDirection.startToEnd) {
           // Start title disappearance animation
-          if (widget.notDoneTasks.length == 1) {
+          if (doneTasks.length == 1) {
             setState(() {
-              widget.hasDoneTasks = false;
+              hasDoneTasks = false;
             });
           }
 
@@ -276,27 +248,27 @@ class _TaskListViewState extends State<TaskListView>
           );
 
           // Delete task in database
-          // _deleteTaskInDB(widget.notDoneTasks[i]);
+          _deleteTaskInDB(doneTasks[i]);
 
           /// Remove extra [notDoneTasks]
-          if (widget.notDoneTasks.length == 1) {
+          if (notDoneTasks.length == 1) {
             Future.delayed(Duration(milliseconds: 300)).then((_) {
               setState(() {
-                widget.doneTasks.removeAt(i);
+                doneTasks.removeAt(i);
               });
             });
           } else {
             setState(() {
-              widget.doneTasks.removeAt(i);
+              doneTasks.removeAt(i);
             });
           }
         }
         // Submit task active
         else if (direction == DismissDirection.endToStart) {
           // Start title disappearance animation
-          if (widget.doneTasks.length == 1) {
+          if (doneTasks.length == 1) {
             setState(() {
-              widget.hasDoneTasks = false;
+              hasDoneTasks = false;
             });
           }
 
@@ -313,37 +285,40 @@ class _TaskListViewState extends State<TaskListView>
 
           setState(() {
             /// Add [DoneTask] to [notDoneTasks], remove extra notDoneTask and insert into [AnimatedList]
-            widget.notDoneTasks.add(widget.doneTasks[i]);
-            _keyNotDoneTask.currentState
-                .insertItem(widget.notDoneTasks.length - 1);
-            widget.hasNotDoneTasks = true;
-            // widget.notDoneTasks.removeAt(i);
+            notDoneTasks.add(doneTasks[i]);
+            _keyNotDoneTask.currentState.insertItem(notDoneTasks.length - 1);
+            hasNotDoneTasks = true;
+            // notDoneTasks.removeAt(i);
           });
 
-          // Delete task in database
-          // _deleteTaskInDB(widget.notDoneTasks[i]);
+          // Update task in database
+          setState(() {
+            doneTasks[i].done = false;
+          });
+          _updateTaskInDB(doneTasks[i]);
 
           /// Remove extra [doneTasks]
-          if (widget.doneTasks.length == 1) {
+          if (doneTasks.length == 1) {
             Future.delayed(Duration(milliseconds: 300)).then((_) {
               setState(() {
-                widget.doneTasks.removeAt(i);
+                doneTasks.removeAt(i);
               });
             });
           } else {
             setState(() {
-              widget.doneTasks.removeAt(i);
+              doneTasks.removeAt(i);
             });
           }
         }
       },
       background: Container(
+        margin: EdgeInsets.symmetric(horizontal: 10),
         color: Colors.red,
       ),
       secondaryBackground: Container(
         color: Theme.of(context).primaryColor.withOpacity(0.1),
       ),
-      key: ValueKey(widget.doneTasks[i].title),
+      key: ValueKey(doneTasks[i].title),
       child: Container(
         height: 60,
         child: SlideTransition(
@@ -365,8 +340,8 @@ class _TaskListViewState extends State<TaskListView>
                 children: <Widget>[
                   _buildDoneText(
                     false,
-                    widget.doneTasks[i].title,
-                    widget.doneTasks[i].description,
+                    doneTasks[i].title,
+                    doneTasks[i].description,
                   ),
                   _buildDoneButton(false),
                 ],
@@ -389,9 +364,9 @@ class _TaskListViewState extends State<TaskListView>
         // Remove task action
         if (direction == DismissDirection.startToEnd) {
           // Start title disappearance animation
-          if (widget.notDoneTasks.length == 1) {
+          if (notDoneTasks.length == 1) {
             setState(() {
-              widget.hasNotDoneTasks = false;
+              hasNotDoneTasks = false;
             });
           }
 
@@ -400,34 +375,34 @@ class _TaskListViewState extends State<TaskListView>
             i,
             (BuildContext context, Animation<double> animation) {
               return Container(
-                height: animation.value - 1,
+                height: animation.value,
                 color: Colors.redAccent,
               );
             },
           );
 
           // Delete task in database
-          // _deleteTaskInDB(widget.notDoneTasks[i]);
+          _deleteTaskInDB(notDoneTasks[i]);
 
           /// Remove extra [notDoneTasks] and [animationDoneInNotDoneTaskList]
-          if (widget.notDoneTasks.length == 1) {
+          if (notDoneTasks.length == 1) {
             Future.delayed(Duration(milliseconds: 300)).then((_) {
               setState(() {
-                widget.notDoneTasks.removeAt(i);
+                notDoneTasks.removeAt(i);
               });
             });
           } else {
             setState(() {
-              widget.notDoneTasks.removeAt(i);
+              notDoneTasks.removeAt(i);
             });
           }
         }
         //* Submit task active
         else if (direction == DismissDirection.endToStart) {
           // Start title disappearance animation
-          if (widget.notDoneTasks.length == 1) {
+          if (notDoneTasks.length == 1) {
             setState(() {
-              widget.hasNotDoneTasks = false;
+              hasNotDoneTasks = false;
             });
           }
 
@@ -445,26 +420,29 @@ class _TaskListViewState extends State<TaskListView>
           // Future.delayed(Duration(milliseconds: 0)).then((_) {
           setState(() {
             /// Add [notDoneTask] to [doneTasks], remove extra doneTask and insert into [AnimatedList]
-            widget.doneTasks.add(widget.notDoneTasks[i]);
-            _keyDoneTask.currentState.insertItem(widget.doneTasks.length - 1);
-            widget.hasDoneTasks = true;
-            // widget.notDoneTasks.removeAt(i);
+            doneTasks.add(notDoneTasks[i]);
+            _keyDoneTask.currentState.insertItem(doneTasks.length - 1);
+            hasDoneTasks = true;
+            // notDoneTasks.removeAt(i);
           });
           // });
 
-          // Delete task in database
-          // _deleteTaskInDB(widget.notDoneTasks[i]);
+          // Update task in database
+          setState(() {
+            notDoneTasks[i].done = true;
+          });
+          _updateTaskInDB(notDoneTasks[i]);
 
           /// Remove extra [notDoneTasks]
-          if (widget.notDoneTasks.length == 1) {
+          if (notDoneTasks.length == 1) {
             Future.delayed(Duration(milliseconds: 300)).then((_) {
               setState(() {
-                widget.notDoneTasks.removeAt(i);
+                notDoneTasks.removeAt(i);
               });
             });
           } else {
             setState(() {
-              widget.notDoneTasks.removeAt(i);
+              notDoneTasks.removeAt(i);
             });
           }
         }
@@ -475,7 +453,7 @@ class _TaskListViewState extends State<TaskListView>
       secondaryBackground: Container(
         color: Theme.of(context).primaryColor.withOpacity(0.1),
       ),
-      key: ValueKey(widget.notDoneTasks[i].title),
+      key: ValueKey(notDoneTasks[i].title),
       child: Container(
         height: 60,
         child: SlideTransition(
@@ -497,8 +475,8 @@ class _TaskListViewState extends State<TaskListView>
                 children: <Widget>[
                   _buildNotDoneText(
                     false,
-                    widget.notDoneTasks[i].title,
-                    widget.notDoneTasks[i].description,
+                    notDoneTasks[i].title,
+                    notDoneTasks[i].description,
                   ),
                   _buildNotDoneButton(false),
                 ],
@@ -512,25 +490,28 @@ class _TaskListViewState extends State<TaskListView>
 
   removeItemFromDoneList(int i) {
     // Remind done variables as local variables
-    String title = widget.doneTasks[i].title;
-    String desc = widget.doneTasks[i].description;
+    String title = doneTasks[i].title;
+    String desc = doneTasks[i].description;
 
-    // TODO: update in DB
+    // Update task in DB
+    setState(() {
+      doneTasks[i].done = false;
+    });
+    _updateTaskInDB(doneTasks[i]);
 
     Future.delayed(Duration(milliseconds: 200)).then(
       (_) {
         setState(() {
-          if (widget.doneTasks.length == 1) {
-            widget.hasDoneTasks = false;
+          if (doneTasks.length == 1) {
+            hasDoneTasks = false;
           }
           Future.delayed(Duration(milliseconds: 300)).then((_) {
             setState(() {
               /// Add [notDoneTask] to [doneTasks], remove extra doneTask and insert into [AnimatedList]
-              widget.notDoneTasks.add(widget.doneTasks[i]);
-              _keyNotDoneTask.currentState
-                  .insertItem(widget.notDoneTasks.length - 1);
-              widget.hasNotDoneTasks = true;
-              widget.doneTasks.removeAt(i);
+              notDoneTasks.add(doneTasks[i]);
+              _keyNotDoneTask.currentState.insertItem(notDoneTasks.length - 1);
+              hasNotDoneTasks = true;
+              doneTasks.removeAt(i);
             });
           });
         });
@@ -568,29 +549,32 @@ class _TaskListViewState extends State<TaskListView>
     );
   }
 
-  removeItemFromNotDoneList(int i) {
+  removeItemFromNotDoneList(int i) async {
     // Remind done variables as local variables
-    String title = widget.notDoneTasks[i].title;
-    String desc = widget.notDoneTasks[i].description;
+    String title = notDoneTasks[i].title;
+    String desc = notDoneTasks[i].description;
 
-    // TODO: update in DB
+    // setState(() {
+    notDoneTasks[i].done = true;
+    // });
+    await _updateTaskInDB(notDoneTasks[i]);
 
     setState(() {
-      if (widget.notDoneTasks.length == 1) {
-        widget.hasNotDoneTasks = false;
+      if (notDoneTasks.length == 1) {
+        hasNotDoneTasks = false;
       }
-      widget.hasDoneTasks = true;
+      hasDoneTasks = true;
     });
 
     Future.delayed(Duration(milliseconds: 200)).then(
       (_) {
         setState(() {
-          widget.doneTasks.add(widget.notDoneTasks[i]);
-          widget.notDoneTasks.removeAt(i);
+          doneTasks.add(notDoneTasks[i]);
+          notDoneTasks.removeAt(i);
           Future.delayed(Duration(milliseconds: 300)).then((_) {
             setState(() {
               /// Add [notDoneTask] to [doneTasks], remove extra doneTask and insert into [AnimatedList]
-              _keyDoneTask.currentState.insertItem(widget.doneTasks.length - 1);
+              _keyDoneTask.currentState.insertItem(doneTasks.length - 1);
             });
           });
         });
@@ -677,21 +661,21 @@ class _TaskListViewState extends State<TaskListView>
 //========================================================================================
 
           // Padding
-          widget.notDoneTasks.length > 0
+          notDoneTasks.length > 0
               ? AnimatedContainer(
                   duration: Duration(milliseconds: 300),
-                  height: widget.hasNotDoneTasks ? 20 : 0,
+                  height: hasNotDoneTasks ? 20 : 0,
                 )
               : SizedBox.shrink(),
 
           // Title
           AnimatedOpacity(
             duration: Duration(milliseconds: 300),
-            opacity: widget.hasNotDoneTasks ? 1 : 0,
-            child: widget.notDoneTasks.length > 0
+            opacity: hasNotDoneTasks ? 1 : 0,
+            child: notDoneTasks.length > 0
                 ? AnimatedDefaultTextStyle(
                     duration: Duration(milliseconds: 300),
-                    style: widget.hasNotDoneTasks
+                    style: hasNotDoneTasks
                         ? TextStyle(
                             fontSize: 18,
                             color: Theme.of(context)
@@ -718,8 +702,7 @@ class _TaskListViewState extends State<TaskListView>
           // List
           AnimatedContainer(
             duration: Duration(milliseconds: 200),
-            height:
-                widget.hasNotDoneTasks ? 60.0 * widget.notDoneTasks.length : 0,
+            height: hasNotDoneTasks ? 60.0 * notDoneTasks.length : 0,
             child: _buildNotDoneTaskList(),
           ),
 
@@ -730,21 +713,21 @@ class _TaskListViewState extends State<TaskListView>
 //========================================================================================
 
           // Padding
-          widget.doneTasks.length > 0
+          doneTasks.length > 0
               ? AnimatedContainer(
                   duration: Duration(milliseconds: 300),
-                  height: widget.hasDoneTasks ? 20 : 0,
+                  height: hasDoneTasks ? 20 : 0,
                 )
               : SizedBox.shrink(),
 
           // Title
           AnimatedOpacity(
             duration: Duration(milliseconds: 300),
-            opacity: widget.hasDoneTasks ? 1 : 0,
-            child: widget.doneTasks.length > 0
+            opacity: hasDoneTasks ? 1 : 0,
+            child: doneTasks.length > 0
                 ? AnimatedDefaultTextStyle(
                     duration: Duration(milliseconds: 300),
-                    style: widget.hasDoneTasks
+                    style: hasDoneTasks
                         ? TextStyle(
                             fontSize: 18,
                             color: Theme.of(context)
@@ -771,7 +754,7 @@ class _TaskListViewState extends State<TaskListView>
           // List
           AnimatedContainer(
             duration: Duration(milliseconds: 200),
-            height: widget.hasDoneTasks ? 60.0 * widget.doneTasks.length : 0,
+            height: hasDoneTasks ? 60.0 * doneTasks.length : 0,
             child: _buildDoneTaskList(),
           )
         ],
