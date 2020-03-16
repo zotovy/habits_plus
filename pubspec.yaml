@@ -48,6 +48,7 @@ dependencies:
   date_util: ^0.1.4
   uuid: ^2.0.4
   async: ^2.4.0
+  get_it: ^4.0.0
 
 dev_dependencies:
   flutter_test:

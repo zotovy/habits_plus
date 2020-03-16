@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:habits_plus/models/habit.dart';
-import 'package:habits_plus/models/task.dart';
-import 'package:habits_plus/models/user.dart';
-import 'package:habits_plus/util/constant.dart';
+import 'package:habits_plus/core/models/habit.dart';
+import 'package:habits_plus/core/models/task.dart';
+import 'package:habits_plus/core/models/user.dart';
+import 'package:habits_plus/core/util/constant.dart';
 import 'package:uuid/uuid.dart';
 
 class DatabaseServices {

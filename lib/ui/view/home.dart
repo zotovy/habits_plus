@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:habits_plus/core/services/auth.dart';
 import 'package:habits_plus/localization.dart';
 import 'package:habits_plus/main.dart';
-import 'package:habits_plus/models/habit.dart';
-import 'package:habits_plus/models/task.dart';
-import 'package:habits_plus/ui/habits.dart';
+import 'package:habits_plus/core/models/habit.dart';
+import 'package:habits_plus/core/models/task.dart';
+import 'package:habits_plus/ui/view/loading.dart';
 import 'package:provider/provider.dart';
 
 GlobalKey<_HomePageState> homePageKey = GlobalKey<_HomePageState>();
@@ -43,11 +44,12 @@ class _HomePageState extends State<HomePage> {
     if (mounted) {
       setState(() {
         _pages = [
+          LoadingPage(),
           Container(
-            color: Theme.of(context).backgroundColor,
-          ),
-          HabitsPage(
-            habits: widget.habits,
+            child: RaisedButton(
+              child: Text('logout'),
+              onPressed: () => AuthService.logout(),
+            ),
           ),
         ];
       });

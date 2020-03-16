@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habits_plus/localization.dart';
-import 'package:habits_plus/services/auth.dart';
-import 'package:habits_plus/widgets/progress_bar.dart';
+import 'package:habits_plus/core/services/auth.dart';
+import 'package:habits_plus/ui/widgets/progress_bar.dart';
 
 class SignUpPage extends StatefulWidget {
   static final String id = 'signup_page';
@@ -80,8 +80,8 @@ class _SignUpPageState extends State<SignUpPage> {
                             child: InkWell(
                               borderRadius: BorderRadius.circular(20),
                               splashColor: Colors.white24,
-                              onTap: () async =>
-                                  await AuthService.signInByGoogle(context),
+                              // onTap: () async =>
+                              //     await AuthService.signInByGoogle(context),
                               child: Container(
                                 padding: EdgeInsets.all(10),
                                 child: Image(
@@ -115,8 +115,8 @@ class _SignUpPageState extends State<SignUpPage> {
                             child: InkWell(
                               borderRadius: BorderRadius.circular(20),
                               splashColor: Colors.white24,
-                              onTap: () async =>
-                                  await AuthService.signInByFacebook(context),
+                              // onTap: () async =>
+                              //     await AuthService.signInByFacebook(context),
                               child: Container(
                                 padding: EdgeInsets.all(10),
                                 child: Image(

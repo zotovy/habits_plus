@@ -2,17 +2,18 @@ import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:habits_plus/models/theme.dart';
-import 'package:habits_plus/models/userData.dart';
-import 'package:habits_plus/notifiers/task.dart';
-import 'package:habits_plus/services/database.dart';
-import 'package:habits_plus/ui/create_habit.dart';
-import 'package:habits_plus/ui/habits.dart';
-import 'package:habits_plus/ui/home.dart';
-import 'package:habits_plus/ui/intro.dart';
-import 'package:habits_plus/ui/login.dart';
-import 'package:habits_plus/ui/signup.dart';
-import 'package:habits_plus/util/constant.dart';
+import 'package:habits_plus/core/models/theme.dart';
+import 'package:habits_plus/core/models/userData.dart';
+import 'package:habits_plus/core/services/database.dart';
+import 'package:habits_plus/locator.dart';
+import 'package:habits_plus/ui/router.dart';
+import 'package:habits_plus/ui/view/create_habit.dart';
+import 'package:habits_plus/ui/view/home.dart';
+import 'package:habits_plus/ui/view/intro.dart';
+import 'package:habits_plus/ui/view/loading.dart';
+import 'package:habits_plus/ui/view/login.dart';
+import 'package:habits_plus/ui/view/signup.dart';
+import 'package:habits_plus/core/util/constant.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -20,16 +21,10 @@ import 'localization.dart';
 
 import 'dart:async';
 
-import 'models/habit.dart';
-import 'models/task.dart';
-
 void main() {
+  setupLocator();
   runApp(MyApp());
 }
-
-GlobalKey<HabitsPageState> habitsPageKey = GlobalKey<HabitsPageState>();
-bool isHabitsPageBuild = false;
-bool isTaskListWidgetBuild = false;
 
 class MyApp extends StatelessWidget {
   @override
@@ -41,9 +36,6 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<UserData>(
           create: (_) => UserData(),
-        ),
-        ChangeNotifierProvider<TaskData>(
-          create: (_) => TaskData(),
         ),
       ],
       child: MainApp(),
@@ -77,16 +69,13 @@ class MainApp extends StatelessWidget {
             ),
             builder: (BuildContext context, snapshot) {
               if (snapshot.hasData) {
-                TaskData taskNotifier = Provider.of<TaskData>(context);
-
                 // Update provider
-                taskNotifier.allTasks = snapshot.data['tasks'];
 
                 return HomePage(
                   habits: snapshot.data['habits'],
                 );
               } else {
-                return _buildLoadingScreen(context);
+                return LoadingPage();
               }
             },
           );
@@ -128,11 +117,7 @@ class MainApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Habits+',
       home: _getPage(context),
-      routes: {
-        LoginPage.id: (_) => LoginPage(),
-        SignUpPage.id: (_) => SignUpPage(),
-        CreateHabitPage.id: (_) => CreateHabitPage(),
-      },
+      onGenerateRoute: Router.generateRoute,
     );
   }
 }

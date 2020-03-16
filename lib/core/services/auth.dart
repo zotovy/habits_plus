@@ -6,12 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:habits_plus/localization.dart';
-import 'package:habits_plus/models/user.dart';
-import 'package:habits_plus/models/userData.dart';
-import 'package:habits_plus/services/database.dart';
-import 'package:habits_plus/ui/home.dart';
-import 'package:habits_plus/ui/signup.dart';
-import 'package:habits_plus/util/constant.dart';
+import 'package:habits_plus/core/models/user.dart';
+import 'package:habits_plus/core/models/userData.dart';
+import 'package:habits_plus/core/services/database.dart';
+import 'package:habits_plus/ui/view/home.dart';
+import 'package:habits_plus/ui/view/signup.dart';
+import 'package:habits_plus/core/util/constant.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:provider/provider.dart';
@@ -106,7 +106,7 @@ class AuthService {
     _auth.signOut();
   }
 
-  static void login(
+  Future login(
     String email,
     String password,
     GlobalKey<ScaffoldState> scaffoldKey,
@@ -181,8 +181,7 @@ class AuthService {
   //   'errorMessage': String,
   //   'data': null,
   // }
-  static Future<Map<String, dynamic>> signInByGoogle(
-      BuildContext context) async {
+  Future<Map<String, dynamic>> signInByGoogle(BuildContext context) async {
     GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
     GoogleSignInAuthentication googleSignInAuthentication =
         await googleSignInAccount.authentication;
@@ -261,8 +260,7 @@ class AuthService {
     // Success
   }
 
-  static Future<Map<String, dynamic>> signInByFacebook(
-      BuildContext context) async {
+  Future<Map<String, dynamic>> signInByFacebook(BuildContext context) async {
     final result = await facebookSignIn.logIn(['email', 'public_profile']);
 
     switch (result.status) {

@@ -1,12 +1,12 @@
 import 'package:date_util/date_util.dart';
 import 'package:flutter/material.dart';
 import 'package:habits_plus/localization.dart';
-import 'package:habits_plus/models/habit.dart';
-import 'package:habits_plus/models/task.dart';
-import 'package:habits_plus/models/userData.dart';
-import 'package:habits_plus/services/database.dart';
-import 'package:habits_plus/util/constant.dart';
-import 'package:habits_plus/widgets/progress_bar.dart';
+import 'package:habits_plus/core/models/habit.dart';
+import 'package:habits_plus/core/models/task.dart';
+import 'package:habits_plus/core/models/userData.dart';
+import 'package:habits_plus/core/services/database.dart';
+import 'package:habits_plus/core/util/constant.dart';
+import 'package:habits_plus/ui/widgets/progress_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
