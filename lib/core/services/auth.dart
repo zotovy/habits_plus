@@ -20,7 +20,7 @@ class AuthService {
   static final _auth = FirebaseAuth.instance;
   static final _firestore = Firestore.instance;
 
-  static dynamic signUpUser(
+  dynamic signUpUser(
     BuildContext context,
     String email,
     String name,
@@ -106,7 +106,7 @@ class AuthService {
     _auth.signOut();
   }
 
-  Future login(
+  void login(
     String email,
     String password,
     GlobalKey<ScaffoldState> scaffoldKey,
@@ -181,7 +181,7 @@ class AuthService {
   //   'errorMessage': String,
   //   'data': null,
   // }
-  Future<Map<String, dynamic>> signInByGoogle(BuildContext context) async {
+  Future signInByGoogle(BuildContext context) async {
     GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
     GoogleSignInAuthentication googleSignInAuthentication =
         await googleSignInAccount.authentication;
@@ -236,31 +236,12 @@ class AuthService {
       };
     }
 
-    if (await DatabaseServices.isUserExists(fireUser.uid)) {
-      Navigator.pop(context);
-
-      return {
-        'error': false,
-        'error_message': null,
-        'data': fireUser,
-      };
-    } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => GoogleSignUpPage(
-            email: googleSignInAccount.email,
-            name: googleSignInAccount.displayName,
-            profileImg: googleSignInAccount.photoUrl,
-          ),
-        ),
-      );
-    }
+    Navigator.pop(context);
 
     // Success
   }
 
-  Future<Map<String, dynamic>> signInByFacebook(BuildContext context) async {
+  Future signInByFacebook(BuildContext context) async {
     final result = await facebookSignIn.logIn(['email', 'public_profile']);
 
     switch (result.status) {
@@ -274,27 +255,11 @@ class AuthService {
 
         if (await DatabaseServices.isUserExists(fireUser.uid)) {
           Navigator.pop(context);
-
-          return {
-            'error': false,
-            'errorMessage': null,
-            'data': fireUser,
-          };
         } else {
           final responce = await http.get(
             'https://graph.facebook.com/v2.12/me?fields=name,email&access_token=${result.accessToken.token}',
           );
           String name = json.decode(responce.body)['name'];
-
-          // Continue registration
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => FacebookSignUpPage(
-                name: name,
-              ),
-            ),
-          );
         }
 
         break;

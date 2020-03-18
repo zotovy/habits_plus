@@ -6,18 +6,40 @@ class LoginTextField extends StatefulWidget {
   Function onSaved;
   String errorLocalizationPath;
   String labelLocalizationPath;
+  Function validator;
+  bool hasObscure = false;
 
   LoginTextField({
     this.onSaved,
     this.errorLocalizationPath,
     this.labelLocalizationPath,
-  });
+    this.hasObscure,
+    this.validator,
+  }) {
+    if (hasObscure == null) hasObscure = false;
+  }
 
   @override
   _LoginTextFieldState createState() => _LoginTextFieldState();
 }
 
 class _LoginTextFieldState extends State<LoginTextField> {
+  String _submit(String value) {
+    return value == '' && widget.errorLocalizationPath != null
+        ? AppLocalizations.of(context).translate(
+            widget.errorLocalizationPath,
+          )
+        : null;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.validator == null) {
+      widget.validator = _submit;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -27,11 +49,8 @@ class _LoginTextFieldState extends State<LoginTextField> {
       ),
       margin: EdgeInsets.symmetric(horizontal: 28),
       child: TextFormField(
-        validator: (value) => value == ''
-            ? AppLocalizations.of(context).translate(
-                widget.errorLocalizationPath,
-              )
-            : null,
+        obscureText: widget.hasObscure,
+        validator: widget.validator,
         onSaved: widget.onSaved,
         decoration: InputDecoration(
           labelText: AppLocalizations.of(context).translate(

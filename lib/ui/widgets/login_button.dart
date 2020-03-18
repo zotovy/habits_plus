@@ -4,18 +4,25 @@ class LoginButton extends StatelessWidget {
   Function onTap;
   String imagePath;
   Color color;
+  double width;
+  double height;
 
   LoginButton({
     this.color,
     this.imagePath,
     this.onTap,
-  });
+    this.height,
+    this.width,
+  }) {
+    if (width == null) width = 90;
+    if (height == null) height = 47;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 90,
-      height: 47,
+      width: width,
+      height: height,
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(20),

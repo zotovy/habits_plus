@@ -61,6 +61,7 @@ class MainApp extends StatelessWidget {
       builder: (BuildContext context, snapshot) {
         try {
           String id = snapshot.data.uid;
+          print(snapshot.data);
           Provider.of<UserData>(context).currentUserId = id;
 
           return FutureBuilder(
@@ -82,7 +83,6 @@ class MainApp extends StatelessWidget {
         } catch (e) {
           return IntroPage();
         }
-        // return _buildLoadingScreen(context);
       },
     );
   }
@@ -102,6 +102,7 @@ class MainApp extends StatelessWidget {
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
+      home: _getPage(context),
       localeResolutionCallback: (locale, supportedLocales) {
         // Check if the current device locale is supported
         for (var supportedLocale in supportedLocales) {
@@ -116,7 +117,6 @@ class MainApp extends StatelessWidget {
       },
       debugShowCheckedModeBanner: false,
       title: 'Habits+',
-      home: _getPage(context),
       onGenerateRoute: Router.generateRoute,
     );
   }

@@ -102,31 +102,34 @@ class _LoginPageState extends State<LoginPage> {
                           LoginTextField(
                             errorLocalizationPath: 'login_password_error',
                             labelLocalizationPath: 'password',
-                            onSaved: (value) => _password = value,
+                            onSaved: (String value) => _password = value,
                           ),
 
                           UIHelper.padAll10,
 
                           // Button
-                          LoginConfirmButton(submit: () async {
-                            if (_formKey.currentState.validate()) {
-                              // Login Form doesn't have errors
-                              model.setState(ViewState.Busy);
+                          LoginConfirmButton(
+                            submit: () async {
+                              if (_formKey.currentState.validate()) {
+                                // Login Form doesn't have errors
+                                model.setState(ViewState.Busy);
 
-                              _formKey.currentState.save();
-                              await model.login(
-                                _email,
-                                _password,
-                                _scaffoldKey,
-                                context,
-                              );
+                                _formKey.currentState.save();
+                                await model.login(
+                                  _email,
+                                  _password,
+                                  _scaffoldKey,
+                                  context,
+                                );
 
-                              model.setState(ViewState.Idle);
-                            }
-                          }),
+                                model.setState(ViewState.Idle);
+                              }
+                            },
+                            text: 'login_title',
+                          ),
 
                           // Forgot password & signup page
-                          ForgotPageLink(),
+                          ForgotPageLink(isLoginPage: true),
                         ],
                       ),
                     ],

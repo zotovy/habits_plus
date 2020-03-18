@@ -4,8 +4,9 @@ import '../../localization.dart';
 
 class LoginConfirmButton extends StatelessWidget {
   Function submit;
+  String text;
 
-  LoginConfirmButton({this.submit});
+  LoginConfirmButton({this.submit, this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +25,7 @@ class LoginConfirmButton extends StatelessWidget {
             onTap: submit,
             child: Center(
               child: Text(
-                AppLocalizations.of(context).translate('login_title'),
+                AppLocalizations.of(context).translate(text),
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 18,
