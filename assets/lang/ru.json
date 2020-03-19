@@ -32,6 +32,7 @@
     "error_incorrect_password": "Неверный пароль или логин",
     "error_email_already_exists": "Этот email уже используется, выберите другой",
     "error_user_doent_exists": "Ошибка: Пользователь не существует",
+    "error_date_picking": "Неверная дата, пожалуйста выберите другую",
 
 
     "intro_skip": "Пропустить",

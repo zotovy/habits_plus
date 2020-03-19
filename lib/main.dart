@@ -12,6 +12,7 @@ import 'package:habits_plus/ui/view/home.dart';
 import 'package:habits_plus/ui/view/intro.dart';
 import 'package:habits_plus/ui/view/loading.dart';
 import 'package:habits_plus/ui/view/login.dart';
+import 'package:habits_plus/ui/view/shell.dart';
 import 'package:habits_plus/ui/view/signup.dart';
 import 'package:habits_plus/core/util/constant.dart';
 import 'package:provider/provider.dart';
@@ -61,7 +62,6 @@ class MainApp extends StatelessWidget {
       builder: (BuildContext context, snapshot) {
         try {
           String id = snapshot.data.uid;
-          print(snapshot.data);
           Provider.of<UserData>(context).currentUserId = id;
 
           return FutureBuilder(
@@ -72,9 +72,7 @@ class MainApp extends StatelessWidget {
               if (snapshot.hasData) {
                 // Update provider
 
-                return HomePage(
-                  habits: snapshot.data['habits'],
-                );
+                return MainShell();
               } else {
                 return LoadingPage();
               }

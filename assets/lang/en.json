@@ -32,6 +32,7 @@
     "error_incorrect_password": "Invalid email or password",
     "error_email_already_exists": "This email is already in used. Please, choose another email",
     "error_user_doent_exists": "Invalid error: User does not exist",
+    "error_date_picking": "Invalid date, please pick another",
 
 
     "intro_skip": "SKIP",

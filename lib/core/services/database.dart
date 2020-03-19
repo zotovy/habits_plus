@@ -45,7 +45,10 @@ class DatabaseServices {
 
   // Pass new habit to Firebase
   static Future<bool> createHabit(
-      Habit habit, String userId, String timeOfDay) async {
+    Habit habit,
+    String userId,
+    String timeOfDay,
+  ) async {
     bool isExists = await isUserExists(userId);
     if (isExists) {
       // generate document ID

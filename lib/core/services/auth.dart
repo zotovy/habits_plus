@@ -236,6 +236,15 @@ class AuthService {
       };
     }
 
+    if (!(await DatabaseServices.isUserExists(fireUser.uid))) {
+      print('asd');
+      await _firestore.collection('/users').document(fireUser.uid).setData({
+        'email': fireUser.email,
+        'name': fireUser.displayName,
+        'profileImageUrl': fireUser.photoUrl,
+      });
+    }
+
     Navigator.pop(context);
 
     // Success
