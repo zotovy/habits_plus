@@ -63,21 +63,7 @@ class MainApp extends StatelessWidget {
         try {
           String id = snapshot.data.uid;
           Provider.of<UserData>(context).currentUserId = id;
-
-          return FutureBuilder(
-            future: DatabaseServices.setupApp(
-              Provider.of<UserData>(context, listen: false).currentUserId,
-            ),
-            builder: (BuildContext context, snapshot) {
-              if (snapshot.hasData) {
-                // Update provider
-
-                return MainShell();
-              } else {
-                return LoadingPage();
-              }
-            },
-          );
+          return MainShell();
         } catch (e) {
           return IntroPage();
         }

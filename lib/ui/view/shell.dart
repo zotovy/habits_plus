@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:habits_plus/core/models/userData.dart';
+import 'package:habits_plus/core/viewmodels/home_model.dart';
 import 'package:habits_plus/ui/view/home.dart';
 import 'package:habits_plus/ui/widgets/shell_widget.dart';
+import 'package:provider/provider.dart';
+
+import '../../locator.dart';
 
 class MainShell extends StatefulWidget {
   @override
@@ -19,6 +24,8 @@ class _MainShellState extends State<MainShell> {
   @override
   void initState() {
     super.initState();
+    String userId = Provider.of<UserData>(context, listen: false).currentUserId;
+    locator<HomeViewModel>().fetch(userId);
     _pageController = PageController(initialPage: _currentPage);
   }
 

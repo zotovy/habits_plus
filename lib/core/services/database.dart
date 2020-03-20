@@ -8,16 +8,6 @@ import 'package:habits_plus/core/util/constant.dart';
 import 'package:uuid/uuid.dart';
 
 class DatabaseServices {
-  static Future setupApp(String userId) async {
-    List<Habit> habits = await DatabaseServices.getAllHabitsById(userId);
-    List<Task> tasks = await DatabaseServices.getAllTasksById(userId);
-
-    return {
-      'habits': habits,
-      'tasks': tasks,
-    };
-  }
-
   static Future<bool> isUserExists(String id) async {
     try {
       final user = await userRef.document(id).get();
@@ -114,7 +104,7 @@ class DatabaseServices {
     return false;
   }
 
-  static Future<List<Habit>> getAllHabitsById(String id) async {
+  Future<List<Habit>> getAllHabitsById(String id) async {
     QuerySnapshot snap =
         await habitsRef.document(id).collection('habits').getDocuments();
     List<Habit> habits = snap.documents
@@ -123,7 +113,7 @@ class DatabaseServices {
     return habits;
   }
 
-  static Future<List<Task>> getAllTasksById(String id) async {
+  Future<List<Task>> getAllTasksById(String id) async {
     QuerySnapshot snap =
         await tasksRef.document(id).collection('tasks').getDocuments();
     List<Task> tasks = snap.documents
@@ -132,7 +122,7 @@ class DatabaseServices {
     return tasks;
   }
 
-  static Future updateHabit(Habit habit, String userId) {
+  Future updateHabit(Habit habit, String userId) {
     // rewrite List<bool> -> binary String '1110001'
     String days = '';
     for (var i = 0; i < habit.repeatDays.length; i++) {
@@ -166,7 +156,7 @@ class DatabaseServices {
     );
   }
 
-  static Future updateTask(Task task, String userId) {
+  Future updateTask(Task task, String userId) {
     // Update data in firebase
     tasksRef.document(userId).collection('tasks').document(task.id).updateData(
       {
