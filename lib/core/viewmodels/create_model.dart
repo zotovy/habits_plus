@@ -4,6 +4,7 @@ import 'package:habits_plus/core/models/task.dart';
 import 'package:habits_plus/core/models/userData.dart';
 import 'package:habits_plus/core/services/database.dart';
 import 'package:habits_plus/core/viewmodels/base_model.dart';
+import 'package:habits_plus/core/viewmodels/home_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../locator.dart';
@@ -14,6 +15,10 @@ class CreateViewModel extends BaseViewModel {
   Future<bool> createTask(Task task, String userId) async {
     setState(ViewState.Busy);
     bool dbcode = await DatabaseServices.createTask(task, userId);
+    if (dbcode) {
+      // If successed -> add task to home screen
+      locator<HomeViewModel>().addTaskWithOutReload(task);
+    }
     setState(ViewState.Idle);
     return dbcode;
   }
@@ -21,6 +26,10 @@ class CreateViewModel extends BaseViewModel {
   Future<bool> createHabit(Habit habit, String userId, String timeOfDay) async {
     setState(ViewState.Busy);
     bool dbcode = await DatabaseServices.createHabit(habit, userId, timeOfDay);
+    if (dbcode) {
+      // If successed -> add habit to home screen
+      locator<HomeViewModel>().addHabit(habit);
+    }
     setState(ViewState.Idle);
     return dbcode;
   }

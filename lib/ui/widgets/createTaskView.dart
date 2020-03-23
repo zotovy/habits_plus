@@ -4,6 +4,7 @@ import 'package:habits_plus/core/models/task.dart';
 import 'package:habits_plus/core/models/userData.dart';
 import 'package:habits_plus/core/viewmodels/create_model.dart';
 import 'package:habits_plus/locator.dart';
+import 'package:habits_plus/ui/view/shell.dart';
 import 'package:habits_plus/ui/widgets/progress_bar.dart';
 import 'package:habits_plus/ui/widgets/textField_create.dart';
 import 'package:intl/intl.dart';
@@ -430,7 +431,9 @@ class _CreateTaskState extends State<CreateTask> {
 
                                           // Push data to DB
                                           bool dbCode = await model.createTask(
-                                              task, userId);
+                                            task,
+                                            userId,
+                                          );
 
                                           // Check DataBase Code (dbCode)
                                           if (!dbCode) {
@@ -450,7 +453,12 @@ class _CreateTaskState extends State<CreateTask> {
                                           }
 
                                           // Return Navigator to home page
-                                          Navigator.pop(context);
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (_) => MainShell(),
+                                            ),
+                                          );
                                         }
                                       },
                                       splashColor: Colors.white12,

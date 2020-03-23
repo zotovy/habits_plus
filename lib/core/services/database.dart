@@ -172,9 +172,18 @@ class DatabaseServices {
     );
   }
 
-  static Future deleteTask(String taskId, String userId) {
-    // Delete firebase
-    tasksRef.document(userId).collection('tasks').document(taskId).delete();
+  Future<bool> deleteTask(String taskId, String userId) async {
+    if (await isUserExists(userId)) {
+      // Delete firebase
+      await tasksRef
+          .document(userId)
+          .collection('tasks')
+          .document(taskId)
+          .delete();
+      return true;
+    } else {
+      return false;
+    }
   }
 
   static Stream habitStream(String userId) {

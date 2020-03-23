@@ -1,8 +1,12 @@
 import 'package:calendar_strip/calendar_strip.dart';
 import 'package:flutter/material.dart';
+import 'package:habits_plus/core/enums/viewstate.dart';
+import 'package:habits_plus/core/models/userData.dart';
 import 'package:habits_plus/core/services/auth.dart';
 import 'package:habits_plus/core/viewmodels/home_model.dart';
+import 'package:habits_plus/ui/view/loading.dart';
 import 'package:habits_plus/ui/widgets/habitView_home.dart';
+import 'package:habits_plus/ui/widgets/taskView_home.dart';
 import 'package:provider/provider.dart';
 
 import '../../localization.dart';
@@ -14,7 +18,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage>
-    with SingleTickerProviderStateMixin {
+    with
+        SingleTickerProviderStateMixin,
+        AutomaticKeepAliveClientMixin<HomePage> {
   // View model
   HomeViewModel _model = locator<HomeViewModel>();
 
@@ -24,8 +30,16 @@ class _HomePageState extends State<HomePage>
   double _transitionOpacity = 0;
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   void initState() {
     super.initState();
+    String userId = Provider.of<UserData>(
+      context,
+      listen: false,
+    ).currentUserId;
+    _model.fetch(userId);
     _transitionController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 500),
@@ -125,26 +139,40 @@ class _HomePageState extends State<HomePage>
       child: Consumer<HomeViewModel>(
         builder: (_, HomeViewModel model, child) {
           return SafeArea(
-            child: SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  // Calendar
-                  CalendarStrip(
-                    startDate: DateTime.now().subtract(Duration(days: 210)),
-                    endDate: DateTime.now().add(Duration(days: 210)),
-                    selectedDate: DateTime.now(),
-                    markedDates: model.markedDates,
-                    onDateSelected: (DateTime date) => model.setToday(date),
-                    dateTileBuilder: dateTileBuilder,
-                  ),
+            child: model.state == ViewState.Busy
+                ? LoadingPage()
+                : SingleChildScrollView(
+                    child: Column(
+                      children: <Widget>[
+                        // Calendar
+                        CalendarStrip(
+                          startDate:
+                              DateTime.now().subtract(Duration(days: 210)),
+                          endDate: DateTime.now().add(Duration(days: 210)),
+                          selectedDate: DateTime.now(),
+                          markedDates: model.markedDates,
+                          onDateSelected: (DateTime date) =>
+                              model.setToday(date),
+                          dateTileBuilder: dateTileBuilder,
+                        ),
 
-                  Opacity(
-                    opacity: _transitionOpacity,
-                    child: HabitViewOnHomePage(),
+                        Opacity(
+                          opacity: _transitionOpacity,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16.0),
+                            child: HabitViewOnHomePage(),
+                          ),
+                        ),
+                        Opacity(
+                          opacity: _transitionOpacity,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16.0),
+                            child: TaskViewOnHomePage(),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
-            ),
           );
         },
       ),

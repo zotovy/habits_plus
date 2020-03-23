@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:habits_plus/core/models/theme.dart';
 import 'package:habits_plus/core/models/userData.dart';
 import 'package:habits_plus/core/services/database.dart';
+import 'package:habits_plus/core/viewmodels/home_model.dart';
 import 'package:habits_plus/locator.dart';
 import 'package:habits_plus/ui/router.dart';
 import 'package:habits_plus/ui/view/create_habit.dart';
@@ -44,25 +45,22 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({Key key}) : super(key: key);
+class MainApp extends StatefulWidget {
+  @override
+  _MainAppState createState() => _MainAppState();
+}
 
-  Widget _buildLoadingScreen(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
-      body: Center(
-        child: FlutterLogo(size: 100),
-      ),
-    );
-  }
-
+class _MainAppState extends State<MainApp> {
   Widget _getPage(BuildContext context) {
     return StreamBuilder<FirebaseUser>(
       stream: FirebaseAuth.instance.onAuthStateChanged,
       builder: (BuildContext context, snapshot) {
+        // print(snapshot.data);
+
         try {
           String id = snapshot.data.uid;
           Provider.of<UserData>(context).currentUserId = id;
+          // locator<HomeViewModel>().fetch(id);
           return MainShell();
         } catch (e) {
           return IntroPage();

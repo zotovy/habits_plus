@@ -5,6 +5,7 @@ import 'package:habits_plus/core/services/database.dart';
 import 'package:habits_plus/core/util/constant.dart';
 import 'package:habits_plus/core/viewmodels/base_model.dart';
 import 'package:habits_plus/locator.dart';
+import 'package:provider/provider.dart';
 
 class HomeViewModel extends BaseViewModel {
   DatabaseServices _databaseServices = locator<DatabaseServices>();
@@ -22,6 +23,8 @@ class HomeViewModel extends BaseViewModel {
   List<DateTime> _markedDates = [];
   Map<int, List<DateTime>> _habitsDate = {};
 
+  bool hasData = false;
+
   List<Habit> get habits => _habits;
   List<Task> get tasks => _tasks;
 
@@ -31,15 +34,38 @@ class HomeViewModel extends BaseViewModel {
   List<Task> get doneTodayTasks => _doneTodayTasks;
   List<Task> get notDoneTodayTasks => _notDoneTodayTasks;
   bool get hasDoneTasks => _hasDoneTasks;
-  bool get hasNotDoneTodayTasks => _hasNotDoneTasks;
+  bool get hasNotDoneTasks => _hasNotDoneTasks;
+
+  set hasDoneTasks(bool value) {
+    _hasDoneTasks = value;
+    notifyListeners();
+  }
+
+  set hasNotDoneTasks(bool value) {
+    _hasNotDoneTasks = value;
+    notifyListeners();
+  }
 
   void fetch(String userId) async {
     setState(ViewState.Busy);
     _habits = await _databaseServices.getAllHabitsById(userId);
     _tasks = await _databaseServices.getAllTasksById(userId);
+
     setMarkedDates();
     setToday(DateTime.now());
     setState(ViewState.Idle);
+  }
+
+  void addHabitWithOutReload(Habit habit) {
+    _habits = _habits + [habit];
+    setMarkedDates();
+    setToday(DateTime.now());
+  }
+
+  void addTaskWithOutReload(Task task) {
+    _tasks.add(task);
+    setMarkedDates();
+    setToday(DateTime.now());
   }
 
   void setMarkedDates() {
@@ -128,11 +154,15 @@ class HomeViewModel extends BaseViewModel {
 
   void addHabit(Habit habit) {
     _habits.add(habit);
+    setMarkedDates();
+    setToday(DateTime.now());
     notifyListeners();
   }
 
   void addTask(Task task) {
     _tasks.add(task);
+    setMarkedDates();
+    setToday(DateTime.now());
     notifyListeners();
   }
 
@@ -141,8 +171,16 @@ class HomeViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void removeTask(int i) {
-    _tasks.removeAt(i);
+  void removeTask(Task task, String userId) {
+    // Remove from local providers
+    _tasks.removeAt(_tasks.indexOf(task));
+    if (task.done) {
+      _doneTodayTasks.removeAt(_doneTodayTasks.indexOf(task));
+    } else {
+      _notDoneTodayTasks.removeAt(_notDoneTodayTasks.indexOf(task));
+    }
+
+    // Remove from database
     notifyListeners();
   }
 
@@ -150,8 +188,8 @@ class HomeViewModel extends BaseViewModel {
     await _databaseServices.updateHabit(habit, userId);
   }
 
-  void updateTask() async {
-    // TODo: implement
+  void updateTask(Task task, userId) async {
+    await _databaseServices.updateTask(task, userId);
   }
 
   void updateProgressBin(int habitIndex, int elemIndex, int value) async {
@@ -173,5 +211,45 @@ class HomeViewModel extends BaseViewModel {
         .progressBin
         .add(value);
     notifyListeners();
+  }
+
+  void removeFromDoneTasks(int index) {
+    _doneTodayTasks.removeAt(index);
+    notifyListeners();
+  }
+
+  void removeFromNotDoneTasks(int index) {
+    _notDoneTodayTasks.removeAt(index);
+    notifyListeners();
+  }
+
+  void addDoneTask(Task task) {
+    _tasks.add(task);
+    _doneTodayTasks.add(task);
+    notifyListeners();
+  }
+
+  void addNotDoneTasks(Task task) {
+    _tasks.add(task);
+    _notDoneTodayTasks.add(task);
+    notifyListeners();
+  }
+
+  void updateDoneProperty(Task task, bool value) {
+    if (task.done) {
+      _doneTodayTasks[_doneTodayTasks.indexOf(task)].done = value;
+    } else {
+      _notDoneTodayTasks[_notDoneTodayTasks.indexOf(task)].done = value;
+    }
+    print(
+      '${_tasks.length} ${_doneTodayTasks.length} ${_notDoneTodayTasks.length}',
+    );
+    _tasks[_tasks.indexOf(task)].done = value;
+
+    notifyListeners();
+  }
+
+  Future<bool> removeTaskFromDB(Task task, String userId) async {
+    await _databaseServices.deleteTask(task.id, userId);
   }
 }

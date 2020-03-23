@@ -24,8 +24,7 @@ class _MainShellState extends State<MainShell> {
   @override
   void initState() {
     super.initState();
-    String userId = Provider.of<UserData>(context, listen: false).currentUserId;
-    locator<HomeViewModel>().fetch(userId);
+
     _pageController = PageController(initialPage: _currentPage);
   }
 
@@ -36,11 +35,20 @@ class _MainShellState extends State<MainShell> {
         currentPage: _currentPage,
         onHomePressed: () => setState(() {
           _currentPage = 1;
-          _pageController.jumpToPage(_currentPage);
+
+          _pageController.animateToPage(
+            _currentPage,
+            duration: Duration(milliseconds: 200),
+            curve: Curves.easeInOut,
+          );
         }),
         onStatisticPressed: () => setState(() {
           _currentPage = 0;
-          _pageController.jumpToPage(_currentPage);
+          _pageController.animateToPage(
+            _currentPage,
+            duration: Duration(milliseconds: 200),
+            curve: Curves.easeInOut,
+          );
         }),
       ),
       body: SafeArea(
