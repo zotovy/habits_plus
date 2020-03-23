@@ -23,6 +23,7 @@ class HomeViewModel extends BaseViewModel {
   List<DateTime> _markedDates = [];
   Map<int, List<DateTime>> _habitsDate = {};
 
+  DateTime _currentDate = DateTime.now();
   bool hasData = false;
 
   List<Habit> get habits => _habits;
@@ -35,6 +36,7 @@ class HomeViewModel extends BaseViewModel {
   List<Task> get notDoneTodayTasks => _notDoneTodayTasks;
   bool get hasDoneTasks => _hasDoneTasks;
   bool get hasNotDoneTasks => _hasNotDoneTasks;
+  DateTime get currentDate => _currentDate;
 
   set hasDoneTasks(bool value) {
     _hasDoneTasks = value;
@@ -57,7 +59,7 @@ class HomeViewModel extends BaseViewModel {
   }
 
   void addHabitWithOutReload(Habit habit) {
-    _habits = _habits + [habit];
+    _habits.add(habit);
     setMarkedDates();
     setToday(DateTime.now());
   }
@@ -78,6 +80,9 @@ class HomeViewModel extends BaseViewModel {
       );
     }
     _firstDayOfTheWeek = _firstDayOfTheWeek.subtract(new Duration(days: 210));
+
+    _habitsDate = {};
+    _markedDates = [];
 
     // Habits
     for (var i = 0; i < _habits.length; i++) {
@@ -110,12 +115,14 @@ class HomeViewModel extends BaseViewModel {
     // Format date
     date = dateFormater.parse(date.toString());
 
+    // Update currentDate variable
+    _currentDate = date;
     // Habits
     _todayHabits = [];
     for (var i = 0; i < _habits.length; i++) {
       for (var j = 0; j < _habitsDate[i].length; j++) {
         if (_habitsDate[i][j] == dateFormater.parse(date.toString())) {
-          todayHabits.add(habits[i]);
+          _todayHabits.add(_habits[i]);
         }
       }
     }
@@ -192,24 +199,26 @@ class HomeViewModel extends BaseViewModel {
     await _databaseServices.updateTask(task, userId);
   }
 
-  void updateProgressBin(int habitIndex, int elemIndex, int value) async {
-    _todayHabits[habitIndex].progressBin[elemIndex] = value;
-    _habits
-        .firstWhere(
-          (Habit habit) => habit.id == _todayHabits[habitIndex].id,
-        )
-        .progressBin[elemIndex] = value;
-    notifyListeners();
-  }
-
-  void addToProgressBin(int index, int value) {
-    _todayHabits[index].progressBin.add(value);
+  void addToProgressBin(int index, DateTime date) {
+    _todayHabits[index].progressBin.add(date);
     _habits
         .firstWhere(
           (Habit habit) => habit.id == _todayHabits[index].id,
         )
         .progressBin
-        .add(value);
+        .add(date);
+    notifyListeners();
+  }
+
+  void removeFromProgressBin(int index, DateTime date) {
+    date = dateFormater.parse(date.toString());
+    _habits[_habits.indexOf(_todayHabits[index])].progressBin.removeAt(
+          _habits[index].progressBin.indexOf(date),
+        );
+    _todayHabits[index].progressBin.removeAt(
+          _todayHabits[index].progressBin.indexOf(date),
+        );
+
     notifyListeners();
   }
 
@@ -241,9 +250,7 @@ class HomeViewModel extends BaseViewModel {
     } else {
       _notDoneTodayTasks[_notDoneTodayTasks.indexOf(task)].done = value;
     }
-    print(
-      '${_tasks.length} ${_doneTodayTasks.length} ${_notDoneTodayTasks.length}',
-    );
+
     _tasks[_tasks.indexOf(task)].done = value;
 
     notifyListeners();

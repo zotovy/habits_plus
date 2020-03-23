@@ -1,20 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:habits_plus/core/enums/habitType.dart';
+import 'package:habits_plus/core/util/constant.dart';
 
 class Habit {
   String id;
   String title;
   String description;
-  int type; // 0 is uncountable type; 1 is an countable
+  HabitType type;
   bool isDisable; // firstly - false
   bool hasReminder;
   DateTime timeStamp;
   TimeOfDay timeOfDay;
-  int colorCode; // more info on github
+  bool hasImage;
+  int colorCode; // Todo: add to create page
   List<bool> repeatDays;
-  List<dynamic> progressBin;
-  Map progressBinByDate;
-  List progressDateTimeById;
+  int goalAmount; // Todo: add to create page
+  List<DateTime> progressBin;
   int timesADay;
 
   Habit({
@@ -22,16 +24,15 @@ class Habit {
     this.title,
     this.description,
     this.type,
+    this.colorCode,
+    this.goalAmount,
     this.isDisable,
     this.hasReminder,
     this.timeStamp,
     this.timeOfDay,
-    this.colorCode,
     this.repeatDays,
     this.timesADay,
     this.progressBin,
-    this.progressBinByDate,
-    this.progressDateTimeById,
   });
 
   factory Habit.fromDoc(DocumentSnapshot doc) {
@@ -47,19 +48,27 @@ class Habit {
       id: doc.documentID,
       title: doc['title'],
       description: doc['description'],
-      type: doc['type'],
+      type: doc['type'] == 1 ? HabitType.Countable : HabitType.Uncountable,
+      colorCode: doc['colorCode'],
+      goalAmount: doc['goalAmount'],
       isDisable: doc['isDisable'],
       hasReminder: doc['hasReminder'],
       timeStamp: (doc['timeStamp'] as Timestamp).toDate(),
       timeOfDay: doc['timeToRemind'] != '' && doc['timeToRemind'] != null
           ? TimeOfDay.fromDateTime(DateTime.parse(doc['timeToRemind']))
           : null,
-      colorCode: doc['colorCode'],
       repeatDays: repeatDays,
       timesADay: doc['timesADay'],
-      progressBin: doc['progressBin'].toList(),
-      progressBinByDate: doc['progressBinByDate'],
-      progressDateTimeById: doc['progressDateTimeById'],
+      progressBin: (doc['progressBin'] as List)
+          .map(
+            (val) => val as DateTime,
+          )
+          .toList(),
     );
+  }
+
+  bool getDoneProperty(DateTime date) {
+    DateTime _date = dateFormater.parse(date.toString());
+    return progressBin.contains(_date);
   }
 }

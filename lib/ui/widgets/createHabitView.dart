@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habits_plus/core/enums/habitType.dart';
 import 'package:habits_plus/core/enums/viewstate.dart';
 import 'package:habits_plus/core/models/habit.dart';
 import 'package:habits_plus/core/models/userData.dart';
@@ -10,7 +11,6 @@ import 'package:provider/provider.dart';
 
 import '../../localization.dart';
 import '../../locator.dart';
-import 'colorpicker_create.dart';
 
 class HabitViewOnCreatePage extends StatefulWidget {
   @override
@@ -141,10 +141,6 @@ class _HabitVieOnnCreatePageState extends State<HabitViewOnCreatePage> {
                           SizedBox(height: 20),
 
                           // Color picker
-                          ColorPickerOnCreatePage(
-                            currentColorIndex: currentColorIndex,
-                          ),
-                          SizedBox(height: 10),
 
                           //Days
                           Container(
@@ -573,7 +569,6 @@ class _HabitVieOnnCreatePageState extends State<HabitViewOnCreatePage> {
 
                                           // Create new habit
                                           Habit habit = Habit(
-                                            colorCode: currentColorIndex,
                                             description: _description,
                                             hasReminder: hasReminder,
                                             isDisable: false,
@@ -592,10 +587,10 @@ class _HabitVieOnnCreatePageState extends State<HabitViewOnCreatePage> {
                                             timesADay: int.parse(timesADay),
                                             timeStamp: DateTime.now(),
                                             title: _title,
-                                            type: isNums ? 1 : 0,
-                                            progressBin: [],
-                                            progressBinByDate: {},
-                                            progressDateTimeById: [],
+                                            type: isNums
+                                                ? HabitType.Countable
+                                                : HabitType.Uncountable,
+                                            progressBin: <DateTime>[],
                                           );
                                           String userId = Provider.of<UserData>(
                                             context,

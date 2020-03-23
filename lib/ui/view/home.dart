@@ -39,7 +39,7 @@ class _HomePageState extends State<HomePage>
       context,
       listen: false,
     ).currentUserId;
-    _model.fetch(userId);
+    locator<HomeViewModel>().fetch(userId);
     _transitionController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 500),
@@ -138,41 +138,46 @@ class _HomePageState extends State<HomePage>
       value: _model,
       child: Consumer<HomeViewModel>(
         builder: (_, HomeViewModel model, child) {
-          return SafeArea(
-            child: model.state == ViewState.Busy
-                ? LoadingPage()
-                : SingleChildScrollView(
-                    child: Column(
-                      children: <Widget>[
-                        // Calendar
-                        CalendarStrip(
-                          startDate:
-                              DateTime.now().subtract(Duration(days: 210)),
-                          endDate: DateTime.now().add(Duration(days: 210)),
-                          selectedDate: DateTime.now(),
-                          markedDates: model.markedDates,
-                          onDateSelected: (DateTime date) =>
-                              model.setToday(date),
-                          dateTileBuilder: dateTileBuilder,
-                        ),
+          return RefreshIndicator(
+            onRefresh: () async => await _model.fetch(
+              Provider.of<UserData>(context, listen: false).currentUserId,
+            ),
+            child: SafeArea(
+              child: model.state == ViewState.Busy
+                  ? LoadingPage()
+                  : SingleChildScrollView(
+                      child: Column(
+                        children: <Widget>[
+                          // Calendar
+                          CalendarStrip(
+                            startDate:
+                                DateTime.now().subtract(Duration(days: 210)),
+                            endDate: DateTime.now().add(Duration(days: 210)),
+                            selectedDate: DateTime.now(),
+                            markedDates: model.markedDates,
+                            onDateSelected: (DateTime date) =>
+                                model.setToday(date),
+                            dateTileBuilder: dateTileBuilder,
+                          ),
 
-                        Opacity(
-                          opacity: _transitionOpacity,
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16.0),
-                            child: HabitViewOnHomePage(),
+                          Opacity(
+                            opacity: _transitionOpacity,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16.0),
+                              child: HabitViewOnHomePage(),
+                            ),
                           ),
-                        ),
-                        Opacity(
-                          opacity: _transitionOpacity,
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16.0),
-                            child: TaskViewOnHomePage(),
+                          Opacity(
+                            opacity: _transitionOpacity,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16.0),
+                              child: TaskViewOnHomePage(),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
+            ),
           );
         },
       ),

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:habits_plus/core/enums/habitType.dart';
 import 'package:habits_plus/core/models/habit.dart';
 import 'package:habits_plus/core/models/task.dart';
 import 'package:habits_plus/core/models/user.dart';
@@ -57,6 +58,7 @@ class DatabaseServices {
       habitsRef.document(userId).collection('habits').document(docId).setData(
         {
           'colorCode': habit.colorCode,
+          'goalAmount': habit.goalAmount,
           'description': habit.description,
           'disable': false,
           'hasReminder': habit.hasReminder,
@@ -65,10 +67,8 @@ class DatabaseServices {
           'timeToRemind': timeOfDay,
           'timesADay': habit.timesADay,
           'title': habit.title,
-          'type': habit.type,
-          'progressBin': [],
-          'progressBinByDate': {},
-          'progressDateTimeById': [],
+          'type': habit.type == HabitType.Countable ? 1 : 0,
+          'progressBin': <DateTime>[],
         },
       );
 
@@ -140,18 +140,17 @@ class DatabaseServices {
         .updateData(
       {
         'colorCode': habit.colorCode,
+        'goalAmount': habit.goalAmount,
         'description': habit.description,
-        'disable': habit.isDisable,
+        'disable': false,
         'hasReminder': habit.hasReminder,
         'repeatDays': days,
-        'timeStamp': habit.timeStamp,
+        'timeStamp': Timestamp.now(),
         'timeToRemind': habit.timeOfDay,
         'timesADay': habit.timesADay,
         'title': habit.title,
-        'type': habit.type,
-        'progressBin': habit.progressBin,
-        'progressBinByDate': habit.progressBinByDate,
-        'progressDateTimeById': habit.progressDateTimeById,
+        'type': habit.type == HabitType.Countable ? 1 : 0,
+        'progressBin': [],
       },
     );
   }
