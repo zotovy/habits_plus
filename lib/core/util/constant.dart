@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +58,7 @@ final List<Color> colors = [
 
 // Habits icons
 List<IconData> habitsIcons = [
-  MdiIcons.star,
+  EvaIcons.star,
   MdiIcons.water,
   MdiIcons.foodApple,
   MdiIcons.tree,

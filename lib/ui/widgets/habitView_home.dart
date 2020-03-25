@@ -56,6 +56,7 @@ class _HabitViewOnHomePageState extends State<HabitViewOnHomePage>
   }
 
   Widget _buildHabitBox(int index, HomeViewModel model) {
+    print(!model.todayHabits[index].getDoneProperty(model.currentDate));
     return Material(
       borderRadius: BorderRadius.circular(10),
       color: Colors.transparent,
@@ -86,9 +87,23 @@ class _HabitViewOnHomePageState extends State<HabitViewOnHomePage>
             children: <Widget>[
               // title & desc
               Container(
-                child: // Title & desc
-                    Row(
+                child: Row(
                   children: <Widget>[
+                    // Icon
+                    Container(
+                      padding: EdgeInsets.all(3),
+                      decoration: BoxDecoration(
+                        color: Colors.white24,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Icon(
+                        habitsIcons[model.habits[index].iconCode],
+                        size: 36,
+                        color: Colors.white,
+                      ),
+                    ),
+
+                    // Title & desc
                     Container(
                       padding: EdgeInsets.only(left: 12.5),
                       child: Column(
@@ -120,6 +135,7 @@ class _HabitViewOnHomePageState extends State<HabitViewOnHomePage>
                       ),
                     ),
 
+                    // Todo
                     // Progress
                     // Text(model.todayHabits[index].goalAmount),
                   ],
@@ -137,7 +153,8 @@ class _HabitViewOnHomePageState extends State<HabitViewOnHomePage>
                     color: Colors.white,
                     width: 2,
                   ),
-                  color: model.habits[index].getDoneProperty(model.currentDate)
+                  color: model.todayHabits[index]
+                          .getDoneProperty(model.currentDate)
                       ? Colors.white
                       : Colors.transparent,
                 ),

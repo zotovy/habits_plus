@@ -105,10 +105,6 @@ class HomeViewModel extends BaseViewModel {
       // start --> end
       for (var j = 0; j < start.difference(end).inDays.abs() + 1; j++) {
         // If j-day (from start) is used i-habit
-        // print(
-        //     'j=$j _habits[i].repeatDays[j%7]=${_habits[i].repeatDays[j % 7]}');
-        print(j % 7);
-        print(_habits);
         if (_habits[i].repeatDays[j % 7]) {
           DateTime currentDate = start.add(Duration(days: j));
 
@@ -146,7 +142,6 @@ class HomeViewModel extends BaseViewModel {
     _currentDate = date;
     // Habits
     _todayHabits = [];
-    print(_habitsDate);
     for (var i = 0; i < _habits.length; i++) {
       for (var j = 0; j < _habitsDate[i].length; j++) {
         if (_habitsDate[i][j] == dateFormater.parse(date.toString())) {
@@ -241,7 +236,7 @@ class HomeViewModel extends BaseViewModel {
   void removeFromProgressBin(int index, DateTime date) {
     date = dateFormater.parse(date.toString());
     _habits[_habits.indexOf(_todayHabits[index])].progressBin.removeAt(
-          _habits[index].progressBin.indexOf(date),
+          _todayHabits[index].progressBin.indexOf(date),
         );
     _todayHabits[index].progressBin.removeAt(
           _todayHabits[index].progressBin.indexOf(date),
