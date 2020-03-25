@@ -156,7 +156,7 @@ class _HomePageState extends State<HomePage>
                             selectedDate: DateTime.now(),
                             markedDates: model.markedDates,
                             onDateSelected: (DateTime date) =>
-                                model.setToday(date),
+                                model.setTodayWithReload(date),
                             dateTileBuilder: dateTileBuilder,
                           ),
 

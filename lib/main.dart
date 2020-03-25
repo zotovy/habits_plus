@@ -60,7 +60,7 @@ class _MainAppState extends State<MainApp> {
         try {
           String id = snapshot.data.uid;
           Provider.of<UserData>(context).currentUserId = id;
-          // locator<HomeViewModel>().fetch(id);
+          locator<HomeViewModel>().fetch(id);
           return MainShell();
         } catch (e) {
           return IntroPage();

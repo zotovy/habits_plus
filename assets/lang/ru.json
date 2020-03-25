@@ -72,6 +72,7 @@
     "createHabit_reminder_button": "Выбрать время",
     "createHabit_reminder_clear": "Очистить",
     "createHabit_reminder_time": "Раз в день",
+    "duration_create": "Период",
 
     "habits_for_today": "Привычки на сегодня",
     "habits_span_1": "Всего ",
@@ -82,7 +83,22 @@
     "todos_reminder": "Весь день",
     "todos_choose_date": "Выберите день",
     "todos_date_warning": "Пожалуйста, выберите дату",
-    "todos_done": "Выполнено"
+    "todos_done": "Выполнено",
+
+    "week": "Неделя",
+    "month": "Месяц",
+    "21_day": "21 день",
+    "66_day": "66 дней",
+    "3_month": "3 месяца",
+    "year": "Год",
+    "without_duration": "Без Периода",
+    "Custom": "Создать свой",
+
+    "from": "От",
+    "to": "До",
+
+    "customDate_title": "Выберите период",
+    "confirm": "Подтвердить"
 
 
 

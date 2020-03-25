@@ -11,11 +11,13 @@ class Habit {
   bool isDisable; // firstly - false
   bool hasReminder;
   DateTime timeStamp;
+  List<DateTime> duration;
   TimeOfDay timeOfDay;
   bool hasImage;
-  int colorCode; // Todo: add to create page
   List<bool> repeatDays;
-  int goalAmount; // Todo: add to create page
+  int goalAmount;
+  int iconCode;
+  int almostDone; // Todo: add to create page
   List<DateTime> progressBin;
   int timesADay;
 
@@ -24,11 +26,13 @@ class Habit {
     this.title,
     this.description,
     this.type,
-    this.colorCode,
     this.goalAmount,
+    this.iconCode,
+    this.almostDone,
     this.isDisable,
     this.hasReminder,
     this.timeStamp,
+    this.duration,
     this.timeOfDay,
     this.repeatDays,
     this.timesADay,
@@ -49,11 +53,17 @@ class Habit {
       title: doc['title'],
       description: doc['description'],
       type: doc['type'] == 1 ? HabitType.Countable : HabitType.Uncountable,
-      colorCode: doc['colorCode'],
       goalAmount: doc['goalAmount'],
+      almostDone: doc['almostDone'],
+      iconCode: doc['iconCode'],
       isDisable: doc['isDisable'],
       hasReminder: doc['hasReminder'],
       timeStamp: (doc['timeStamp'] as Timestamp).toDate(),
+      duration: (doc['duration'] as List)
+          .map(
+            (val) => (val as Timestamp).toDate(),
+          )
+          .toList(),
       timeOfDay: doc['timeToRemind'] != '' && doc['timeToRemind'] != null
           ? TimeOfDay.fromDateTime(DateTime.parse(doc['timeToRemind']))
           : null,
@@ -61,7 +71,7 @@ class Habit {
       timesADay: doc['timesADay'],
       progressBin: (doc['progressBin'] as List)
           .map(
-            (val) => val as DateTime,
+            (val) => (val as Timestamp).toDate(),
           )
           .toList(),
     );

@@ -76,27 +76,47 @@ class HomeViewModel extends BaseViewModel {
     DateTime _firstDayOfTheWeek = DateTime.now();
     if (today.weekday != 1) {
       _firstDayOfTheWeek = today.subtract(
-        new Duration(days: today.weekday - 1),
+        Duration(days: today.weekday - 1),
       );
     }
-    _firstDayOfTheWeek = _firstDayOfTheWeek.subtract(new Duration(days: 210));
 
     _habitsDate = {};
     _markedDates = [];
 
     // Habits
     for (var i = 0; i < _habits.length; i++) {
-      for (var j = 0; j < _habits[i].repeatDays.length; j++) {
-        DateTime current = _firstDayOfTheWeek.add(Duration(days: j));
-        if (_habits[i].repeatDays[j]) {
-          for (var a = 0; a < 60; a++) {
-            DateTime date = current.add(Duration(days: a * 7));
-            _markedDates.add(date);
+      _firstDayOfTheWeek = _habits[i].duration[0];
+      DateTime start = _firstDayOfTheWeek, end = _firstDayOfTheWeek;
 
-            _habitsDate[i] == null
-                ? _habitsDate[i] = [dateFormater.parse(date.toString())]
-                : _habitsDate[i].add(dateFormater.parse(date.toString()));
-          }
+      // init start
+      if (_firstDayOfTheWeek.weekday != 1) {
+        start = _firstDayOfTheWeek.subtract(
+          Duration(days: _firstDayOfTheWeek.weekday - 1),
+        );
+      }
+
+      // init end
+      if (_firstDayOfTheWeek.weekday != 7) {
+        end = _firstDayOfTheWeek.add(
+          Duration(days: 7 - _firstDayOfTheWeek.weekday),
+        );
+      }
+
+      // start --> end
+      for (var j = 0; j < start.difference(end).inDays.abs() + 1; j++) {
+        // If j-day (from start) is used i-habit
+        // print(
+        //     'j=$j _habits[i].repeatDays[j%7]=${_habits[i].repeatDays[j % 7]}');
+        print(j % 7);
+        print(_habits);
+        if (_habits[i].repeatDays[j % 7]) {
+          DateTime currentDate = start.add(Duration(days: j));
+
+          _markedDates.add(currentDate);
+
+          _habitsDate[i] == null
+              ? _habitsDate[i] = [dateFormater.parse(currentDate.toString())]
+              : _habitsDate[i].add(dateFormater.parse(currentDate.toString()));
         }
       }
     }
@@ -111,6 +131,13 @@ class HomeViewModel extends BaseViewModel {
     _markedDates = _markedDates.toSet().toList();
   }
 
+  void setTodayWithReload(DateTime date) {
+    setState(ViewState.Busy);
+    setMarkedDates();
+    setToday(date);
+    setState(ViewState.Idle);
+  }
+
   void setToday(DateTime date) {
     // Format date
     date = dateFormater.parse(date.toString());
@@ -119,6 +146,7 @@ class HomeViewModel extends BaseViewModel {
     _currentDate = date;
     // Habits
     _todayHabits = [];
+    print(_habitsDate);
     for (var i = 0; i < _habits.length; i++) {
       for (var j = 0; j < _habitsDate[i].length; j++) {
         if (_habitsDate[i][j] == dateFormater.parse(date.toString())) {

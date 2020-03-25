@@ -40,6 +40,7 @@ dependencies:
   flutter_svg: ^0.17.1
   calendar_strip: ^1.0.4
   configurable_expansion_tile: ^1.0.0
+  material_design_icons_flutter: ^4.0.5045
 
   # Other
   provider: ^4.0.2

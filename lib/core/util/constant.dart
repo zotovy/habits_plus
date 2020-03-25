@@ -6,6 +6,7 @@ import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:habits_plus/core/models/theme.dart';
 import 'package:intl/intl.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 // Firebase
 final auth = FirebaseAuth.instance;
@@ -28,6 +29,7 @@ ThemeModel lightMode = ThemeModel(
     textSelectionColor: Color(0xFF565656),
     textSelectionHandleColor: Color(0xFF282828),
     accentColor: Color(0xFF6C3CD1),
+    canvasColor: Colors.transparent,
   ),
 );
 ThemeModel darkMode = ThemeModel(
@@ -39,6 +41,7 @@ ThemeModel darkMode = ThemeModel(
     textSelectionColor: Colors.white70,
     textSelectionHandleColor: Colors.white,
     accentColor: Color(0xFF6C3CD1),
+    canvasColor: Colors.transparent,
   ),
 );
 final List<Color> colors = [
@@ -51,3 +54,16 @@ final List<Color> colors = [
   Colors.purple.withOpacity(0.85),
   Colors.red.withOpacity(0.85),
 ];
+
+// Habits icons
+List<IconData> habitsIcons = [
+  MdiIcons.star,
+  MdiIcons.water,
+  MdiIcons.foodApple,
+  MdiIcons.tree,
+  MdiIcons.car,
+  MdiIcons.scaleBathroom,
+  MdiIcons.heart,
+];
+
+final habitDurationMarkDate = DateTime.utc(2005, 11, 21);

@@ -73,6 +73,7 @@
     "createHabit_reminder_button": "Choose time",
     "createHabit_reminder_clear": "Clear",
     "createHabit_reminder_time": "Time A Day",
+    "duration_create": "Duration",
 
     "habits_for_today": "Habits for today",
     "habits_span_1": "Your only ",
@@ -83,7 +84,22 @@
     "todos_reminder": "All day",
     "todos_choose_date": "Choose date",
     "todos_date_warning": "Please, pick date",
-    "todos_done": "Done Tasks"
+    "todos_done": "Done Tasks",
+
+    "week": "Week",
+    "month": "Month",
+    "21_day": "21 days",
+    "66_day": "66 days",
+    "3_month": "3 months",
+    "year": "Year",
+    "always": "Always",
+    "custom": "Custom",
+
+    "from": "From",
+    "to": "To",
+
+    "customDate_title": "Select custom date",
+    "confirm": "Confirm"
 
 
 

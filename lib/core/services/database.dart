@@ -57,7 +57,6 @@ class DatabaseServices {
       // Write document into DB
       habitsRef.document(userId).collection('habits').document(docId).setData(
         {
-          'colorCode': habit.colorCode,
           'goalAmount': habit.goalAmount,
           'description': habit.description,
           'disable': false,
@@ -69,6 +68,8 @@ class DatabaseServices {
           'title': habit.title,
           'type': habit.type == HabitType.Countable ? 1 : 0,
           'progressBin': <DateTime>[],
+          'iconCode': habit.iconCode,
+          'duration': habit.duration,
         },
       );
 
@@ -139,7 +140,6 @@ class DatabaseServices {
         .document(habit.id)
         .updateData(
       {
-        'colorCode': habit.colorCode,
         'goalAmount': habit.goalAmount,
         'description': habit.description,
         'disable': false,
@@ -151,6 +151,8 @@ class DatabaseServices {
         'title': habit.title,
         'type': habit.type == HabitType.Countable ? 1 : 0,
         'progressBin': [],
+        'iconCode': habit.iconCode,
+        'duration': habit.duration,
       },
     );
   }

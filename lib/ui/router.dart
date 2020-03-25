@@ -9,7 +9,6 @@ const String initialRoute = 'login';
 
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
-    print(settings.name);
     switch (settings.name) {
       case '/':
         return MaterialPageRoute(builder: (_) => MainShell());

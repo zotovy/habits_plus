@@ -6,6 +6,8 @@ import 'package:habits_plus/core/models/userData.dart';
 import 'package:habits_plus/core/services/database.dart';
 import 'package:habits_plus/core/util/constant.dart';
 import 'package:habits_plus/core/viewmodels/create_model.dart';
+import 'package:habits_plus/ui/widgets/chooseIcon_create.dart';
+import 'package:habits_plus/ui/widgets/duration_create.dart';
 import 'package:habits_plus/ui/widgets/textField_create.dart';
 import 'package:provider/provider.dart';
 
@@ -22,7 +24,11 @@ class _HabitVieOnnCreatePageState extends State<HabitViewOnCreatePage> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String _title = '';
   String _description = '';
-  int currentColorIndex = 0;
+  int _goalAmount;
+  int currentIconIndex = 0;
+  String currentDurationIndex = 'Week';
+  DateTime fromDateDuration;
+  DateTime toDateDuration;
   List<String> _days = [];
   List<bool> _enabledDays = [false, false, false, false, false, false, false];
   bool isEveryDay = true;
@@ -31,6 +37,12 @@ class _HabitVieOnnCreatePageState extends State<HabitViewOnCreatePage> {
   TimeOfDay timeRemind;
   DateTime date;
   String timesADay = '1';
+
+  @override
+  void initState() {
+    super.initState();
+    // currentDurationIndex = AppLocalizations.of(context).translate('month');
+  }
 
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -124,6 +136,16 @@ class _HabitVieOnnCreatePageState extends State<HabitViewOnCreatePage> {
                     child: SingleChildScrollView(
                       child: Column(
                         children: <Widget>[
+                          // Icon Picker
+                          ChooseIconOnCreatePage(
+                            currentIconIndex: currentIconIndex,
+                            onIconPressed: (int i) {
+                              setState(() {
+                                currentIconIndex = i;
+                              });
+                            },
+                          ),
+
                           // Title
                           TextFieldOnCreatePage(
                             labelText: 'createHabit_title',
@@ -138,19 +160,16 @@ class _HabitVieOnnCreatePageState extends State<HabitViewOnCreatePage> {
                             onSaved: (String value) => _description = value,
                             validator: null,
                           ),
-                          SizedBox(height: 20),
+                          SizedBox(height: 25),
 
                           // Color picker
 
                           //Days
                           Container(
+                            width: double.infinity,
                             child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                Icon(
-                                  Icons.calendar_today,
-                                  color: Theme.of(context).textSelectionColor,
-                                ),
-                                SizedBox(width: 7),
                                 Text(
                                   AppLocalizations.of(context)
                                       .translate('createHabit_calendar'),
@@ -159,7 +178,24 @@ class _HabitVieOnnCreatePageState extends State<HabitViewOnCreatePage> {
                                         .textSelectionHandleColor,
                                     fontSize: 18,
                                   ),
-                                )
+                                ),
+                                GestureDetector(
+                                  onTap: () => setState(
+                                    () => isEveryDay = !isEveryDay,
+                                  ),
+                                  child: Text(
+                                    AppLocalizations.of(context).translate(
+                                      'createHabit_everyday',
+                                    ),
+                                    style: TextStyle(
+                                      color: isEveryDay
+                                          ? Theme.of(context).primaryColor
+                                          : Theme.of(context).disabledColor,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -167,7 +203,7 @@ class _HabitVieOnnCreatePageState extends State<HabitViewOnCreatePage> {
                           Container(
                             width: MediaQuery.of(context).size.width,
                             child: Wrap(
-                              // alignment: WrapAlignment.start,
+                              alignment: WrapAlignment.spaceBetween,
                               children: List.generate(
                                 _days.length,
                                 (int i) =>
@@ -176,64 +212,26 @@ class _HabitVieOnnCreatePageState extends State<HabitViewOnCreatePage> {
                             ),
                           ),
                           SizedBox(height: 10),
-                          GestureDetector(
-                            onTap: () {
+
+                          DurationOnCreatePage(
+                            onItemPressed: (String val) {
+                              setState(
+                                () => currentDurationIndex = val,
+                              );
+                            },
+                            initCurrentIndexValue:
+                                AppLocalizations.of(context).translate('month'),
+                            submitCustom:
+                                (DateTime _fromDate, DateTime _toDate) {
                               setState(() {
-                                isEveryDay = !isEveryDay;
-                                _enabledDays = [
-                                  false,
-                                  false,
-                                  false,
-                                  false,
-                                  false,
-                                  false,
-                                  false
-                                ];
+                                fromDateDuration = _fromDate;
+                                toDateDuration = _toDate;
+                                currentDurationIndex = 'custom';
                               });
                             },
-                            child: Container(
-                              child: Row(
-                                children: <Widget>[
-                                  // CheckBox
-                                  AnimatedContainer(
-                                    duration: Duration(milliseconds: 150),
-                                    padding: EdgeInsets.all(3),
-                                    width: 25,
-                                    height: 25,
-                                    decoration: BoxDecoration(
-                                      color: isEveryDay
-                                          ? Theme.of(context).primaryColor
-                                          : Theme.of(context).disabledColor,
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    child: AnimatedOpacity(
-                                      duration: Duration(milliseconds: 100),
-                                      opacity: isEveryDay ? 1 : 0,
-                                      child: Icon(
-                                        Icons.done,
-                                        color: Colors.white,
-                                        size: 16,
-                                      ),
-                                    ),
-                                  ),
-
-                                  SizedBox(width: 10),
-                                  Text(
-                                    AppLocalizations.of(context)
-                                        .translate('createHabit_everyday'),
-                                    style: TextStyle(
-                                      color: Theme.of(context)
-                                          .textSelectionHandleColor,
-                                      fontSize: 18,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
                           ),
 
                           // Amount
-                          SizedBox(height: 25),
                           Text(
                             AppLocalizations.of(context)
                                 .translate('createHabit_amount'),
@@ -354,54 +352,6 @@ class _HabitVieOnnCreatePageState extends State<HabitViewOnCreatePage> {
                           SizedBox(height: 25),
 
                           // Reminder
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                hasReminder = !hasReminder;
-                              });
-                            },
-                            child: Container(
-                              child: Row(
-                                children: <Widget>[
-                                  // CheckBox
-                                  AnimatedContainer(
-                                    duration: Duration(milliseconds: 150),
-                                    padding: EdgeInsets.all(3),
-                                    width: 25,
-                                    height: 25,
-                                    decoration: BoxDecoration(
-                                      color: hasReminder
-                                          ? Theme.of(context).primaryColor
-                                          : Theme.of(context).disabledColor,
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    child: AnimatedOpacity(
-                                      duration: Duration(milliseconds: 100),
-                                      opacity: hasReminder ? 1 : 0,
-                                      child: Icon(
-                                        Icons.done,
-                                        color: Colors.white,
-                                        size: 16,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(width: 10),
-                                  Container(
-                                    child: Text(
-                                      AppLocalizations.of(context)
-                                          .translate('createHabit_reminder'),
-                                      style: TextStyle(
-                                        color: Theme.of(context)
-                                            .textSelectionHandleColor,
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 7),
                           Container(
                             child: Material(
                               color: Colors.transparent,
@@ -430,7 +380,7 @@ class _HabitVieOnnCreatePageState extends State<HabitViewOnCreatePage> {
                                             Icon(
                                               Icons.timelapse,
                                               size: 24,
-                                              color: hasReminder
+                                              color: timeRemind != null
                                                   ? Theme.of(context)
                                                       .textSelectionColor
                                                   : Theme.of(context)
@@ -445,7 +395,7 @@ class _HabitVieOnnCreatePageState extends State<HabitViewOnCreatePage> {
                                                   : timeRemind.format(context),
                                               style: TextStyle(
                                                 fontSize: 18,
-                                                color: hasReminder
+                                                color: timeRemind != null
                                                     ? Theme.of(context)
                                                         .textSelectionHandleColor
                                                     : Theme.of(context)
@@ -458,7 +408,7 @@ class _HabitVieOnnCreatePageState extends State<HabitViewOnCreatePage> {
                                       Icon(
                                         Icons.navigate_next,
                                         size: 24,
-                                        color: hasReminder
+                                        color: timeRemind != null
                                             ? Theme.of(context)
                                                 .textSelectionColor
                                             : Theme.of(context).disabledColor,
@@ -472,57 +422,77 @@ class _HabitVieOnnCreatePageState extends State<HabitViewOnCreatePage> {
                           SizedBox(height: 7),
                           Container(
                             child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                DropdownButton(
-                                  value: timesADay,
-                                  items: <String>[
-                                    '1',
-                                    '2',
-                                    '3',
-                                    '4',
-                                    '5',
-                                    '6',
-                                    '7',
-                                    '8',
-                                    '9'
-                                  ].map<DropdownMenuItem<String>>(
-                                      (String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value.toString(),
-                                      child: Text(value.toString()),
-                                    );
-                                  }).toList(),
-                                  iconSize: 24,
-                                  elevation: 16,
-                                  style: TextStyle(
-                                    color: Colors.deepPurple,
-                                    fontSize: 16,
+                                Container(
+                                  child: Row(
+                                    children: <Widget>[
+                                      DropdownButton(
+                                        value: timesADay,
+                                        items: <String>[
+                                          '1',
+                                          '2',
+                                          '3',
+                                          '4',
+                                          '5',
+                                          '6',
+                                          '7',
+                                          '8',
+                                          '9'
+                                        ].map<DropdownMenuItem<String>>(
+                                            (String value) {
+                                          return DropdownMenuItem<String>(
+                                            value: value.toString(),
+                                            child: Text(value.toString()),
+                                          );
+                                        }).toList(),
+                                        iconSize: 24,
+                                        elevation: 16,
+                                        style: TextStyle(
+                                          color: Colors.deepPurple,
+                                          fontSize: 16,
+                                        ),
+                                        disabledHint: Text(
+                                          timesADay,
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                        onChanged: hasReminder
+                                            ? (String newValue) {
+                                                setState(() {
+                                                  timesADay = newValue;
+                                                });
+                                              }
+                                            : null,
+                                      ),
+                                      SizedBox(width: 15),
+                                      Text(
+                                        AppLocalizations.of(context).translate(
+                                            'createHabit_reminder_time'),
+                                        style: TextStyle(
+                                          color: hasReminder
+                                              ? Theme.of(context)
+                                                  .textSelectionHandleColor
+                                              : Theme.of(context)
+                                                  .textSelectionColor,
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  disabledHint: Text(
-                                    timesADay,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  onChanged: hasReminder
-                                      ? (String newValue) {
-                                          setState(() {
-                                            timesADay = newValue;
-                                          });
-                                        }
-                                      : null,
                                 ),
-                                SizedBox(width: 15),
-                                Text(
-                                  AppLocalizations.of(context)
-                                      .translate('createHabit_reminder_time'),
-                                  style: TextStyle(
-                                    color: hasReminder
-                                        ? Theme.of(context)
-                                            .textSelectionHandleColor
-                                        : Theme.of(context).textSelectionColor,
-                                    fontSize: 18,
-                                  ),
+                                Switch(
+                                  value: hasReminder,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      hasReminder = value;
+                                    });
+                                  },
+                                  activeTrackColor: Theme.of(context)
+                                      .primaryColor
+                                      .withOpacity(0.3),
+                                  activeColor: Theme.of(context).primaryColor,
                                 ),
                               ],
                             ),
@@ -567,6 +537,95 @@ class _HabitVieOnnCreatePageState extends State<HabitViewOnCreatePage> {
                                         if (_formKey.currentState.validate()) {
                                           _formKey.currentState.save();
 
+                                          List<DateTime> _duration = [];
+                                          DateTime today = dateFormater
+                                              .parse(DateTime.now().toString());
+                                          String week =
+                                              AppLocalizations.of(context)
+                                                  .translate('week');
+                                          String month =
+                                              AppLocalizations.of(context)
+                                                  .translate('month');
+
+                                          String day_21 =
+                                              AppLocalizations.of(context)
+                                                  .translate('21_day');
+                                          String day_66 =
+                                              AppLocalizations.of(context)
+                                                  .translate('66_day');
+                                          String month_3 =
+                                              AppLocalizations.of(context)
+                                                  .translate('3_month');
+                                          String year =
+                                              AppLocalizations.of(context)
+                                                  .translate('year');
+                                          String always =
+                                              AppLocalizations.of(context)
+                                                  .translate('always');
+
+                                          if (currentDurationIndex == week) {
+                                            _duration.add(today);
+                                            _duration.add(
+                                              today.add(
+                                                Duration(days: 7),
+                                              ),
+                                            );
+                                          } else if (currentDurationIndex ==
+                                              month) {
+                                            _duration.add(today);
+                                            _duration.add(
+                                              today.add(
+                                                Duration(days: 30),
+                                              ),
+                                            );
+                                          } else if (currentDurationIndex ==
+                                              day_21) {
+                                            _duration.add(today);
+                                            _duration.add(
+                                              today.add(
+                                                Duration(days: 21),
+                                              ),
+                                            );
+                                          } else if (currentDurationIndex ==
+                                              day_66) {
+                                            _duration.add(today);
+                                            _duration.add(
+                                              today.add(
+                                                Duration(days: 66),
+                                              ),
+                                            );
+                                          } else if (currentDurationIndex ==
+                                              month_3) {
+                                            _duration.add(today);
+                                            _duration.add(
+                                              today.add(
+                                                Duration(days: 90),
+                                              ),
+                                            );
+                                          } else if (currentDurationIndex ==
+                                              year) {
+                                            _duration.add(today);
+                                            _duration.add(
+                                              today.add(
+                                                Duration(days: 365),
+                                              ),
+                                            );
+                                          } else if (currentDurationIndex ==
+                                              always) {
+                                            _duration.add(
+                                              habitDurationMarkDate,
+                                            );
+                                            _duration.add(
+                                              habitDurationMarkDate,
+                                            );
+                                          } else if (currentDurationIndex ==
+                                              'custom') {
+                                            _duration.add(fromDateDuration);
+                                            _duration.add(toDateDuration);
+                                          }
+                                          print(currentDurationIndex);
+                                          print('_duration = $_duration');
+
                                           // Create new habit
                                           Habit habit = Habit(
                                             description: _description,
@@ -586,11 +645,15 @@ class _HabitVieOnnCreatePageState extends State<HabitViewOnCreatePage> {
                                             timeOfDay: timeRemind,
                                             timesADay: int.parse(timesADay),
                                             timeStamp: DateTime.now(),
+                                            duration: _duration,
                                             title: _title,
                                             type: isNums
                                                 ? HabitType.Countable
                                                 : HabitType.Uncountable,
                                             progressBin: <DateTime>[],
+                                            almostDone: 0,
+                                            goalAmount: 100,
+                                            iconCode: currentIconIndex,
                                           );
                                           String userId = Provider.of<UserData>(
                                             context,

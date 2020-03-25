@@ -56,88 +56,99 @@ class _HabitViewOnHomePageState extends State<HabitViewOnHomePage>
   }
 
   Widget _buildHabitBox(int index, HomeViewModel model) {
-    return InkWell(
-      onTap: () {
-        if (!model.todayHabits[index].getDoneProperty(model.currentDate)) {
-          model.addToProgressBin(index, model.currentDate);
-        } else {
-          model.removeFromProgressBin(index, model.currentDate);
-        }
-      },
-      child: Container(
-        padding: EdgeInsets.all(10),
-        height: 70,
-        decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black26,
-              blurRadius: 5,
-              offset: Offset(1, 1),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            // Avatar, title & desc
-            Container(
-              child: // Title & desc
-                  Container(
-                padding: EdgeInsets.only(left: 12.5),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
+    return Material(
+      borderRadius: BorderRadius.circular(10),
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () {
+          if (!model.todayHabits[index].getDoneProperty(model.currentDate)) {
+            model.addToProgressBin(index, model.currentDate);
+          } else {
+            model.removeFromProgressBin(index, model.currentDate);
+          }
+        },
+        child: Container(
+          padding: EdgeInsets.all(10),
+          height: 70,
+          decoration: BoxDecoration(
+            color: Theme.of(context).primaryColor,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 5,
+                offset: Offset(1, 1),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              // title & desc
+              Container(
+                child: // Title & desc
+                    Row(
                   children: <Widget>[
-                    Text(
-                      model.todayHabits[index].title,
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
+                    Container(
+                      padding: EdgeInsets.only(left: 12.5),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            model.todayHabits[index].title,
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          model.todayHabits[index].description != ''
+                              ? SizedBox(height: 3)
+                              : SizedBox.shrink(),
+                          model.todayHabits[index].description != ''
+                              ? Text(
+                                  model.todayHabits[index].description,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.white.withOpacity(0.75),
+                                    // fontWeight: FontWeight.w600,
+                                  ),
+                                )
+                              : SizedBox.shrink(),
+                        ],
                       ),
                     ),
-                    model.todayHabits[index].description != ''
-                        ? SizedBox(height: 3)
-                        : SizedBox.shrink(),
-                    model.todayHabits[index].description != ''
-                        ? Text(
-                            model.todayHabits[index].description,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.white.withOpacity(0.75),
-                              // fontWeight: FontWeight.w600,
-                            ),
-                          )
-                        : SizedBox.shrink(),
+
+                    // Progress
+                    // Text(model.todayHabits[index].goalAmount),
                   ],
                 ),
               ),
-            ),
 
-            // Confirm
-            AnimatedContainer(
-              duration: Duration(milliseconds: 200),
-              width: 30,
-              height: 30,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(6),
-                border: Border.all(
-                  color: Colors.white,
-                  width: 2,
+              // Confirm
+              AnimatedContainer(
+                duration: Duration(milliseconds: 200),
+                width: 30,
+                height: 30,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(
+                    color: Colors.white,
+                    width: 2,
+                  ),
+                  color: model.habits[index].getDoneProperty(model.currentDate)
+                      ? Colors.white
+                      : Colors.transparent,
                 ),
-                color: model.habits[index].getDoneProperty(model.currentDate)
-                    ? Colors.white
-                    : Colors.transparent,
+                child: Icon(
+                  Icons.done,
+                  color: Theme.of(context).primaryColor,
+                  size: 24,
+                ),
               ),
-              child: Icon(
-                Icons.done,
-                color: Theme.of(context).primaryColor,
-                size: 24,
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
