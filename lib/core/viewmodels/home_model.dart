@@ -224,20 +224,12 @@ class HomeViewModel extends BaseViewModel {
 
   void addToProgressBin(int index, DateTime date) {
     _todayHabits[index].progressBin.add(date);
-    _habits
-        .firstWhere(
-          (Habit habit) => habit.id == _todayHabits[index].id,
-        )
-        .progressBin
-        .add(date);
+
     notifyListeners();
   }
 
   void removeFromProgressBin(int index, DateTime date) {
     date = dateFormater.parse(date.toString());
-    _habits[_habits.indexOf(_todayHabits[index])].progressBin.removeAt(
-          _todayHabits[index].progressBin.indexOf(date),
-        );
     _todayHabits[index].progressBin.removeAt(
           _todayHabits[index].progressBin.indexOf(date),
         );

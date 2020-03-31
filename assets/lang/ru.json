@@ -11,22 +11,36 @@
     "Tue": "Вт",
     "Wed": "Ср",
     "Thr": "Чт",
+    "Thu": "Чт",
     "Fri": "Пт",
     "Sat": "Сб",
     "Sun": "Вс",
 
-    "January": "Января",
-    "February": "Февраля",
-    "March": "Марта",
-    "April": "Апреля",
-    "May": "Мая",
-    "June": "Июня",
-    "July": "Июля",
-    "August": "Августа",
-    "September": "Сентября",
-    "October": "Октября",
-    "November": "Ноября",
-    "December": "Декабря",
+    "January_": "Января",
+    "February_": "Февраля",
+    "March_": "Марта",
+    "April_": "Апреля",
+    "May_": "Мая",
+    "June_": "Июня",
+    "July_": "Июля",
+    "August_": "Августа",
+    "September_": "Сентября",
+    "October_": "Октября",
+    "November_": "Ноября",
+    "December_": "Декабря",
+
+    "January": "Январь",
+    "February": "Февраль",
+    "March": "Март",
+    "April": "Апрель",
+    "May": "Май",
+    "June": "Июнь",
+    "July": "Июль",
+    "August": "Август",
+    "September": "Сентябрь",
+    "October": "Октябрь",
+    "November": "Ноябрь",
+    "December": "Декабрь",
 
     "error_email_bad_formated": "Неверный формат email",
     "error_incorrect_password": "Неверный пароль или логин",
@@ -92,13 +106,20 @@
     "3_month": "3 месяца",
     "year": "Год",
     "without_duration": "Без Периода",
-    "Custom": "Создать свой",
+    "always": "Всегда",
+    "custom": "Создать свой",
 
     "from": "От",
     "to": "До",
 
     "customDate_title": "Выберите период",
-    "confirm": "Подтвердить"
+    "confirm": "Подтвердить",
+
+    "comments": "Комментарии",
+    "comments_error": "Необходимо ввести комментарий",
+    "comment": "Комментарий"
+
+
 
 
 

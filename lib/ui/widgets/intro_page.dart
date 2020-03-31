@@ -23,11 +23,12 @@ class IntroPageWidget extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Container(
-              height: 300,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(imageLocalizationPath),
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(imageLocalizationPath),
+                  ),
                 ),
               ),
             ),

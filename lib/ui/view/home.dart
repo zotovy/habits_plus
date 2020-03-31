@@ -83,7 +83,7 @@ class _HomePageState extends State<HomePage>
     // Name of Day Style
     TextStyle dayNameStyle = TextStyle(
       fontSize: 12,
-      color: Theme.of(context).disabledColor,
+      color: Theme.of(context).textSelectionColor,
     );
     TextStyle daySelectedStyle = TextStyle(
       fontSize: 12,
@@ -107,7 +107,9 @@ class _HomePageState extends State<HomePage>
               width: 5,
               height: 5,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: isSelectedDate
+                    ? Colors.white
+                    : Theme.of(context).backgroundColor,
                 shape: BoxShape.circle,
               ),
             )
@@ -139,7 +141,7 @@ class _HomePageState extends State<HomePage>
       child: Consumer<HomeViewModel>(
         builder: (_, HomeViewModel model, child) {
           return RefreshIndicator(
-            onRefresh: () async => await _model.fetch(
+            onRefresh: () async => _model.fetch(
               Provider.of<UserData>(context, listen: false).currentUserId,
             ),
             child: SafeArea(
@@ -158,6 +160,29 @@ class _HomePageState extends State<HomePage>
                             onDateSelected: (DateTime date) =>
                                 model.setTodayWithReload(date),
                             dateTileBuilder: dateTileBuilder,
+                            monthNameWidget: (String name) {
+                              List _splitName = name.split(' ');
+                              String monthName = _splitName.length == 5
+                                  ? AppLocalizations.of(context)
+                                          .translate(_splitName[0]) +
+                                      ' / ' +
+                                      AppLocalizations.of(context)
+                                          .translate(_splitName[3])
+                                  : AppLocalizations.of(context)
+                                      .translate(_splitName[0]);
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  '$monthName ${_splitName.last}',
+                                  style: TextStyle(
+                                    color: Theme.of(context)
+                                        .textSelectionHandleColor,
+                                  ),
+                                ),
+                              );
+                            },
+                            iconColor:
+                                Theme.of(context).textSelectionHandleColor,
                           ),
 
                           Opacity(

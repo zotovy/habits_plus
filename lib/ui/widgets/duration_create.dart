@@ -212,7 +212,6 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
                       }
                     },
                     child: Container(
-                      margin: EdgeInsets.all(10),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[

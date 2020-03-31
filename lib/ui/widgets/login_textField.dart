@@ -49,10 +49,16 @@ class _LoginTextFieldState extends State<LoginTextField> {
       ),
       margin: EdgeInsets.symmetric(horizontal: 28),
       child: TextFormField(
+        style: TextStyle(
+          color: Colors.black87,
+        ),
         obscureText: widget.hasObscure,
         validator: widget.validator,
         onSaved: widget.onSaved,
         decoration: InputDecoration(
+          labelStyle: TextStyle(
+            color: Colors.black38,
+          ),
           labelText: AppLocalizations.of(context).translate(
             widget.labelLocalizationPath,
           ),

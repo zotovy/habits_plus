@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:habits_plus/core/enums/habitType.dart';
+import 'package:habits_plus/core/models/comment.dart';
 import 'package:habits_plus/core/models/habit.dart';
 import 'package:habits_plus/core/models/task.dart';
 import 'package:habits_plus/core/models/user.dart';
@@ -35,7 +36,7 @@ class DatabaseServices {
   }
 
   // Pass new habit to Firebase
-  static Future<bool> createHabit(
+  Future<bool> createHabit(
     Habit habit,
     String userId,
     String timeOfDay,
@@ -79,7 +80,7 @@ class DatabaseServices {
   }
 
   // Create new habit and pass it to Firebase
-  static Future<bool> createTask(Task task, String userId) async {
+  Future<bool> createTask(Task task, String userId) async {
     // Check user id
     bool isExists = await isUserExists(userId);
     if (isExists) {
@@ -105,6 +106,38 @@ class DatabaseServices {
     return false;
   }
 
+  Future<bool> createComment(Comment comment, String userId) async {
+    // Check userId
+    bool isUserExist = await isUserExists(userId);
+
+    if (isUserExist && comment.habitId != null) {
+      // generate document ID
+      String docId = Uuid().v4();
+
+      // Write doc into DB
+      await commentsRef
+          .document(userId)
+          .collection('comments')
+          .document(comment.habitId)
+          .collection('comments')
+          .document(docId)
+          .setData(
+        {
+          'authorId': comment.authorId,
+          'habitId': comment.habitId,
+          'hasImage': comment.hasImage,
+          'imageUrl': comment.imageUrl,
+          'content': comment.content,
+          'timestamp': comment.timestamp,
+        },
+      );
+
+      return true;
+    }
+
+    return false;
+  }
+
   Future<List<Habit>> getAllHabitsById(String id) async {
     QuerySnapshot snap =
         await habitsRef.document(id).collection('habits').getDocuments();
@@ -123,7 +156,23 @@ class DatabaseServices {
     return tasks;
   }
 
-  Future updateHabit(Habit habit, String userId) {
+  Future<List<Comment>> getCommentsByHabitId(
+      String userId, String habitId) async {
+    QuerySnapshot snap = await commentsRef
+        .document(userId)
+        .collection('comments')
+        .document(habitId)
+        .collection('comments')
+        .getDocuments();
+    List<Comment> _comments = snap.documents
+        .map(
+          (DocumentSnapshot doc) => Comment.fromJson(doc),
+        )
+        .toList();
+    return _comments;
+  }
+
+  Future updateHabit(Habit habit, String userId) async {
     // rewrite List<bool> -> binary String '1110001'
     String days = '';
     for (var i = 0; i < habit.repeatDays.length; i++) {
@@ -134,7 +183,7 @@ class DatabaseServices {
     }
 
     // Update data in firebase
-    habitsRef
+    await habitsRef
         .document(userId)
         .collection('habits')
         .document(habit.id)
@@ -150,14 +199,14 @@ class DatabaseServices {
         'timesADay': habit.timesADay,
         'title': habit.title,
         'type': habit.type == HabitType.Countable ? 1 : 0,
-        'progressBin': [],
+        'progressBin': habit.progressBin,
         'iconCode': habit.iconCode,
         'duration': habit.duration,
       },
     );
   }
 
-  Future updateTask(Task task, String userId) {
+  void updateTask(Task task, String userId) {
     // Update data in firebase
     tasksRef.document(userId).collection('tasks').document(task.id).updateData(
       {
@@ -169,6 +218,26 @@ class DatabaseServices {
         'isEveryDay': task.isEveryDay,
         'hasTime': task.hasTime,
         'done': task.done,
+      },
+    );
+  }
+
+  void updateComment(Comment comment) {
+    // Update data in firebase
+    commentsRef
+        .document(comment.authorId)
+        .collection('comments')
+        .document(comment.authorId)
+        .collection('comments')
+        .document(comment.id)
+        .setData(
+      {
+        'authorId': comment.authorId,
+        'habitId': comment.habitId,
+        'hasImage': comment.hasImage,
+        'imageUrl': comment.imageUrl,
+        'content': comment.content,
+        'timestamp': comment.timestamp,
       },
     );
   }
@@ -185,13 +254,5 @@ class DatabaseServices {
     } else {
       return false;
     }
-  }
-
-  static Stream habitStream(String userId) {
-    return habitsRef.document(userId).collection('habits').snapshots();
-  }
-
-  static Stream taskStream(String userId) {
-    return tasksRef.document(userId).collection('tasks').snapshots();
   }
 }

@@ -18,6 +18,7 @@ final storageRef = FirebaseStorage.instance.ref();
 final userRef = _firestore.collection('users');
 final habitsRef = _firestore.collection('habits');
 final tasksRef = _firestore.collection('tasks');
+final commentsRef = _firestore.collection('comments');
 final DateFormat dateFormater = DateFormat('yyyy-MM-dd');
 final TimeOfDay nullTime = TimeOfDay(hour: 3, minute: 59);
 
@@ -45,16 +46,6 @@ ThemeModel darkMode = ThemeModel(
     canvasColor: Colors.transparent,
   ),
 );
-final List<Color> colors = [
-  Colors.blue.withOpacity(0.85),
-  Colors.lightBlue.withOpacity(0.85),
-  Colors.green.withOpacity(0.85),
-  Colors.indigo.withOpacity(0.85),
-  Colors.orange.withOpacity(0.85),
-  Colors.pink.withOpacity(0.85),
-  Colors.purple.withOpacity(0.85),
-  Colors.red.withOpacity(0.85),
-];
 
 // Habits icons
 List<IconData> habitsIcons = [
@@ -67,4 +58,29 @@ List<IconData> habitsIcons = [
   MdiIcons.heart,
 ];
 
+// Short name of each day of the week
+const List<String> dayNames = [
+  'Mon',
+  'Tue',
+  'Wed',
+  'Thr',
+  'Fri',
+  'Sat',
+  'Sun',
+];
+
+const List<String> monthNames = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
 final habitDurationMarkDate = DateTime.utc(2005, 11, 21);

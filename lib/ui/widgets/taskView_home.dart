@@ -35,7 +35,9 @@ class _TaskViewOnHomePageState extends State<TaskViewOnHomePage> {
     Future.delayed(Duration(milliseconds: 100)).then(
       (value) async {
         for (var i = 0; i < model.doneTodayTasks.length; i++) {
-          _keyDoneTask.currentState.insertItem(i);
+          if (_keyDoneTask.currentState != null) {
+            _keyDoneTask.currentState.insertItem(i);
+          }
           await Future.delayed(Duration(milliseconds: 250));
         }
       },
@@ -49,7 +51,9 @@ class _TaskViewOnHomePageState extends State<TaskViewOnHomePage> {
     Future.delayed(Duration(milliseconds: 100)).then(
       (value) async {
         for (var i = 0; i < model.notDoneTodayTasks.length; i++) {
-          _keyNotDoneTask.currentState.insertItem(i);
+          if (_keyDoneTask.currentState != null) {
+            _keyNotDoneTask.currentState.insertItem(i);
+          }
           await Future.delayed(Duration(milliseconds: 250));
         }
       },

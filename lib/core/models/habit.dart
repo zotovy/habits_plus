@@ -13,7 +13,6 @@ class Habit {
   DateTime timeStamp;
   List<DateTime> duration;
   TimeOfDay timeOfDay;
-  bool hasImage;
   List<bool> repeatDays;
   int goalAmount;
   int iconCode;

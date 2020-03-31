@@ -11,9 +11,25 @@
     "Tue": "Tue",
     "Wed": "Wed",
     "Thr": "Thr",
+    "Thu": "Thu",
     "Fri": "Fri",
     "Sat": "Sat",
     "Sun": "Sun",
+
+    
+
+    "January_": "January",
+    "February_": "February",
+    "March_": "March",
+    "April_": "April",
+    "May_": "May",
+    "June_": "June",
+    "July_": "July",
+    "August_": "August",
+    "September_": "September",
+    "October_": "October",
+    "November_": "November",
+    "December_": "December",
 
     "January": "January",
     "February": "February",
@@ -99,7 +115,13 @@
     "to": "To",
 
     "customDate_title": "Select custom date",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+
+    "day": "Day",
+
+    "comments": "Comments",
+    "comments_error": "Please, enter your comment",
+    "comment": "Comment"
 
 
 

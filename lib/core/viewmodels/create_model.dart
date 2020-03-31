@@ -14,7 +14,7 @@ class CreateViewModel extends BaseViewModel {
 
   Future<bool> createTask(Task task, String userId) async {
     setState(ViewState.Busy);
-    bool dbcode = await DatabaseServices.createTask(task, userId);
+    bool dbcode = await _databaseServices.createTask(task, userId);
     if (dbcode) {
       // If successed -> add task to home screen
       locator<HomeViewModel>().addTaskWithOutReload(task);
@@ -25,7 +25,7 @@ class CreateViewModel extends BaseViewModel {
 
   Future<bool> createHabit(Habit habit, String userId, String timeOfDay) async {
     setState(ViewState.Busy);
-    bool dbcode = await DatabaseServices.createHabit(habit, userId, timeOfDay);
+    bool dbcode = await _databaseServices.createHabit(habit, userId, timeOfDay);
     if (dbcode) {
       // If successed -> add habit to home screen
       locator<HomeViewModel>().addHabit(habit);
