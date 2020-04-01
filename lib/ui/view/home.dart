@@ -5,8 +5,8 @@ import 'package:habits_plus/core/models/userData.dart';
 import 'package:habits_plus/core/services/auth.dart';
 import 'package:habits_plus/core/viewmodels/home_model.dart';
 import 'package:habits_plus/ui/view/loading.dart';
-import 'package:habits_plus/ui/widgets/habitView_home.dart';
-import 'package:habits_plus/ui/widgets/taskView_home.dart';
+import 'package:habits_plus/ui/widgets/home/habitView_home.dart';
+import 'package:habits_plus/ui/widgets/home/taskView_home.dart';
 import 'package:provider/provider.dart';
 
 import '../../localization.dart';

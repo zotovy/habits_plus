@@ -18,6 +18,9 @@ class Habit {
   int iconCode;
   int almostDone; // Todo: add to create page
   List<DateTime> progressBin;
+
+  /// List<DateTime, List>
+  Map countableProgress;
   int timesADay;
 
   Habit({
@@ -36,6 +39,7 @@ class Habit {
     this.repeatDays,
     this.timesADay,
     this.progressBin,
+    this.countableProgress,
   });
 
   factory Habit.fromDoc(DocumentSnapshot doc) {
@@ -73,6 +77,8 @@ class Habit {
             (val) => (val as Timestamp).toDate(),
           )
           .toList(),
+      countableProgress:
+          doc['countableProgress'] == null ? {} : doc['countableProgress'],
     );
   }
 

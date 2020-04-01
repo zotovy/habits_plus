@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:habits_plus/core/enums/habitType.dart';
 import 'package:habits_plus/core/enums/viewstate.dart';
 import 'package:habits_plus/core/models/habit.dart';
 import 'package:habits_plus/core/models/userData.dart';
@@ -57,7 +58,12 @@ class _DetailHabitPageState extends State<DetailHabitPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                              CalendarDetailWidget(model.habit.progressBin),
+                              CalendarDetailWidget(model.habit.type ==
+                                      HabitType.Uncountable
+                                  ? model.habit.progressBin
+                                  : model.habit.countableProgress.keys
+                                      .map((var val) => dateFormater.parse(val))
+                                      .toList()),
 
                               // Comments
                               Container(

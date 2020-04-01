@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:habits_plus/core/models/user.dart';
 import 'package:habits_plus/core/viewmodels/drawer_model.dart';
@@ -40,7 +41,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       DrawerTile(
-                        icon: Icons.settings,
+                        icon: EvaIcons.settings,
                         text: 'Settings',
                         onPressed: () => print('go to settigns'),
                       ),

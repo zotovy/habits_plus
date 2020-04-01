@@ -202,6 +202,7 @@ class DatabaseServices {
         'progressBin': habit.progressBin,
         'iconCode': habit.iconCode,
         'duration': habit.duration,
+        'countableProgress': habit.countableProgress,
       },
     );
   }

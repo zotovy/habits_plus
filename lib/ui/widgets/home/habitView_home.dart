@@ -1,15 +1,16 @@
 import 'dart:ui';
 
-import 'package:configurable_expansion_tile/configurable_expansion_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:habits_plus/core/enums/habitType.dart';
 import 'package:habits_plus/core/models/habit.dart';
 import 'package:habits_plus/core/models/userData.dart';
 import 'package:habits_plus/core/util/constant.dart';
 import 'package:habits_plus/core/viewmodels/home_model.dart';
+import 'package:habits_plus/ui/widgets/home/countable_habit_bottomDialog.dart';
 import 'package:provider/provider.dart';
 
-import '../../localization.dart';
-import '../../locator.dart';
+import '../../../localization.dart';
+import '../../../locator.dart';
 
 class HabitViewOnHomePage extends StatefulWidget {
   @override
@@ -219,45 +220,73 @@ class _HabitViewOnHomePageState extends State<HabitViewOnHomePage>
                     ),
 
                     // Confirm
-                    InkWell(
-                      onTap: () {
-                        if (!model.todayHabits[index]
-                            .getDoneProperty(model.currentDate)) {
-                          model.addToProgressBin(index, model.currentDate);
-                        } else {
-                          model.removeFromProgressBin(index, model.currentDate);
-                        }
-                        String userId = Provider.of<UserData>(
-                          context,
-                          listen: false,
-                        ).currentUserId;
-                        model.updateHabit(model.todayHabits[index], userId);
-                      },
-                      child: AnimatedContainer(
-                        duration: Duration(milliseconds: 200),
-                        width: 30,
-                        height: 30,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(6),
-                          border: Border.all(
-                            color: Colors.white,
-                            width: 2,
+                    model.todayHabits[index].type == HabitType.Uncountable
+                        ? InkWell(
+                            onTap: () {
+                              if (!model.todayHabits[index]
+                                  .getDoneProperty(model.currentDate)) {
+                                model.addToProgressBin(
+                                    index, model.currentDate);
+                              } else {
+                                model.removeFromProgressBin(
+                                    index, model.currentDate);
+                              }
+                              String userId = Provider.of<UserData>(
+                                context,
+                                listen: false,
+                              ).currentUserId;
+                              model.updateHabit(
+                                  model.todayHabits[index], userId);
+                            },
+                            child: AnimatedContainer(
+                              duration: Duration(milliseconds: 200),
+                              width: 30,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(6),
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 2,
+                                ),
+                                color: model.todayHabits[index]
+                                        .getDoneProperty(model.currentDate)
+                                    ? Colors.white
+                                    : Colors.transparent,
+                              ),
+                              child: Icon(
+                                Icons.done,
+                                color: model.todayHabits[index]
+                                        .getDoneProperty(model.currentDate)
+                                    ? Theme.of(context).primaryColor
+                                    : Colors.transparent,
+                                size: 24,
+                              ),
+                            ),
+                          )
+                        : GestureDetector(
+                            child: Icon(
+                              Icons.chevron_right,
+                              color: Colors.white,
+                            ),
+                            onTap: () => showModalBottomSheet(
+                              // isScrollControlled: true,
+                              context: context,
+                              builder: (_) => CountableHabitsBottomDialog(
+                                onConfirm: (int amount, String amountType) {
+                                  String userId = Provider.of<UserData>(context,
+                                          listen: false)
+                                      .currentUserId;
+                                  model.addToCountableProgress(
+                                    model.currentDate,
+                                    [amount, amountType],
+                                    index,
+                                    userId,
+                                  );
+                                  return true;
+                                },
+                              ),
+                            ),
                           ),
-                          color: model.todayHabits[index]
-                                  .getDoneProperty(model.currentDate)
-                              ? Colors.white
-                              : Colors.transparent,
-                        ),
-                        child: Icon(
-                          Icons.done,
-                          color: model.todayHabits[index]
-                                  .getDoneProperty(model.currentDate)
-                              ? Theme.of(context).primaryColor
-                              : Colors.transparent,
-                          size: 24,
-                        ),
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -281,10 +310,17 @@ class _HabitViewOnHomePageState extends State<HabitViewOnHomePage>
                         child: AnimatedDefaultTextStyle(
                           duration: Duration(milliseconds: 200),
                           style: model.todayHabits[index].progressBin.contains(
-                            _firstDayOfWeek.add(
-                              Duration(days: i),
-                            ),
-                          )
+                                    _firstDayOfWeek.add(
+                                      Duration(days: i),
+                                    ),
+                                  ) ||
+                                  model.todayHabits[index].countableProgress[
+                                          dateFormater
+                                              .parse(_firstDayOfWeek
+                                                  .add(Duration(days: i))
+                                                  .toString())
+                                              .toString()] !=
+                                      null
                               ? TextStyle(
                                   color: Colors.white,
                                   fontSize: 18,
@@ -474,45 +510,73 @@ class _HabitViewOnHomePageState extends State<HabitViewOnHomePage>
                     ),
 
                     // Confirm
-                    InkWell(
-                      onTap: () {
-                        if (!model.todayHabits[index]
-                            .getDoneProperty(model.currentDate)) {
-                          model.addToProgressBin(index, model.currentDate);
-                        } else {
-                          model.removeFromProgressBin(index, model.currentDate);
-                        }
-                        String userId = Provider.of<UserData>(
-                          context,
-                          listen: false,
-                        ).currentUserId;
-                        model.updateHabit(model.todayHabits[index], userId);
-                      },
-                      child: AnimatedContainer(
-                        duration: Duration(milliseconds: 200),
-                        width: 30,
-                        height: 30,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(6),
-                          border: Border.all(
-                            color: Theme.of(context).primaryColor,
-                            width: 2,
+                    model.todayHabits[index].type == HabitType.Uncountable
+                        ? InkWell(
+                            onTap: () {
+                              if (!model.todayHabits[index]
+                                  .getDoneProperty(model.currentDate)) {
+                                model.addToProgressBin(
+                                    index, model.currentDate);
+                              } else {
+                                model.removeFromProgressBin(
+                                    index, model.currentDate);
+                              }
+                              String userId = Provider.of<UserData>(
+                                context,
+                                listen: false,
+                              ).currentUserId;
+                              model.updateHabit(
+                                  model.todayHabits[index], userId);
+                            },
+                            child: AnimatedContainer(
+                              duration: Duration(milliseconds: 200),
+                              width: 30,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(6),
+                                border: Border.all(
+                                  color: Theme.of(context).primaryColor,
+                                  width: 2,
+                                ),
+                                color: model.todayHabits[index]
+                                        .getDoneProperty(model.currentDate)
+                                    ? Theme.of(context).primaryColor
+                                    : Colors.transparent,
+                              ),
+                              child: Icon(
+                                Icons.done,
+                                color: model.todayHabits[index]
+                                        .getDoneProperty(model.currentDate)
+                                    ? Colors.white
+                                    : Colors.transparent,
+                                size: 24,
+                              ),
+                            ),
+                          )
+                        : GestureDetector(
+                            child: Icon(
+                              Icons.chevron_right,
+                              color: Colors.white,
+                            ),
+                            onTap: () => showModalBottomSheet(
+                              // isScrollControlled: true,
+                              context: context,
+                              builder: (_) => CountableHabitsBottomDialog(
+                                onConfirm: (int amount, String amountType) {
+                                  String userId = Provider.of<UserData>(context,
+                                          listen: false)
+                                      .currentUserId;
+                                  model.addToCountableProgress(
+                                    model.currentDate,
+                                    [amount, amountType],
+                                    index,
+                                    userId,
+                                  );
+                                  return true;
+                                },
+                              ),
+                            ),
                           ),
-                          color: model.todayHabits[index]
-                                  .getDoneProperty(model.currentDate)
-                              ? Theme.of(context).primaryColor
-                              : Colors.transparent,
-                        ),
-                        child: Icon(
-                          Icons.done,
-                          color: model.todayHabits[index]
-                                  .getDoneProperty(model.currentDate)
-                              ? Colors.white
-                              : Colors.transparent,
-                          size: 24,
-                        ),
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -541,10 +605,17 @@ class _HabitViewOnHomePageState extends State<HabitViewOnHomePage>
                         child: AnimatedDefaultTextStyle(
                           duration: Duration(milliseconds: 200),
                           style: model.todayHabits[index].progressBin.contains(
-                            _firstDayOfWeek.add(
-                              Duration(days: i),
-                            ),
-                          )
+                                    _firstDayOfWeek.add(
+                                      Duration(days: i),
+                                    ),
+                                  ) ||
+                                  model.todayHabits[index].countableProgress[
+                                          dateFormater
+                                              .parse(_firstDayOfWeek
+                                                  .add(Duration(days: i))
+                                                  .toString())
+                                              .toString()] !=
+                                      null
                               ? TextStyle(
                                   color: Theme.of(context).primaryColor,
                                   fontSize: 18,

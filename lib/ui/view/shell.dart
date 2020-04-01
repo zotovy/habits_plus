@@ -80,7 +80,7 @@ class _MainShellState extends State<MainShell> {
           child: Icon(Icons.add),
         ),
         // backgroundColor: Color(0xFFca2b7e),
-        onPressed: () => Navigator.pushNamed(context, 'create_habit'),
+        onPressed: () => Navigator.pushNamed(context, 'create'),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );

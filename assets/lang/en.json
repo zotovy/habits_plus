@@ -124,7 +124,9 @@
     "comment": "Comment",
 
     "no_habits_1": "You have no habits yet",
-    "no_habits_2": "Click on 'Add' button to create a habit"
+    "no_habits_2": "Click on 'Add' button to create a habit",
+    "habit_countable_error": "Enter a num",
+    "habit_countable_example": "cigarettes"
 
 
 

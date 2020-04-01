@@ -58,6 +58,17 @@ class HomeViewModel extends BaseViewModel {
     setState(ViewState.Idle);
   }
 
+  void addToCountableProgress(
+    DateTime date,
+    List _data,
+    int index,
+    String userId,
+  ) {
+    todayHabits[index].countableProgress[
+        dateFormater.parse(currentDate.toString()).toString()] = _data;
+    _databaseServices.updateHabit(todayHabits[index], userId);
+  }
+
   void addHabitWithOutReload(Habit habit) {
     _habits.add(habit);
     setMarkedDates();
