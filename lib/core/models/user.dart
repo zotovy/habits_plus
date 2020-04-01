@@ -15,7 +15,7 @@ class User {
     User user = User(
       email: doc['email'],
       name: doc['name'],
-      profileImg: doc['profileImg'],
+      profileImg: doc['profileImageUrl'],
     );
     return user;
   }

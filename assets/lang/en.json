@@ -121,7 +121,10 @@
 
     "comments": "Comments",
     "comments_error": "Please, enter your comment",
-    "comment": "Comment"
+    "comment": "Comment",
+
+    "no_habits_1": "You have no habits yet",
+    "no_habits_2": "Click on 'Add' button to create a habit"
 
 
 

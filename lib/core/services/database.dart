@@ -25,7 +25,7 @@ class DatabaseServices {
     }
   }
 
-  static Future<dynamic> getUserById(String id) async {
+  Future<dynamic> getUserById(String id) async {
     bool isExists = await isUserExists(id);
     if (isExists) {
       DocumentSnapshot snap = await userRef.document(id).get();

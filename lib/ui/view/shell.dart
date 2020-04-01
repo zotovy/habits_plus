@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habits_plus/core/models/userData.dart';
 import 'package:habits_plus/core/viewmodels/home_model.dart';
 import 'package:habits_plus/ui/view/home.dart';
+import 'package:habits_plus/ui/view/statistic.dart';
 import 'package:habits_plus/ui/widgets/shell_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -16,7 +17,7 @@ class _MainShellState extends State<MainShell> {
   // Page controll
   int _currentPage = 1;
   List<Widget> _pages = [
-    Container(),
+    StatisticPage(),
     HomePage(),
   ];
   PageController _pageController;
@@ -65,6 +66,23 @@ class _MainShellState extends State<MainShell> {
           onPageChanged: (int i) => setState(() => _currentPage = i),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        child: Container(
+          width: 56,
+          height: 56,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: LinearGradient(colors: [
+              Theme.of(context).primaryColor,
+              Color(0xFF8050e5),
+            ]),
+          ),
+          child: Icon(Icons.add),
+        ),
+        // backgroundColor: Color(0xFFca2b7e),
+        onPressed: () => Navigator.pushNamed(context, 'create_habit'),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }

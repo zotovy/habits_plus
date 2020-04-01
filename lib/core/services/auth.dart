@@ -50,7 +50,8 @@ class AuthService {
         Provider.of<UserData>(context, listen: false).currentUserId =
             signedInUser.uid;
 
-        User user = await DatabaseServices.getUserById(signedInUser.uid);
+        User user =
+            await locator<DatabaseServices>().getUserById(signedInUser.uid);
         Navigator.pop(context);
       }
     } catch (error) {
@@ -119,7 +120,8 @@ class AuthService {
       AuthResult result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
 
-      var getResult = await DatabaseServices.getUserById(result.user.uid);
+      var getResult =
+          await locator<DatabaseServices>().getUserById(result.user.uid);
 
       Navigator.pop(context);
     } catch (e) {

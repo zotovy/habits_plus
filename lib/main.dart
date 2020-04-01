@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:habits_plus/core/models/theme.dart';
 import 'package:habits_plus/core/models/userData.dart';
 import 'package:habits_plus/core/services/database.dart';
+import 'package:habits_plus/core/viewmodels/drawer_model.dart';
 import 'package:habits_plus/core/viewmodels/home_model.dart';
 import 'package:habits_plus/locator.dart';
 import 'package:habits_plus/ui/router.dart';
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<ThemeModel>(
-          create: (_) => darkMode,
+          create: (_) => lightMode,
         ),
         ChangeNotifierProvider<UserData>(
           create: (_) => UserData(),
@@ -61,6 +62,7 @@ class _MainAppState extends State<MainApp> {
           String id = snapshot.data.uid;
           Provider.of<UserData>(context).currentUserId = id;
           locator<HomeViewModel>().fetch(id);
+          locator<DrawerViewModel>().fetchUser(id);
           return MainShell();
         } catch (e) {
           return IntroPage();

@@ -581,51 +581,89 @@ class _HabitViewOnHomePageState extends State<HabitViewOnHomePage>
       value: _model,
       child: Consumer<HomeViewModel>(
         builder: (_, HomeViewModel model, child) {
-          return Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                SizedBox(height: 15),
-                model.todayHabits.length > 0
-                    ? Text(
-                        AppLocalizations.of(context)
-                            .translate('habits_for_today')
-                            .toUpperCase(),
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Theme.of(context)
-                              .textSelectionColor
-                              .withOpacity(0.75),
-                          fontWeight: FontWeight.w600,
-                        ),
-                      )
-                    : SizedBox.shrink(),
-                SizedBox(height: 5),
-                model.todayHabits.length >= 1
-                    ? Theme.of(context).brightness == Brightness.light
-                        ? _buildLigtModeHabitBox(0, model)
-                        : _buildDarkModeHabitBox(0, model)
-                    : SizedBox.shrink(),
-                SizedBox(height: 15),
-                model.todayHabits.length >= 2
-                    ? Theme.of(context).brightness == Brightness.light
-                        ? _buildLigtModeHabitBox(1, model)
-                        : _buildDarkModeHabitBox(1, model)
-                    : SizedBox.shrink(),
-                SizedBox(height: 15),
-                Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+          return model.todayHabits.length != 0
+              ? Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      (model.todayHabits.length - 2) > 0
-                          ? _buildMoreHabits(model)
+                      SizedBox(height: 15),
+                      model.todayHabits.length > 0
+                          ? Text(
+                              AppLocalizations.of(context)
+                                  .translate('habits_for_today')
+                                  .toUpperCase(),
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Theme.of(context)
+                                    .textSelectionColor
+                                    .withOpacity(0.75),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            )
                           : SizedBox.shrink(),
+                      SizedBox(height: 5),
+                      model.todayHabits.length >= 1
+                          ? Theme.of(context).brightness == Brightness.light
+                              ? _buildLigtModeHabitBox(0, model)
+                              : _buildDarkModeHabitBox(0, model)
+                          : SizedBox.shrink(),
+                      SizedBox(height: 15),
+                      model.todayHabits.length >= 2
+                          ? Theme.of(context).brightness == Brightness.light
+                              ? _buildLigtModeHabitBox(1, model)
+                              : _buildDarkModeHabitBox(1, model)
+                          : SizedBox.shrink(),
+                      SizedBox(height: 15),
+                      Container(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            (model.todayHabits.length - 2) > 0
+                                ? _buildMoreHabits(model)
+                                : SizedBox.shrink(),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
-                ),
-              ],
-            ),
-          );
+                )
+              : Container(
+                  height: 200,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Theme.of(context).brightness == Brightness.light
+                          ? Image(
+                              width: 80,
+                              image: AssetImage(
+                                  'assets/images/no_habits_light.png'),
+                            )
+                          : Image(
+                              width: 80,
+                              image: AssetImage(
+                                  'assets/images/no_habits_dark.png'),
+                            ),
+                      SizedBox(height: 15),
+                      Text(
+                        AppLocalizations.of(context).translate('no_habits_1'),
+                        style: TextStyle(
+                          color: Theme.of(context).textSelectionColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      // SizedBox(height: 7),
+                      Text(
+                        AppLocalizations.of(context).translate('no_habits_2'),
+                        style: TextStyle(
+                          color:
+                              Theme.of(context).disabledColor.withOpacity(0.3),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
         },
       ),
     );

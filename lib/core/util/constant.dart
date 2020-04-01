@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:habits_plus/core/models/theme.dart';
 import 'package:intl/intl.dart';
@@ -84,3 +85,4 @@ const List<String> monthNames = [
   'December',
 ];
 final habitDurationMarkDate = DateTime.utc(2005, 11, 21);
+final drawerController = ZoomDrawerController();
