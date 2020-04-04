@@ -56,6 +56,12 @@ class _HomePageState extends State<HomePage>
     _transitionController.forward();
   }
 
+  @override
+  void dispose() {
+    _transitionController.dispose();
+    super.dispose();
+  }
+
   dateTileBuilder(
     date,
     selectedDate,

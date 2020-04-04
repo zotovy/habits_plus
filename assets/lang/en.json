@@ -126,8 +126,36 @@
     "no_habits_1": "You have no habits yet",
     "no_habits_2": "Click on 'Add' button to create a habit",
     "habit_countable_error": "Enter a num",
-    "habit_countable_example": "cigarettes"
+    "habit_countable_example": "cigarettes",
 
-
+    "create_habit": "Create Habit",
+    "createHabit_appbar_title": "Create Habit",
+    "title_and_desc": "Title & Description",
+    "noHabitTitle_hint": "Your Title",
+    "noHabitDesc_hint": "Your description",
+    "createHabit1_desc1": "Title & Description will displayed \non main habit page. Please, enter your title \n& description in text fields below ",
+    "choose_your_icon": "Choose your Icon",
+    "createHabit1_desc2": "We have a lot of icons to any needs.\nChoose one, which suitable for you",
+    "calendar": "Calendar",
+    "calendar_desc": "Now you need to specify the days\nyou will develop your habit.",
+    "choose_time_period": "Choose time period",
+    "time_period": "You also need to specify what period\nyou will develop your habit.",
+    "noDaySelectedError": "Sorry, you need to select days, in which you will develop your habit:)",
+    "noDurationSelectedError": "Sorry, you need to select period when you will develop your habit:)",
+    "habit_type": "Habit Type",
+    "habit_type_desc": "There are two types of Habits.\nYou need to choose one",
+    "create_card1_title": "Yes or No",
+    "create_card1_desc": "Mark habits with simple yes or no",
+    "create_card1_example": "-Do you training today?\n-Yes",
+    "create_card2_title": "Nums",
+    "create_card2_desc": "Write numbers in habit",
+    "create_card2_example": "-How many sigarettes do you smoke today?\n-10",
+    "push_notification": "Push Notification",
+    "push_time": "now",
+    "push_today_at": "Today at 12:00 PM",
+    "push_today_at_template": "Today at ",
+    "push_desc": "Let's finish. Last step is setting your\npush notification. You can easily\nspecify time or turn it off.",
+    "time": "Time",
+    "noTimeChoosenError": "You need to specify your notification time or turn it off"
 
 }

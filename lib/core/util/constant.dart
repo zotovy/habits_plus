@@ -57,6 +57,14 @@ List<IconData> habitsIcons = [
   MdiIcons.car,
   MdiIcons.scaleBathroom,
   MdiIcons.heart,
+  MdiIcons.basketball,
+  MdiIcons.alarm,
+  MdiIcons.post,
+  MdiIcons.instagram,
+  MdiIcons.phone,
+  MdiIcons.walk,
+  MdiIcons.dog,
+  MdiIcons.emoticonExcited,
 ];
 
 // Short name of each day of the week

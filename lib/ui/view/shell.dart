@@ -16,24 +16,24 @@ class MainShell extends StatefulWidget {
 class _MainShellState extends State<MainShell> {
   // Page controll
   int _currentPage = 1;
-  List<Widget> _pages = [
-    StatisticPage(),
-    HomePage(),
-  ];
+  List<Widget> _pages;
   PageController _pageController;
 
   @override
   void initState() {
     super.initState();
-
+    _pages = [
+      StatisticPage(),
+      HomePage(),
+    ];
     _pageController = PageController(initialPage: _currentPage);
   }
 
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   _pageController.dispose();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {

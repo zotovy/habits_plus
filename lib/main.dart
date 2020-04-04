@@ -1,28 +1,20 @@
-import 'package:async/async.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:habits_plus/core/models/theme.dart';
 import 'package:habits_plus/core/models/userData.dart';
-import 'package:habits_plus/core/services/database.dart';
 import 'package:habits_plus/core/viewmodels/drawer_model.dart';
 import 'package:habits_plus/core/viewmodels/home_model.dart';
 import 'package:habits_plus/locator.dart';
 import 'package:habits_plus/ui/router.dart';
-import 'package:habits_plus/ui/view/create_habit.dart';
-import 'package:habits_plus/ui/view/home.dart';
 import 'package:habits_plus/ui/view/intro.dart';
 import 'package:habits_plus/ui/view/loading.dart';
 import 'package:habits_plus/ui/view/login.dart';
 import 'package:habits_plus/ui/view/shell.dart';
-import 'package:habits_plus/ui/view/signup.dart';
 import 'package:habits_plus/core/util/constant.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'localization.dart';
-
-import 'dart:async';
 
 void main() {
   setupLocator();
@@ -53,6 +45,7 @@ class MainApp extends StatefulWidget {
 
 class _MainAppState extends State<MainApp> {
   Widget _getPage(BuildContext context) {
+    // FirebaseAuth.instance
     return StreamBuilder<FirebaseUser>(
       stream: FirebaseAuth.instance.onAuthStateChanged,
       builder: (BuildContext context, snapshot) {
@@ -86,7 +79,7 @@ class _MainAppState extends State<MainApp> {
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
-      home: _getPage(context),
+      // home: _getPage(context),
       localeResolutionCallback: (locale, supportedLocales) {
         // Check if the current device locale is supported
         for (var supportedLocale in supportedLocales) {
@@ -100,8 +93,27 @@ class _MainAppState extends State<MainApp> {
         return supportedLocales.first;
       },
       debugShowCheckedModeBanner: false,
+      home: FutureBuilder(
+        future: FirebaseAuth.instance.currentUser(),
+        builder: (_, snap) {
+          if (snap.connectionState == ConnectionState.done &&
+              snap.data != null) {
+            String id = snap.data.uid;
+            Provider.of<UserData>(context, listen: false).currentUserId = id;
+            locator<HomeViewModel>().fetch(id);
+            locator<DrawerViewModel>().fetchUser(id);
+            return MainShell();
+          } else if (snap.connectionState == ConnectionState.done &&
+              snap.data == null) {
+            return LoginPage();
+          }
+          return LoadingPage();
+        },
+      ),
       title: 'Habits+',
-      onGenerateRoute: Router.generateRoute,
+      onGenerateRoute: (RouteSettings settings) =>
+          Router.generateRoute(settings, context),
+      // initialRoute: 'login',
     );
   }
 }

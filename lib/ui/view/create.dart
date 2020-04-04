@@ -140,7 +140,39 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
                   padding: const EdgeInsets.only(top: 55),
                   child: _currentPage == 0
                       ? CreateTask()
-                      : HabitViewOnCreatePage(),
+                      : Column(
+                          children: <Widget>[
+                            Container(
+                              margin: EdgeInsets.symmetric(horizontal: 15),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).primaryColor,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Material(
+                                borderRadius: BorderRadius.circular(10),
+                                child: InkWell(
+                                  onTap: () => Navigator.pushNamed(
+                                    context,
+                                    'createHabit_1',
+                                  ),
+                                  child: Container(
+                                    padding: EdgeInsets.all(15),
+                                    child: Center(
+                                      child: Text(
+                                        AppLocalizations.of(context)
+                                            .translate('create_habit'),
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                 ),
               ],
             ),
