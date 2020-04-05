@@ -151,7 +151,14 @@
     "push_today_at_template": "Сегодня в ",
     "push_desc": "Давайте закончим. Последняя, что нужно - настроить уведомления.\nВы можете поставить нужное время или вовсе выключить",
     "time": "Время",
-    "noTimeChoosenError": "Вы должны указать время или выключить уведомления"
+    "noTimeChoosenError": "Вы должны указать время или выключить уведомления",
+
+    "template": "Шаблоны",
+    "template_doSport": "Заниматься спортом",
+    "template_eatVegetarian": "Есть овощи",
+    "template_wakeUpAt5AM": "Просыпаться в 5 утра",
+    "template_dontHangOutOnInstagram": "Не залипать в инстаграме", 
+    "template_createPostEveryday": "Писать посты каждый день"
 
 
 

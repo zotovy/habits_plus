@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:habits_plus/core/models/theme.dart';
 import 'package:habits_plus/core/models/userData.dart';
+import 'package:habits_plus/core/util/habit_templates.dart';
 import 'package:habits_plus/core/viewmodels/drawer_model.dart';
 import 'package:habits_plus/core/viewmodels/home_model.dart';
 import 'package:habits_plus/locator.dart';
@@ -67,7 +68,6 @@ class _MainAppState extends State<MainApp> {
   @override
   Widget build(BuildContext context) {
     final theme = Provider.of<ThemeModel>(context).getTheme();
-
     return MaterialApp(
       theme: theme,
       supportedLocales: [

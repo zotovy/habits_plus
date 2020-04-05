@@ -46,6 +46,7 @@ dependencies:
   cached_network_image: ^2.0.0
   photo_view: ^0.9.2
   flutter_zoom_drawer: ^1.0.1
+  flutter_staggered_animations: ^0.1.2
 
   # Other
   provider: ^4.0.2

@@ -1,11 +1,13 @@
 import 'package:date_util/date_util.dart';
 import 'package:flutter/material.dart';
+import 'package:habits_plus/core/util/habit_templates.dart';
 import 'package:habits_plus/localization.dart';
 import 'package:habits_plus/core/models/habit.dart';
 import 'package:habits_plus/core/models/task.dart';
 import 'package:habits_plus/core/models/userData.dart';
 import 'package:habits_plus/core/services/database.dart';
 import 'package:habits_plus/core/util/constant.dart';
+import 'package:habits_plus/ui/widgets/create/templates.dart';
 import 'package:habits_plus/ui/widgets/createHabitView.dart';
 import 'package:habits_plus/ui/widgets/createTaskView.dart';
 import 'package:habits_plus/ui/widgets/progress_bar.dart';
@@ -26,6 +28,7 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
 
   @override
   Widget build(BuildContext context) {
+    setupHabitTemplates(context);
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -142,8 +145,8 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
                       ? CreateTask()
                       : Column(
                           children: <Widget>[
+                            // Create button
                             Container(
-                              margin: EdgeInsets.symmetric(horizontal: 15),
                               decoration: BoxDecoration(
                                 color: Theme.of(context).primaryColor,
                                 borderRadius: BorderRadius.circular(10),
@@ -171,6 +174,11 @@ class _CreateHabitPageState extends State<CreateHabitPage> {
                                 ),
                               ),
                             ),
+
+                            SizedBox(height: 35),
+
+                            // Template
+                            HabitTemplateWidget(),
                           ],
                         ),
                 ),

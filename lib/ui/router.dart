@@ -1,10 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:habits_plus/core/models/habit.dart';
-import 'package:habits_plus/core/models/userData.dart';
-import 'package:habits_plus/core/viewmodels/drawer_model.dart';
-import 'package:habits_plus/core/viewmodels/home_model.dart';
-import 'package:habits_plus/locator.dart';
 import 'package:habits_plus/ui/view/create.dart';
 import 'package:habits_plus/ui/view/detail_habit.dart';
 import 'package:habits_plus/ui/view/home.dart';
@@ -16,7 +11,6 @@ import 'package:habits_plus/ui/view/create/habit_view1.dart';
 import 'package:habits_plus/ui/view/create/habit_view2.dart';
 import 'package:habits_plus/ui/view/create/habit_view3.dart';
 import 'package:habits_plus/ui/view/create/habit_view4.dart';
-import 'package:provider/provider.dart';
 
 const String initialRoute = 'login';
 

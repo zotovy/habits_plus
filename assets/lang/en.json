@@ -156,6 +156,13 @@
     "push_today_at_template": "Today at ",
     "push_desc": "Let's finish. Last step is setting your\npush notification. You can easily\nspecify time or turn it off.",
     "time": "Time",
-    "noTimeChoosenError": "You need to specify your notification time or turn it off"
+    "noTimeChoosenError": "You need to specify your notification time or turn it off",
+    
+    "templates": "Templates",
+    "template_doSport": "Do sport",
+    "template_eatVegetarian": "Eat vegetarian",
+    "template_wakeUpAt5AM": "Wake up at 5 AM",
+    "template_dontHangOutInInstagram": "Don't hang out in instagram", 
+    "template_createPostEveryday": "Create Post everyday"
 
 }
