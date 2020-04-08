@@ -72,8 +72,6 @@ class _HabitViewOnHomePageState extends State<HabitViewOnHomePage>
           )
         : model.currentDate;
 
-    print(model.todayHabits[index].iconCode);
-
     return Material(
       borderRadius: BorderRadius.circular(10),
       color: Colors.transparent,

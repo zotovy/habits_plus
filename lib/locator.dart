@@ -6,6 +6,7 @@ import 'package:habits_plus/core/viewmodels/detail_model.dart';
 import 'package:habits_plus/core/viewmodels/drawer_model.dart';
 import 'package:habits_plus/core/viewmodels/home_model.dart';
 import 'package:habits_plus/core/viewmodels/login_model.dart';
+import 'package:habits_plus/core/viewmodels/statistic_model.dart';
 
 import 'core/services/database.dart';
 import 'core/viewmodels/create_model.dart';
@@ -26,4 +27,5 @@ void setupLocator() {
   locator.registerLazySingleton<DetailPageView>(() => DetailPageView());
   locator.registerLazySingleton<StorageServices>(() => StorageServices());
   locator.registerLazySingleton<DrawerViewModel>(() => DrawerViewModel());
+  locator.registerLazySingleton<StatisticViewModel>(() => StatisticViewModel());
 }

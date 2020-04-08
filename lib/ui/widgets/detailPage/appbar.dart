@@ -16,9 +16,11 @@ class DetailAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   String _getDesc(BuildContext context) {
     String time = model.habit.hasReminder
-        ? model.habit.timeOfDay.hour.toString() +
-            ':' +
-            '${model.habit.timeOfDay.minute.toString().length == 1 ? '0' + model.habit.timeOfDay.minute.toString() : model.habit.timeOfDay.minute.toString()}'
+        ? model.habit.timeOfDay != null
+            ? model.habit.timeOfDay.hour.toString() +
+                ':' +
+                '${model.habit.timeOfDay.minute.toString().length == 1 ? '0' + model.habit.timeOfDay.minute.toString() : model.habit.timeOfDay.minute.toString()}'
+            : AppLocalizations.of(context).translate('todos_reminder')
         : AppLocalizations.of(context).translate('todos_reminder');
 
     String days = '';

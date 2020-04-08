@@ -47,6 +47,7 @@ dependencies:
   photo_view: ^0.9.2
   flutter_zoom_drawer: ^1.0.1
   flutter_staggered_animations: ^0.1.2
+  syncfusion_flutter_charts: ^18.1.43
 
   # Other
   provider: ^4.0.2

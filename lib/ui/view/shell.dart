@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:habits_plus/core/enums/viewstate.dart';
 import 'package:habits_plus/core/models/userData.dart';
 import 'package:habits_plus/core/viewmodels/home_model.dart';
+import 'package:habits_plus/core/viewmodels/statistic_model.dart';
 import 'package:habits_plus/ui/view/home.dart';
 import 'package:habits_plus/ui/view/statistic.dart';
 import 'package:habits_plus/ui/widgets/shell_widget.dart';
@@ -15,7 +17,7 @@ class MainShell extends StatefulWidget {
 
 class _MainShellState extends State<MainShell> {
   // Page controll
-  int _currentPage = 1;
+  int _currentPage = 0;
   List<Widget> _pages;
   PageController _pageController;
 
@@ -26,6 +28,14 @@ class _MainShellState extends State<MainShell> {
       StatisticPage(),
       HomePage(),
     ];
+    String userId = Provider.of<UserData>(
+      context,
+      listen: false,
+    ).currentUserId;
+    locator<StatisticViewModel>().setState(ViewState.Busy);
+    locator<HomeViewModel>().fetch(userId).then((val) {
+      locator<StatisticViewModel>().setupHabits();
+    });
     _pageController = PageController(initialPage: _currentPage);
   }
 

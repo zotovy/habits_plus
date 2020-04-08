@@ -166,6 +166,16 @@
     "template_wakeUpAt5AM": "Wake up at 5 AM",
     "template_dontHangOutInInstagram": "Don't hang out in instagram", 
     "template_createPostEveryday": "Create Post everyday",
-    "error_noTextFieldData": "This field is required:("
+    "error_noTextFieldData": "This field is required:(",
+
+    "statistic": "Statistic",
+    "all": "All",
+    "this_week": "This week",
+    "habits": "Habits",
+    "completions": "Completions",
+    "complete": "Complete",
+    "this_month": "This month",
+    "top_habits": "Top habits"
+
 
 }

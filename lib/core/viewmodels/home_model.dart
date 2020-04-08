@@ -48,7 +48,7 @@ class HomeViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void fetch(String userId) async {
+  Future fetch(String userId) async {
     setState(ViewState.Busy);
     _habits = await _databaseServices.getAllHabitsById(userId);
     _tasks = await _databaseServices.getAllTasksById(userId);

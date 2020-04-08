@@ -204,13 +204,15 @@ class DatabaseServices {
         'hasReminder': habit.hasReminder,
         'repeatDays': days,
         'timeStamp': Timestamp.fromDate(habit.timeStamp),
-        'timeToRemind': DateTime(
-          now.year,
-          now.month,
-          now.day,
-          habit.timeOfDay.hour,
-          habit.timeOfDay.minute,
-        ),
+        'timeToRemind': habit.timeOfDay == null
+            ? null
+            : DateTime(
+                now.year,
+                now.month,
+                now.day,
+                habit.timeOfDay.hour,
+                habit.timeOfDay.minute,
+              ),
         'timesADay': habit.timesADay,
         'title': habit.title,
         'type': habit.type == HabitType.Countable ? 1 : 0,

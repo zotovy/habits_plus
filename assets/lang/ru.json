@@ -160,22 +160,16 @@
     "template_wakeUpAt5AM": "Просыпаться в 5 утра",
     "template_dontHangOutOnInstagram": "Не залипать в инстаграме", 
     "template_createPostEveryday": "Писать посты каждый день",
-    "error_noTextFieldData": "Это поле обязательно:("
+    "error_noTextFieldData": "Это поле обязательно:(",
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    "statistic": "Статистика",
+    "all": "Все",
+    "this_week": "Эта Неделя",
+    "habits": "Привычки",
+    "completions": "Завершено",
+    "complete": "Выполнено",
+    "this_month": "Этот месяц",
+    "top_habits": "Топ Привычек"
 
 
 
