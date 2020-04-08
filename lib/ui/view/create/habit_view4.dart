@@ -9,6 +9,8 @@ import 'package:habits_plus/core/util/constant.dart';
 import 'package:habits_plus/core/viewmodels/create_model.dart';
 import 'package:habits_plus/localization.dart';
 import 'package:habits_plus/ui/widgets/create/appbar.dart';
+import 'package:habits_plus/ui/widgets/create/confirm_button.dart';
+import 'package:habits_plus/ui/widgets/create/texts.dart';
 import 'package:provider/provider.dart';
 
 import '../../../locator.dart';
@@ -183,15 +185,7 @@ class _CreateHabitView4State extends State<CreateHabitView4>
                       SizedBox(height: 25),
 
                       // "Habit Type"
-                      Text(
-                        AppLocalizations.of(context)
-                            .translate('push_notification'),
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Theme.of(context).textSelectionHandleColor,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+                      titleText(context, 'push_notification'),
 
                       // Push preview
                       SizeTransition(
@@ -202,7 +196,32 @@ class _CreateHabitView4State extends State<CreateHabitView4>
                               horizontal: 15, vertical: 10),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            color: Theme.of(context).backgroundColor,
+                            color: Theme.of(context).brightness ==
+                                    Brightness.dark
+                                ? Color.fromARGB(
+                                    Theme.of(context).backgroundColor.alpha,
+                                    (Theme.of(context).backgroundColor.red *
+                                            1.5)
+                                        .round(),
+                                    (Theme.of(context).backgroundColor.green *
+                                            1.5)
+                                        .round(),
+                                    (Theme.of(context).backgroundColor.blue *
+                                            1.5)
+                                        .round(),
+                                  )
+                                : Color.fromARGB(
+                                    Theme.of(context).backgroundColor.alpha,
+                                    (Theme.of(context).backgroundColor.red *
+                                            0.99)
+                                        .round(),
+                                    (Theme.of(context).backgroundColor.green *
+                                            0.99)
+                                        .round(),
+                                    (Theme.of(context).backgroundColor.blue *
+                                            0.99)
+                                        .round(),
+                                  ),
                             boxShadow: [
                               BoxShadow(
                                 blurRadius: 5.0,
@@ -397,10 +416,7 @@ class _CreateHabitView4State extends State<CreateHabitView4>
                       // Desc
                       FadeTransition(
                         opacity: _descTransAnim,
-                        child: Text(
-                          AppLocalizations.of(context).translate('push_desc'),
-                          textAlign: TextAlign.center,
-                        ),
+                        child: descText(context, 'push_desc'),
                       ),
                       SizedBox(height: 15),
 
@@ -508,78 +524,55 @@ class _CreateHabitView4State extends State<CreateHabitView4>
                       // Confirm
                       FadeTransition(
                         opacity: _confirmButtonTransAnim,
-                        child: Container(
-                          margin: EdgeInsets.symmetric(horizontal: 15),
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).primaryColor,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Material(
-                            child: InkWell(
-                              borderRadius: BorderRadius.circular(10),
-                              onTap: () async {
-                                Habit habit = Habit(
-                                  almostDone: 0,
-                                  countableProgress: {},
-                                  description: widget.desc,
-                                  duration: widget.duration,
-                                  goalAmount: widget.duration[0]
-                                          .difference(widget.duration[1])
-                                          .inDays
-                                          .abs() +
-                                      1,
-                                  hasReminder: hasReminder,
-                                  iconCode: widget.iconCode,
-                                  isDisable: false,
-                                  progressBin: [],
-                                  repeatDays: widget.progressBin,
-                                  timeOfDay: dayTime,
-                                  timeStamp: DateTime.now(),
-                                  title: widget.title,
-                                  type: widget.habitType,
-                                );
-                                String userId = Provider.of<UserData>(context,
-                                        listen: false)
+                        child: ConfirmButton(
+                          onPress: () async {
+                            Habit habit = Habit(
+                              almostDone: 0,
+                              countableProgress: {},
+                              description: widget.desc,
+                              duration: widget.duration,
+                              goalAmount: widget.duration[0]
+                                      .difference(widget.duration[1])
+                                      .inDays
+                                      .abs() +
+                                  1,
+                              hasReminder: hasReminder,
+                              iconCode: widget.iconCode,
+                              isDisable: false,
+                              progressBin: [],
+                              repeatDays: widget.progressBin,
+                              timeOfDay: dayTime,
+                              timeStamp: DateTime.now(),
+                              title: widget.title,
+                              type: widget.habitType,
+                            );
+                            String userId =
+                                Provider.of<UserData>(context, listen: false)
                                     .currentUserId;
 
-                                bool dbCode = await model.createHabit(
-                                  habit,
-                                  userId,
-                                  dayTime == null ? null : dayTime.toString(),
-                                );
-                                if (dbCode) {
-                                  Navigator.pushNamed(context, '/');
-                                  return null;
-                                }
+                            bool dbCode = await model.createHabit(
+                              habit,
+                              userId,
+                            );
+                            if (dbCode) {
+                              Navigator.pushNamed(context, '/');
+                              return null;
+                            }
 
-                                _scaffoldKey.currentState.showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      AppLocalizations.of(context)
-                                          .translate('error_user_doent_exists'),
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    backgroundColor: Colors.redAccent,
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                padding: EdgeInsets.all(15),
-                                child: Center(
-                                  child: Text(
-                                    AppLocalizations.of(context)
-                                        .translate('intro_next'),
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                    ),
+                            _scaffoldKey.currentState.showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  AppLocalizations.of(context)
+                                      .translate('error_user_doent_exists'),
+                                  style: TextStyle(
+                                    color: Colors.white,
                                   ),
                                 ),
+                                backgroundColor: Colors.redAccent,
                               ),
-                            ),
-                          ),
+                            );
+                          },
+                          stringPath: 'finish',
                         ),
                       ),
                       SizedBox(height: 15),

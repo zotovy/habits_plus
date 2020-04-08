@@ -86,61 +86,71 @@ class TemplateTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 7),
-      child: Row(
-        children: <Widget>[
-          // Icon
-          Container(
-            padding: EdgeInsets.all(7),
-            decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor,
-              borderRadius: BorderRadius.circular(12.5),
-            ),
-            child: Icon(
-              icon,
-              color: Colors.white,
-              size: 35,
-            ),
+      child: Material(
+        child: InkWell(
+          onTap: () => Navigator.pushNamed(
+            context,
+            'create_from_template',
+            arguments: templates[i],
           ),
-
-          SizedBox(width: 10),
-
-          // Title & days
-          Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
-                    color: Theme.of(context).textSelectionHandleColor,
-                  ),
+          borderRadius: BorderRadius.circular(10),
+          child: Row(
+            children: <Widget>[
+              // Icon
+              Container(
+                padding: EdgeInsets.all(7),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                  borderRadius: BorderRadius.circular(12.5),
                 ),
-                Text(
-                  dayData(context),
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Theme.of(context).textSelectionColor,
-                  ),
+                child: Icon(
+                  icon,
+                  color: Colors.white,
+                  size: 35,
                 ),
-              ],
-            ),
-          ),
-
-          // Go Icon
-          Expanded(
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: Icon(
-                Icons.chevron_right,
-                color: Theme.of(context).textSelectionColor,
-                size: 24,
               ),
-            ),
+
+              SizedBox(width: 10),
+
+              // Title & days
+              Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      title,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                        color: Theme.of(context).textSelectionHandleColor,
+                      ),
+                    ),
+                    Text(
+                      dayData(context),
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Theme.of(context).textSelectionColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Go Icon
+              Expanded(
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: Icon(
+                    Icons.chevron_right,
+                    color: Theme.of(context).textSelectionColor,
+                    size: 24,
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

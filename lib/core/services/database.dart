@@ -39,9 +39,9 @@ class DatabaseServices {
   Future<bool> createHabit(
     Habit habit,
     String userId,
-    String timeOfDay,
   ) async {
     bool isExists = await isUserExists(userId);
+    DateTime now = DateTime.now();
     if (isExists) {
       // generate document ID
       String docId = Uuid().v4();
@@ -64,7 +64,15 @@ class DatabaseServices {
           'hasReminder': habit.hasReminder,
           'repeatDays': days,
           'timeStamp': Timestamp.now(),
-          'timeToRemind': timeOfDay,
+          'timeToRemind': habit.timeOfDay != null
+              ? DateTime(
+                  now.year,
+                  now.month,
+                  now.day,
+                  habit.timeOfDay.hour,
+                  habit.timeOfDay.minute,
+                )
+              : null,
           'timesADay': habit.timesADay,
           'title': habit.title,
           'type': habit.type == HabitType.Countable ? 1 : 0,
@@ -181,6 +189,7 @@ class DatabaseServices {
       else
         days += '0';
     }
+    DateTime now = DateTime.now();
 
     // Update data in firebase
     await habitsRef
@@ -194,8 +203,14 @@ class DatabaseServices {
         'disable': false,
         'hasReminder': habit.hasReminder,
         'repeatDays': days,
-        'timeStamp': Timestamp.now(),
-        'timeToRemind': habit.timeOfDay,
+        'timeStamp': Timestamp.fromDate(habit.timeStamp),
+        'timeToRemind': DateTime(
+          now.year,
+          now.month,
+          now.day,
+          habit.timeOfDay.hour,
+          habit.timeOfDay.minute,
+        ),
         'timesADay': habit.timesADay,
         'title': habit.title,
         'type': habit.type == HabitType.Countable ? 1 : 0,

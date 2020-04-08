@@ -23,9 +23,9 @@ class CreateViewModel extends BaseViewModel {
     return dbcode;
   }
 
-  Future<bool> createHabit(Habit habit, String userId, String timeOfDay) async {
+  Future<bool> createHabit(Habit habit, String userId) async {
     setState(ViewState.Busy);
-    bool dbcode = await _databaseServices.createHabit(habit, userId, timeOfDay);
+    bool dbcode = await _databaseServices.createHabit(habit, userId);
     if (dbcode) {
       // If successed -> add habit to home screen
       locator<HomeViewModel>().addHabit(habit);

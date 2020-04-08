@@ -7,6 +7,7 @@ import 'package:habits_plus/core/viewmodels/drawer_model.dart';
 import 'package:habits_plus/core/viewmodels/home_model.dart';
 import 'package:habits_plus/locator.dart';
 import 'package:habits_plus/ui/router.dart';
+import 'package:habits_plus/ui/view/create/create_from_template.dart';
 import 'package:habits_plus/ui/view/intro.dart';
 import 'package:habits_plus/ui/view/loading.dart';
 import 'package:habits_plus/ui/view/login.dart';

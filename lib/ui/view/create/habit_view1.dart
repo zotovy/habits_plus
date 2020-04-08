@@ -1,9 +1,11 @@
-import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:habits_plus/core/util/constant.dart';
 import 'package:habits_plus/localization.dart';
+import 'package:habits_plus/ui/view/create/iconGrid.dart';
 import 'package:habits_plus/ui/widgets/create/appbar.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:habits_plus/ui/widgets/create/confirm_button.dart';
+import 'package:habits_plus/ui/widgets/create/createTextField.dart';
+import 'package:habits_plus/ui/widgets/create/texts.dart';
 
 class CreateHabitView1 extends StatefulWidget {
   @override
@@ -47,10 +49,6 @@ class _CreateHabitView1State extends State<CreateHabitView1>
   AnimationController desc2Controller;
   Animation<double> desc2Anim;
 
-  List<AnimationController> iconFadeControllerList;
-  List<Animation<double>> iconFadeAnimList;
-  List<Animation<double>> iconRotationAnimList;
-
   AnimationController confirmController;
   Animation<double> confirmAnim;
 
@@ -65,9 +63,6 @@ class _CreateHabitView1State extends State<CreateHabitView1>
     textfield1Controller.dispose();
     textfield2Controller.dispose();
     desc2Controller.dispose();
-    for (var i = 0; i < iconFadeControllerList.length; i++) {
-      iconFadeControllerList[i].dispose();
-    }
     confirmController.dispose();
   }
 
@@ -159,34 +154,6 @@ class _CreateHabitView1State extends State<CreateHabitView1>
       parent: desc2Controller,
     ));
 
-    iconFadeControllerList = List.generate(
-      7,
-      (int i) => AnimationController(
-        vsync: this,
-        duration: Duration(milliseconds: 200),
-      ),
-    );
-
-    iconFadeAnimList = List.generate(
-      7,
-      (int i) => Tween<double>(begin: 0, end: 1).animate(
-        CurvedAnimation(
-          curve: Curves.easeInOut,
-          parent: iconFadeControllerList[i],
-        ),
-      ),
-    );
-
-    iconRotationAnimList = List.generate(
-      7,
-      (int i) => Tween<double>(begin: -0.1, end: 0).animate(
-        CurvedAnimation(
-          curve: Curves.easeInOut,
-          parent: iconFadeControllerList[i],
-        ),
-      ),
-    );
-
     confirmController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 200),
@@ -219,7 +186,6 @@ class _CreateHabitView1State extends State<CreateHabitView1>
                 Future.delayed(Duration(milliseconds: 100)).then((onValue) {
                   desc2Controller.forward();
                   Future.delayed(Duration(milliseconds: 100)).then((onValue) {
-                    _iconAnimation();
                     Future.delayed(
                       Duration(milliseconds: 200),
                     ).then((onValue) {
@@ -233,13 +199,6 @@ class _CreateHabitView1State extends State<CreateHabitView1>
         });
       });
     });
-  }
-
-  void _iconAnimation() async {
-    for (var i = 0; i < 7; i++) {
-      iconFadeControllerList[i].forward();
-      await Future.delayed(Duration(milliseconds: 100));
-    }
   }
 
   @override
@@ -263,14 +222,7 @@ class _CreateHabitView1State extends State<CreateHabitView1>
                 // Title
                 FadeTransition(
                   opacity: title1Anim,
-                  child: Text(
-                    AppLocalizations.of(context).translate('title_and_desc'),
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Theme.of(context).textSelectionHandleColor,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  child: titleText(context, 'title_and_desc'),
                 ),
 
                 SizedBox(height: 10),
@@ -511,15 +463,7 @@ class _CreateHabitView1State extends State<CreateHabitView1>
                 FadeTransition(
                   opacity: desc1Controller,
                   child: Container(
-                    child: Text(
-                      AppLocalizations.of(context)
-                          .translate('createHabit1_desc1'),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Theme.of(context).textSelectionColor,
-                        fontSize: 16,
-                      ),
-                    ),
+                    child: descText(context, 'createHabit1_desc1'),
                   ),
                 ),
 
@@ -528,41 +472,22 @@ class _CreateHabitView1State extends State<CreateHabitView1>
                 // Title
                 FadeTransition(
                   opacity: textfield1Anim,
-                  child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 15),
-                    child: TextFormField(
-                      style: TextStyle(
-                        color: Colors.black87,
-                      ),
-                      decoration: InputDecoration(
-                        labelStyle: TextStyle(
-                          color: Colors.black38,
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.black12, width: 2),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        hintText: AppLocalizations.of(context)
-                            .translate('noHabitTitle_hint'),
-                      ),
-                      onChanged: (String val) {
-                        setState(() {
-                          if (val.trim() != '') {
-                            _title = val;
-                          } else {
-                            _title = null;
-                          }
-                        });
-                      },
-                      validator: (String val) => val.trim() == ''
-                          ? AppLocalizations.of(context)
-                              .translate('createHabit_title_error')
-                          : null,
-                    ),
+                  child: CreateTextField(
+                    errorLocalizationPath: 'createHabit_title_error',
+                    hintPath: 'noHabitTitle_hint',
+                    onChanged: (String val) {
+                      setState(() {
+                        if (val.trim() != '') {
+                          _title = val;
+                        } else {
+                          _title = null;
+                        }
+                      });
+                    },
+                    validator: (String val) => val.trim() == ''
+                        ? AppLocalizations.of(context)
+                            .translate('createHabit_title_error')
+                        : null,
                   ),
                 ),
 
@@ -571,33 +496,13 @@ class _CreateHabitView1State extends State<CreateHabitView1>
                 // Description
                 FadeTransition(
                   opacity: textfield2Anim,
-                  child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 15),
-                    child: TextFormField(
-                      style: TextStyle(
-                        color: Colors.black87,
-                      ),
-                      decoration: InputDecoration(
-                        labelStyle: TextStyle(
-                          color: Colors.black38,
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.black12, width: 2),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        hintText: AppLocalizations.of(context)
-                            .translate('noHabitDesc_hint'),
-                      ),
-                      onChanged: (String val) {
-                        setState(() {
-                          _description = val;
-                        });
-                      },
-                    ),
+                  child: CreateTextField(
+                    hintPath: 'noHabitDesc_hint',
+                    onChanged: (String val) {
+                      setState(() {
+                        _description = val;
+                      });
+                    },
                   ),
                 ),
 
@@ -606,14 +511,7 @@ class _CreateHabitView1State extends State<CreateHabitView1>
                 // Title 2
                 FadeTransition(
                   opacity: title2Anim,
-                  child: Text(
-                    AppLocalizations.of(context).translate('choose_your_icon'),
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Theme.of(context).textSelectionHandleColor,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  child: titleText(context, 'choose_your_icon'),
                 ),
 
                 SizedBox(height: 10),
@@ -622,104 +520,38 @@ class _CreateHabitView1State extends State<CreateHabitView1>
                 FadeTransition(
                   opacity: desc2Anim,
                   child: Container(
-                    child: Text(
-                      AppLocalizations.of(context)
-                          .translate('createHabit1_desc2'),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Theme.of(context).textSelectionColor,
-                        fontSize: 16,
-                      ),
-                    ),
+                    child: descText(context, 'createHabit1_desc2'),
                   ),
                 ),
 
                 // Icon Grid
-                Container(
-                  height: 300,
-                  child: GridView.count(
-                    physics: NeverScrollableScrollPhysics(),
-                    crossAxisCount: 5,
-                    children: List.generate(
-                      habitsIcons.length,
-                      (int i) {
-                        int index;
-                        if ((i / 5).floor() == 0) {
-                          index = i;
-                        } else if ((i / 5).floor() == 1) {
-                          index = i - 4;
-                        } else if ((i / 5).floor() == 2) {
-                          index = i - 8;
-                        }
-
-                        return GestureDetector(
-                          onTap: () => setState(() {
-                            _icon = i;
-                          }),
-                          child: RotationTransition(
-                            turns: iconRotationAnimList[index],
-                            child: FadeTransition(
-                              opacity: iconFadeAnimList[index],
-                              child: Container(
-                                padding: EdgeInsets.all(5),
-                                child: Icon(
-                                  habitsIcons[i],
-                                  color: i == _icon
-                                      ? Theme.of(context).primaryColor
-                                      : Theme.of(context).disabledColor,
-                                  size: 36,
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
+                IconGridView(
+                  onTap: (int _iconIndex) {
+                    setState(() {
+                      _icon = _iconIndex;
+                    });
+                  },
                 ),
 
                 // Confirm
                 FadeTransition(
-                  opacity: confirmAnim,
-                  child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 15),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Material(
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(10),
-                        onTap: () {
-                          if (_formKey.currentState.validate()) {
-                            Navigator.pushNamed(
-                              context,
-                              'createHabit_2',
-                              arguments: [
-                                _title,
-                                _description == null ? '' : _description,
-                                _icon
-                              ],
-                            );
-                          }
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(15),
-                          child: Center(
-                            child: Text(
-                              AppLocalizations.of(context)
-                                  .translate('intro_next'),
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                    opacity: confirmAnim,
+                    child: ConfirmButton(
+                      onPress: () {
+                        if (_formKey.currentState.validate()) {
+                          Navigator.pushNamed(
+                            context,
+                            'createHabit_2',
+                            arguments: [
+                              _title,
+                              _description == null ? '' : _description,
+                              _icon
+                            ],
+                          );
+                        }
+                      },
+                      stringPath: 'confirm',
+                    )),
 
                 SizedBox(height: 15),
               ],

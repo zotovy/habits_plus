@@ -83,33 +83,38 @@ class HomeViewModel extends BaseViewModel {
 
   void setMarkedDates() {
     // Get the nearest monday
-    DateTime today = DateTime.now();
-    DateTime _firstDayOfTheWeek = DateTime.now();
-    if (today.weekday != 1) {
-      _firstDayOfTheWeek = today.subtract(
-        Duration(days: today.weekday - 1),
-      );
-    }
+    // DateTime today = DateTime.now();
+    // DateTime _firstDayOfTheWeek = DateTime.now();
+    // if (today.weekday != 1) {
+    //   _firstDayOfTheWeek = today.subtract(
+    //     Duration(days: today.weekday - 1),
+    //   );
+    // }
 
     _habitsDate = {};
     _markedDates = [];
 
     // Habits
+
     for (var i = 0; i < _habits.length; i++) {
-      _firstDayOfTheWeek = _habits[i].duration[0];
-      DateTime start = _firstDayOfTheWeek, end = _firstDayOfTheWeek;
+      DateTime start = _habits[i].duration[0], end = _habits[i].duration[1];
+
+      // Check is habit off
+      if (_habits[i].isDisable) {
+        continue;
+      }
 
       // init start
-      if (_firstDayOfTheWeek.weekday != 1) {
-        start = _firstDayOfTheWeek.subtract(
-          Duration(days: _firstDayOfTheWeek.weekday - 1),
+      if (start.weekday != 1) {
+        start = start.subtract(
+          Duration(days: start.weekday - 1),
         );
       }
 
       // init end
-      if (_firstDayOfTheWeek.weekday != 7) {
-        end = _firstDayOfTheWeek.add(
-          Duration(days: 7 - _firstDayOfTheWeek.weekday),
+      if (end.weekday != 7) {
+        end = end.add(
+          Duration(days: 7 - end.weekday),
         );
       }
 
@@ -154,6 +159,11 @@ class HomeViewModel extends BaseViewModel {
     // Habits
     _todayHabits = [];
     for (var i = 0; i < _habits.length; i++) {
+      // Check is disable
+      if (_habits[i].isDisable) {
+        continue;
+      }
+
       for (var j = 0; j < _habitsDate[i].length; j++) {
         if (_habitsDate[i][j] == dateFormater.parse(date.toString())) {
           _todayHabits.add(_habits[i]);

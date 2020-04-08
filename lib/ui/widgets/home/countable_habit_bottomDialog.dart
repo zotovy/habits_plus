@@ -63,6 +63,7 @@ class _CountableHabitsBottomDialogState
                     Container(
                       width: 100,
                       child: TextFormField(
+                        keyboardType: TextInputType.number,
                         decoration: InputDecoration(
                           hintText: randomHint,
                           border: OutlineInputBorder(

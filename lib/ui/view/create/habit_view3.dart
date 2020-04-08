@@ -3,6 +3,8 @@ import 'package:habits_plus/core/enums/habitType.dart';
 import 'package:habits_plus/core/util/constant.dart';
 import 'package:habits_plus/localization.dart';
 import 'package:habits_plus/ui/widgets/create/appbar.dart';
+import 'package:habits_plus/ui/widgets/create/cards.dart';
+import 'package:habits_plus/ui/widgets/create/texts.dart';
 
 class CreateHabitView3 extends StatefulWidget {
   String title;
@@ -129,14 +131,7 @@ class _CreateHabitView3State extends State<CreateHabitView3>
                   SizedBox(height: 25),
 
                   // "Habit Type"
-                  Text(
-                    AppLocalizations.of(context).translate('habit_type'),
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Theme.of(context).textSelectionHandleColor,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  titleText(context, 'habit_type'),
                   SizedBox(height: 10),
 
                   // Habit View
@@ -352,158 +347,19 @@ class _CreateHabitView3State extends State<CreateHabitView3>
                   // Description
                   FadeTransition(
                     opacity: _descTransitionAnim,
-                    child: Text(
-                      AppLocalizations.of(context).translate('habit_type_desc'),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Theme.of(context).textSelectionColor,
-                        fontSize: 16,
-                      ),
-                    ),
+                    child: descText(context, 'habit_type_desc'),
                   ),
                   SizedBox(height: 20),
 
                   // Cards
                   FadeTransition(
                     opacity: _cardsTransitionFadeAnim,
-                    child: Container(
-                      margin: EdgeInsets.symmetric(horizontal: 15),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          // Uncountable
-                          GestureDetector(
-                            onTap: () => setState(() {
-                              isCountable = false;
-                            }),
-                            child: Container(
-                              width: MediaQuery.of(context).size.width / 2 - 40,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: !isCountable
-                                    ? Theme.of(context).primaryColor
-                                    : Theme.of(context).disabledColor,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
-                                    offset: Offset(0, 3),
-                                    blurRadius: 5,
-                                    spreadRadius: 3,
-                                  )
-                                ],
-                              ),
-                              height: 250,
-                              padding: EdgeInsets.all(15),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  // Title
-                                  Text(
-                                    AppLocalizations.of(context)
-                                        .translate('create_card1_title'),
-                                    style: TextStyle(
-                                      fontSize: 24,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  SizedBox(height: 15),
-
-                                  // Description
-                                  Text(
-                                    AppLocalizations.of(context)
-                                        .translate('create_card1_desc'),
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  SizedBox(height: 10),
-
-                                  // Example
-                                  Text(
-                                    AppLocalizations.of(context)
-                                        .translate('create_card1_example'),
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.white.withOpacity(0.75),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-
-                          // Countable
-                          GestureDetector(
-                            onTap: () => setState(() {
-                              isCountable = true;
-                            }),
-                            child: Container(
-                              width: MediaQuery.of(context).size.width / 2 - 40,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: isCountable
-                                    ? Theme.of(context).primaryColor
-                                    : Theme.of(context).disabledColor,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
-                                    offset: Offset(0, 3),
-                                    blurRadius: 5,
-                                    spreadRadius: 3,
-                                  )
-                                ],
-                              ),
-                              height: 250,
-                              padding: EdgeInsets.all(15),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  // Title
-                                  Text(
-                                    AppLocalizations.of(context)
-                                        .translate('create_card2_title'),
-                                    style: TextStyle(
-                                      fontSize: 24,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  SizedBox(height: 15),
-
-                                  // Description
-                                  Text(
-                                    AppLocalizations.of(context)
-                                        .translate('create_card2_desc'),
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  SizedBox(height: 10),
-
-                                  // Example
-                                  Text(
-                                    AppLocalizations.of(context)
-                                        .translate('create_card2_example'),
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.white.withOpacity(0.75),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                    child: HabitTypeCard(
+                      setCountable: (value) {
+                        setState(() {
+                          isCountable = value;
+                        });
+                      },
                     ),
                   ),
                   SizedBox(height: 20),

@@ -72,6 +72,8 @@ class _HabitViewOnHomePageState extends State<HabitViewOnHomePage>
           )
         : model.currentDate;
 
+    print(model.todayHabits[index].iconCode);
+
     return Material(
       borderRadius: BorderRadius.circular(10),
       color: Colors.transparent,
@@ -86,7 +88,6 @@ class _HabitViewOnHomePageState extends State<HabitViewOnHomePage>
           padding: EdgeInsets.all(10),
           height: 107,
           decoration: BoxDecoration(
-            // color: Theme.of(context).primaryColor,
             gradient: LinearGradient(colors: [
               Theme.of(context).primaryColor,
               Color(0xFF8050e5),
@@ -119,12 +120,11 @@ class _HabitViewOnHomePageState extends State<HabitViewOnHomePage>
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Icon(
-                              habitsIcons[model.habits[index].iconCode],
+                              habitsIcons[model.todayHabits[index].iconCode],
                               size: 32,
                               color: Colors.white,
                             ),
                           ),
-
                           // Title & desc
                           Container(
                             padding: EdgeInsets.only(left: 12.5),
@@ -703,17 +703,10 @@ class _HabitViewOnHomePageState extends State<HabitViewOnHomePage>
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Theme.of(context).brightness == Brightness.light
-                          ? Image(
-                              width: 80,
-                              image: AssetImage(
-                                  'assets/images/no_habits_light.png'),
-                            )
-                          : Image(
-                              width: 80,
-                              image: AssetImage(
-                                  'assets/images/no_habits_dark.png'),
-                            ),
+                      Image(
+                        width: MediaQuery.of(context).size.width / 5,
+                        image: AssetImage('assets/images/no_habits.png'),
+                      ),
                       SizedBox(height: 15),
                       Text(
                         AppLocalizations.of(context).translate('no_habits_1'),

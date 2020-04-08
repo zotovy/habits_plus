@@ -16,7 +16,9 @@ class DetailAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   String _getDesc(BuildContext context) {
     String time = model.habit.hasReminder
-        ? model.habit.timeOfDay.hour
+        ? model.habit.timeOfDay.hour.toString() +
+            ':' +
+            '${model.habit.timeOfDay.minute.toString().length == 1 ? '0' + model.habit.timeOfDay.minute.toString() : model.habit.timeOfDay.minute.toString()}'
         : AppLocalizations.of(context).translate('todos_reminder');
 
     String days = '';
@@ -39,7 +41,8 @@ class DetailAppBar extends StatelessWidget implements PreferredSizeWidget {
           )
           .values
           .toList();
-      tmp.forEach((_val) => days += '$_val,');
+      print(tmp);
+      tmp.forEach((_val) => days += _val == '' ? '' : '$_val,');
     }
     int last = ((MediaQuery.of(context).size.width - 89) ~/ 7.5).toInt() -
         time.length -

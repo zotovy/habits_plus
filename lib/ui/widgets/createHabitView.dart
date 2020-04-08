@@ -671,7 +671,6 @@ class _HabitVieOnnCreatePageState extends State<HabitViewOnCreatePage> {
                                           bool dbcode = await model.createHabit(
                                             habit,
                                             userId,
-                                            _timeRemindLocal,
                                           );
 
                                           if (!dbcode) {

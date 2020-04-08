@@ -59,7 +59,7 @@ class Habit {
       goalAmount: doc['goalAmount'],
       almostDone: doc['almostDone'],
       iconCode: doc['iconCode'],
-      isDisable: doc['isDisable'],
+      isDisable: doc['disable'],
       hasReminder: doc['hasReminder'],
       timeStamp: (doc['timeStamp'] as Timestamp).toDate(),
       duration: (doc['duration'] as List)
@@ -68,7 +68,7 @@ class Habit {
           )
           .toList(),
       timeOfDay: doc['timeToRemind'] != '' && doc['timeToRemind'] != null
-          ? TimeOfDay.fromDateTime(DateTime.parse(doc['timeToRemind']))
+          ? TimeOfDay.fromDateTime((doc['timeToRemind'] as Timestamp).toDate())
           : null,
       repeatDays: repeatDays,
       timesADay: doc['timesADay'],

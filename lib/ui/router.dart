@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habits_plus/core/models/habit.dart';
-import 'package:habits_plus/ui/view/create.dart';
+import 'package:habits_plus/ui/view/create/create.dart';
+import 'package:habits_plus/ui/view/create/create_from_template.dart';
 import 'package:habits_plus/ui/view/detail_habit.dart';
 import 'package:habits_plus/ui/view/home.dart';
 import 'package:habits_plus/ui/view/image_preview.dart';
@@ -28,6 +29,11 @@ class Router {
         return MaterialPageRoute(builder: (_) => SignUpPage());
       case 'create':
         return MaterialPageRoute(builder: (_) => CreateHabitPage());
+      case 'create_from_template':
+        Habit habit = settings.arguments;
+        return MaterialPageRoute(
+          builder: (_) => CreateFromTemplatePage(templateHabit: habit),
+        );
       case 'createHabit_1':
         return MaterialPageRoute(builder: (_) => CreateHabitView1());
       case 'createHabit_2':
