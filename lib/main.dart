@@ -106,11 +106,12 @@ class _MainAppState extends State<MainApp> {
             return MainShell();
           } else if (snap.connectionState == ConnectionState.done &&
               snap.data == null) {
-            return LoginPage();
+            return IntroPage();
           }
           return LoadingPage();
         },
       ),
+      // home: (),
       title: 'Habits+',
       onGenerateRoute: (RouteSettings settings) =>
           Router.generateRoute(settings, context),

@@ -72,6 +72,18 @@ class _HabitViewOnHomePageState extends State<HabitViewOnHomePage>
           )
         : model.currentDate;
 
+    String progress;
+    if (model.todayHabits[index].type == HabitType.Countable) {
+      int done = 0;
+      model.todayHabits[index].countableProgress.forEach(
+        (_, elem) => done += elem[0],
+      );
+      progress = '$done/${model.todayHabits[index].goalAmount}';
+    } else {
+      progress =
+          '${model.todayHabits[index].progressBin.length}/${model.todayHabits[index].goalAmount}';
+    }
+
     return Material(
       borderRadius: BorderRadius.circular(10),
       color: Colors.transparent,
@@ -200,7 +212,7 @@ class _HabitViewOnHomePageState extends State<HabitViewOnHomePage>
 
                                       // Progress
                                       Text(
-                                        '${model.todayHabits[index].progressBin.length}/${model.todayHabits[index].goalAmount}',
+                                        progress,
                                         style: TextStyle(
                                           color: Colors.white38,
                                           fontWeight: FontWeight.w600,
@@ -365,6 +377,18 @@ class _HabitViewOnHomePageState extends State<HabitViewOnHomePage>
 
     int last = ((MediaQuery.of(context).size.width - 152.5) ~/ 9.5).toInt();
 
+    String progress;
+    if (model.todayHabits[index].type == HabitType.Countable) {
+      int done = 0;
+      model.todayHabits[index].countableProgress.forEach(
+        (_, elem) => done += elem[0],
+      );
+      progress = '$done/${model.todayHabits[index].goalAmount}';
+    } else {
+      progress =
+          '${model.todayHabits[index].progressBin.length}/${model.todayHabits[index].goalAmount}';
+    }
+
     return Material(
       borderRadius: BorderRadius.circular(10),
       color: Colors.transparent,
@@ -490,7 +514,7 @@ class _HabitViewOnHomePageState extends State<HabitViewOnHomePage>
 
                                       // Progress
                                       Text(
-                                        '${model.todayHabits[index].progressBin.length}/${model.todayHabits[index].goalAmount}',
+                                        progress,
                                         style: TextStyle(
                                           color: Colors.white38,
                                           fontWeight: FontWeight.w600,

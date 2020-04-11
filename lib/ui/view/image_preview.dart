@@ -23,7 +23,7 @@ class ImagePreviewPage extends StatelessWidget {
             Hero(
               tag: tag,
               child: PhotoView(
-                imageProvider: image.runtimeType == File
+                imageProvider: image.runtimeType != String
                     ? FileImage(image)
                     : CachedNetworkImageProvider(image),
               ),

@@ -17,12 +17,12 @@ class ChooseStatViewTypeWidget extends StatefulWidget {
 }
 
 class _ChooseStatViewTypeWidgetState extends State<ChooseStatViewTypeWidget> {
-  int selectedIndex = -1;
+  int selectedIndex = 0;
 
   Widget _buildTile(int i) {
     return AnimatedContainer(
       duration: Duration(milliseconds: 200),
-      margin: EdgeInsets.only(right: i == widget.habits.length - 1 ? 0 : 20),
+      margin: EdgeInsets.only(right: i == widget.habits.length ? 0 : 20),
       decoration: BoxDecoration(
         color: selectedIndex == i
             ? Theme.of(context).primaryColor
@@ -41,7 +41,7 @@ class _ChooseStatViewTypeWidgetState extends State<ChooseStatViewTypeWidget> {
           child: Container(
             padding: EdgeInsets.all(10),
             child: Text(
-              widget.habits[i].title,
+              widget.habits[i - 1].title,
               style: TextStyle(
                 color: selectedIndex == i
                     ? Colors.white
@@ -68,7 +68,7 @@ class _ChooseStatViewTypeWidgetState extends State<ChooseStatViewTypeWidget> {
                   duration: Duration(milliseconds: 200),
                   margin: EdgeInsets.only(right: 20),
                   decoration: BoxDecoration(
-                    color: selectedIndex == -1
+                    color: selectedIndex == 0
                         ? Theme.of(context).primaryColor
                         : Theme.of(context).disabledColor,
                     borderRadius: BorderRadius.circular(10),
@@ -78,9 +78,9 @@ class _ChooseStatViewTypeWidgetState extends State<ChooseStatViewTypeWidget> {
                       borderRadius: BorderRadius.circular(10),
                       onTap: () {
                         setState(() {
-                          selectedIndex = -1;
+                          selectedIndex = 0;
                         });
-                        widget.callback(-1);
+                        widget.callback(0);
                       },
                       child: Container(
                         padding:
@@ -99,7 +99,7 @@ class _ChooseStatViewTypeWidgetState extends State<ChooseStatViewTypeWidget> {
               ] +
               List.generate(
                 widget.habits.length,
-                (int i) => _buildTile(i),
+                (int i) => _buildTile(i + 1),
               ),
         ),
       ),

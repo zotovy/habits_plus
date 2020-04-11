@@ -95,12 +95,22 @@ class DatabaseServices {
       // generate document ID
       String docId = Uuid().v4();
 
+      DateTime now = DateTime.now();
+
       // Write document into DB
       tasksRef.document(userId).collection('tasks').document(docId).setData(
         {
           'title': task.title,
           'description': task.description,
-          'time': task.time,
+          'time': task.time != null
+              ? DateTime(
+                  now.year,
+                  now.month,
+                  now.day,
+                  task.time.hour,
+                  task.time.minute,
+                )
+              : null,
           'date': task.date,
           'timeStamp': task.timestamp,
           'isEveryDay': task.isEveryDay,
@@ -225,12 +235,22 @@ class DatabaseServices {
   }
 
   void updateTask(Task task, String userId) {
+    DateTime now = DateTime.now();
+
     // Update data in firebase
     tasksRef.document(userId).collection('tasks').document(task.id).updateData(
       {
         'title': task.title,
         'description': task.description,
-        'time': task.time,
+        'time': task.time != null
+            ? DateTime(
+                now.year,
+                now.month,
+                now.day,
+                task.time.hour,
+                task.time.minute,
+              )
+            : null,
         'date': task.date,
         'timeStamp': task.timestamp,
         'isEveryDay': task.isEveryDay,

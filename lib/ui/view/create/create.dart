@@ -1,19 +1,8 @@
-import 'package:date_util/date_util.dart';
 import 'package:flutter/material.dart';
 import 'package:habits_plus/core/util/habit_templates.dart';
 import 'package:habits_plus/localization.dart';
-import 'package:habits_plus/core/models/habit.dart';
-import 'package:habits_plus/core/models/task.dart';
-import 'package:habits_plus/core/models/userData.dart';
-import 'package:habits_plus/core/services/database.dart';
-import 'package:habits_plus/core/util/constant.dart';
 import 'package:habits_plus/ui/widgets/create/templates.dart';
-import 'package:habits_plus/ui/widgets/createHabitView.dart';
-import 'package:habits_plus/ui/widgets/createTaskView.dart';
-import 'package:habits_plus/ui/widgets/progress_bar.dart';
-import 'package:habits_plus/ui/widgets/textField_create.dart';
-import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
+import 'package:habits_plus/ui/widgets/create/createTaskView.dart';
 
 class CreateHabitPage extends StatefulWidget {
   @override
@@ -23,7 +12,6 @@ class CreateHabitPage extends StatefulWidget {
 class _CreateHabitPageState extends State<CreateHabitPage> {
   // Services
   int _currentPage = 1; // 0 - Tasks, 1 - Habit
-  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool isLoading = false;
 
   @override

@@ -253,7 +253,7 @@ class AuthService {
     String userId = Provider.of<UserData>(context, listen: false).currentUserId;
     locator<HomeViewModel>().fetch(userId);
 
-    Navigator.pop(context);
+    Navigator.pushReplacementNamed(context, '/');
 
     // Success
   }
@@ -270,14 +270,14 @@ class AuthService {
         FirebaseUser fireUser =
             (await auth.signInWithCredential(credential)).user;
 
-        if (await DatabaseServices.isUserExists(fireUser.uid)) {
-          Navigator.pop(context);
-        } else {
+        if (!await DatabaseServices.isUserExists(fireUser.uid)) {
           final responce = await http.get(
             'https://graph.facebook.com/v2.12/me?fields=name,email&access_token=${result.accessToken.token}',
           );
           String name = json.decode(responce.body)['name'];
         }
+
+        Navigator.pushReplacementNamed(context, '/');
 
         break;
       case FacebookLoginStatus.cancelledByUser:

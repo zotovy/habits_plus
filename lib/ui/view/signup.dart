@@ -42,43 +42,14 @@ class _SignUpPageState extends State<SignUpPage> {
             onTap: () => FocusScope.of(context).unfocus(),
             child: Scaffold(
               appBar: model.state == ViewState.Busy ? ProgressBar() : null,
+              backgroundColor: Colors.white,
               key: _scaffoldKey,
               body: Container(
                 child: Form(
                   key: _formKey,
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        bottom: MediaQuery.of(context).size.height * 0.03,
-                        right: 0,
-                        left: 0,
-                        child: Container(
-                          height: 50,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              // Google
-                              LoginButton(
-                                color: Color(0xFFDE5246),
-                                imagePath: 'assets/images/google.png',
-                                onTap: () async =>
-                                    await model.googleLogin(context),
-                              ),
-
-                              UIHelper.padAll20,
-
-                              // Facebook
-                              LoginButton(
-                                color: Color(0xFF3B5998),
-                                imagePath: 'assets/images/facebook.png',
-                                onTap: () async =>
-                                    await model.facebookLogin(context),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Column(
+                  child: Center(
+                    child: SingleChildScrollView(
+                      child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
@@ -132,13 +103,42 @@ class _SignUpPageState extends State<SignUpPage> {
                                   _scaffoldKey,
                                   false,
                                 );
+                                Navigator.pushReplacementNamed(context, '/');
                               }
                             },
                           ),
                           ForgotPageLink(isLoginPage: false),
+                          Container(
+                            child: Container(
+                              height: 150,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: <Widget>[
+                                  // Google
+                                  LoginButton(
+                                    color: Color(0xFFDE5246),
+                                    imagePath: 'assets/images/google.png',
+                                    onTap: () async =>
+                                        await model.googleLogin(context),
+                                  ),
+
+                                  UIHelper.padAll20,
+
+                                  // Facebook
+                                  LoginButton(
+                                    color: Color(0xFF3B5998),
+                                    imagePath: 'assets/images/facebook.png',
+                                    onTap: () async =>
+                                        await model.facebookLogin(context),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                         ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ),

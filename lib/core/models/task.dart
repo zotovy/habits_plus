@@ -32,7 +32,7 @@ class Task {
       date: doc['date'] != null ? (doc['date'] as Timestamp).toDate() : null,
       timestamp: (doc['timeStamp'] as Timestamp).toDate(),
       time: doc['hasTime']
-          ? TimeOfDay.fromDateTime(DateTime.parse(doc['time']))
+          ? TimeOfDay.fromDateTime((doc['time'] as Timestamp).toDate())
           : null,
       isEveryDay: doc['isEveryDay'],
       hasTime: doc['hasTime'],

@@ -135,7 +135,7 @@
     "noHabitDesc_hint": "Your description",
     "createHabit1_desc1": "Title & Description will displayed \non main habit page. Please, enter your title \n& description in text fields below ",
     "choose_your_icon": "Choose your Icon",
-    "createHabit1_desc2": "We have a lot of icons to any needs.\nChoose one, which suitable for you",
+    "createHabit1_desc2": "We have a lot of icons to any needs. Choose one, which suitable for you",
     "calendar": "Calendar",
     "calendar_desc": "Now you need to specify the days\nyou will develop your habit.",
     "choose_time_period": "Choose time period",
@@ -175,7 +175,12 @@
     "completions": "Completions",
     "complete": "Complete",
     "this_month": "This month",
-    "top_habits": "Top habits"
+    "top_habits": "Top habits",
+
+    "goal_amount": "What quantity do you want to achieve?",
+    "goal_amount_err": "Enter num. Example: 0 (sigarrets), 2 (per day)"
+
+
 
 
 }

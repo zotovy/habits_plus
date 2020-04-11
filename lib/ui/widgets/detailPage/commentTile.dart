@@ -83,29 +83,12 @@ class _CommentTileState extends State<CommentTile> {
           Text(
             date,
             style: TextStyle(
-              color: Theme.of(context).disabledColor,
+              color: Theme.of(context).textSelectionColor.withOpacity(0.5),
               fontSize: 16,
               fontWeight: FontWeight.w600,
             ),
           )
         ],
-      ),
-    );
-  }
-
-  Widget _buildTime() {
-    String date = DateTime.now().day == widget.comment.timestamp.day
-        ? ''
-        : widget.comment.timestamp.day.toString() +
-            AppLocalizations.of(context).translate(
-              monthNames[widget.comment.timestamp.month] + '_',
-            );
-
-    return Text(
-      date,
-      style: TextStyle(
-        fontSize: 14,
-        color: Theme.of(context).textSelectionColor,
       ),
     );
   }

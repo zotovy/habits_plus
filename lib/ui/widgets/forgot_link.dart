@@ -36,6 +36,7 @@ class ForgotPageLink extends StatelessWidget {
                 AppLocalizations.of(context).translate('login_link'),
                 style: TextStyle(
                   fontSize: 16,
+                  color: Color(0xFF282828),
                 ),
               ),
             ),
@@ -69,6 +70,7 @@ class ForgotPageLink extends StatelessWidget {
                 AppLocalizations.of(context).translate('signup_link'),
                 style: TextStyle(
                   fontSize: 16,
+                  color: Color(0xFF282828),
                 ),
               ),
             ),

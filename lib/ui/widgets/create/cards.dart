@@ -46,7 +46,7 @@ class _HabitTypeCardState extends State<HabitTypeCard> {
                   )
                 ],
               ),
-              height: 250,
+              height: 275,
               padding: EdgeInsets.all(15),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -56,6 +56,7 @@ class _HabitTypeCardState extends State<HabitTypeCard> {
                   Text(
                     AppLocalizations.of(context)
                         .translate('create_card1_title'),
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 24,
                       color: Colors.white,
@@ -114,7 +115,7 @@ class _HabitTypeCardState extends State<HabitTypeCard> {
                   )
                 ],
               ),
-              height: 250,
+              height: 275,
               padding: EdgeInsets.all(15),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,

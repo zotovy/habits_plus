@@ -148,7 +148,7 @@ class _CreateFromTemplatePageState extends State<CreateFromTemplatePage> {
                                         )
                                       ],
                                     ),
-                                    height: 250,
+                                    height: 275,
                                     padding: EdgeInsets.all(15),
                                     child: Column(
                                       crossAxisAlignment:
@@ -222,7 +222,7 @@ class _CreateFromTemplatePageState extends State<CreateFromTemplatePage> {
                                         )
                                       ],
                                     ),
-                                    height: 250,
+                                    height: 275,
                                     padding: EdgeInsets.all(15),
                                     child: Column(
                                       crossAxisAlignment:

@@ -124,13 +124,14 @@
     "habit_countable_error": "Введите кол-во",
     "habit_countable_example": "сигареты",
 
+    "create_habit": "Создать привычку",
     "createHabit_appbar_title": "Создание привычки",
     "title_and_desc": "Title & Description",
     "noHabitTitle_hint": "Название",
     "noHabitDesc_hint": "Описание",
     "createHabit1_desc1": "Название и описание будут отображаться\nна главной странице. Все что нужно - заполнить поля ниже",
     "choose_your_icon": "Выберите вашу иконку",
-    "createHabit1_desc2": "У нас есть много иконок, которые вам точно подойдут\nПросто выберите одну",
+    "createHabit1_desc2": "У нас есть много иконок, которые вам точно подойдут. Просто выберите одну",
     "calendar": "Календарь",
     "calendar_desc": "Сейчас вам необходимо указать дни,\nв которые вы собираетесь вырабатывать привычку.",
     "choose_time_period": "Выберите период привычки",
@@ -154,11 +155,11 @@
     "noTimeChoosenError": "Вы должны указать время или выключить уведомления",
     "finish": "Финиш",
 
-    "template": "Шаблоны",
+    "templates": "Шаблоны",
     "template_doSport": "Заниматься спортом",
     "template_eatVegetarian": "Есть овощи",
     "template_wakeUpAt5AM": "Просыпаться в 5 утра",
-    "template_dontHangOutOnInstagram": "Не залипать в инстаграме", 
+    "template_dontHangOutInInstagram": "Не залипать в инстаграме", 
     "template_createPostEveryday": "Писать посты каждый день",
     "error_noTextFieldData": "Это поле обязательно:(",
 
@@ -169,7 +170,11 @@
     "completions": "Завершено",
     "complete": "Выполнено",
     "this_month": "Этот месяц",
-    "top_habits": "Топ Привычек"
+    "top_habits": "Топ Привычек",
+
+    "goal_amount": "Какого кол-ва вы хотите достить этой привычкой?",
+    "goal_amount_err": "Введите число. Пример: 0 (сигарет), 2 (раза в день)"
+
 
 
 

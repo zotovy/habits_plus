@@ -10,6 +10,7 @@ import 'package:habits_plus/core/viewmodels/create_model.dart';
 import 'package:habits_plus/localization.dart';
 import 'package:habits_plus/ui/widgets/create/appbar.dart';
 import 'package:habits_plus/ui/widgets/create/confirm_button.dart';
+import 'package:habits_plus/ui/widgets/create/goal_amount_bottom_sheet.dart';
 import 'package:habits_plus/ui/widgets/create/texts.dart';
 import 'package:provider/provider.dart';
 
@@ -43,6 +44,7 @@ class _CreateHabitView4State extends State<CreateHabitView4>
   TimeOfDay dayTime;
   CreateViewModel _model = locator<CreateViewModel>();
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  int goalAmount;
 
   // Animation
   AnimationController _pushExampleTransController;
@@ -526,16 +528,35 @@ class _CreateHabitView4State extends State<CreateHabitView4>
                         opacity: _confirmButtonTransAnim,
                         child: ConfirmButton(
                           onPress: () async {
+                            if (widget.habitType == HabitType.Uncountable &&
+                                goalAmount == null) {
+                              goalAmount = widget.duration[0]
+                                      .difference(widget.duration[1])
+                                      .inDays
+                                      .abs() +
+                                  1;
+                            } else if (widget.habitType ==
+                                    HabitType.Countable &&
+                                goalAmount == null) {
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (_) => GoalAmountBottomSheet(
+                                  onSave: (int value) {
+                                    if (value > 0) {
+                                      goalAmount = value;
+                                    }
+                                  },
+                                ),
+                              );
+                              return null;
+                            }
+
                             Habit habit = Habit(
                               almostDone: 0,
                               countableProgress: {},
                               description: widget.desc,
                               duration: widget.duration,
-                              goalAmount: widget.duration[0]
-                                      .difference(widget.duration[1])
-                                      .inDays
-                                      .abs() +
-                                  1,
+                              goalAmount: goalAmount,
                               hasReminder: hasReminder,
                               iconCode: widget.iconCode,
                               isDisable: false,

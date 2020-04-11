@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habits_plus/core/enums/habitType.dart';
 import 'package:habits_plus/core/models/habit.dart';
 
 class TopHabitsWidget extends StatelessWidget {
@@ -9,6 +10,19 @@ class TopHabitsWidget extends StatelessWidget {
   });
 
   Widget _tile(context, int i) {
+    int percentage;
+
+    if (habits[i].type == HabitType.Countable) {
+      double sum = 0;
+      habits[i].countableProgress.forEach((_, elem) {
+        sum += elem[0];
+      });
+      percentage = (sum / habits[i].goalAmount * 100).toInt();
+    } else {
+      percentage =
+          (habits[i].progressBin.length / habits[i].goalAmount * 100).toInt();
+    }
+
     return GestureDetector(
       onTap: () => Navigator.pushNamed(
         context,
@@ -31,10 +45,7 @@ class TopHabitsWidget extends StatelessWidget {
               ),
             ),
             Text(
-              (habits[i].progressBin.length / habits[i].goalAmount * 100)
-                      .toInt()
-                      .toString() +
-                  '%',
+              percentage.toString() + '%',
               style: TextStyle(
                 color: Theme.of(context).primaryColor,
                 fontSize: 18,

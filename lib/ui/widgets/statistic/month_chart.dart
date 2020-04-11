@@ -44,11 +44,21 @@ class _MonthChartStatsState extends State<MonthChartStats> {
       ),
       child: SfCartesianChart(
         backgroundColor: Theme.of(context).backgroundColor,
-        tooltipBehavior: TooltipBehavior(enable: true),
+        tooltipBehavior: TooltipBehavior(
+          enable: true,
+          color: Theme.of(context).backgroundColor,
+          canShowMarker: true,
+          textStyle: ChartTextStyle(
+            color: Theme.of(context).textSelectionColor,
+          ),
+          activationMode: ActivationMode.singleTap,
+          decimalPlaces: 1,
+        ),
         // Initialize category axis
         primaryXAxis: CategoryAxis(),
         series: <ChartSeries<ChartData, String>>[
           SplineSeries<ChartData, String>(
+            name: 'Month Statistic',
             width: 5,
             animationDuration: 3000,
             splineType: SplineType.natural,
