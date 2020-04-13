@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:flare_flutter/asset_provider.dart';
+import 'package:flare_flutter/flare_actor.dart';
+import 'package:flare_flutter/flare_cache_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:habits_plus/localization.dart';
 import 'package:habits_plus/ui/view/loading.dart';
@@ -57,7 +60,7 @@ class __IntroPageState extends State<_IntroPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF6C3BD0),
+      backgroundColor: Colors.white,
       body: Stack(
         children: <Widget>[
           Container(
@@ -66,17 +69,17 @@ class __IntroPageState extends State<_IntroPage>
               onPageChanged: (int index) => setState(() => currentPage = index),
               children: <Widget>[
                 IntroPageWidget(
-                  imageLocalizationPath: 'assets/images/intro-1.png',
+                  flarePath: 'assets/flare/intro_1.flr',
                   titleLocalizationPath: 'intro_first_title',
                   subtitleLocalizationPath: 'intro_first_subtitle',
                 ),
                 IntroPageWidget(
-                  imageLocalizationPath: 'assets/images/intro-2.png',
+                  flarePath: 'assets/flare/intro_2.flr',
                   titleLocalizationPath: 'intro_second_title',
                   subtitleLocalizationPath: 'intro_second_subtitle',
                 ),
                 IntroPageWidget(
-                  imageLocalizationPath: 'assets/images/intro-3.png',
+                  flarePath: 'assets/flare/intro_3.flr',
                   titleLocalizationPath: 'intro_third_title',
                   subtitleLocalizationPath: 'intro_third_subtitle',
                 ),
@@ -93,7 +96,7 @@ class __IntroPageState extends State<_IntroPage>
               child: Text(
                 AppLocalizations.of(context).translate('intro_skip'),
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Theme.of(context).textSelectionHandleColor,
                   fontSize: 24,
                   fontWeight: FontWeight.w300,
                 ),
@@ -114,6 +117,7 @@ class __IntroPageState extends State<_IntroPage>
               padding: EdgeInsets.symmetric(horizontal: 28),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: List.generate(
                   3,
                   (int i) => IntroCircleWidget(
@@ -142,7 +146,10 @@ class __IntroPageState extends State<_IntroPage>
                   child: currentPage == 2
                       ? Text(
                           AppLocalizations.of(context).translate('intro_next'),
-                          style: TextStyle(color: Colors.white, fontSize: 16),
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontSize: 16,
+                          ),
                         )
                       : SizedBox.shrink(),
                 ),

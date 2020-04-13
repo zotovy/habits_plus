@@ -169,7 +169,7 @@
     "error_noTextFieldData": "This field is required:(",
 
     "statistic": "Statistic",
-    "all": "All",
+    "all_habits": "All Habits",
     "this_week": "This week",
     "habits": "Habits",
     "completions": "Completions",
@@ -178,7 +178,12 @@
     "top_habits": "Top habits",
 
     "goal_amount": "What quantity do you want to achieve?",
-    "goal_amount_err": "Enter num. Example: 0 (sigarrets), 2 (per day)"
+    "goal_amount_err": "Enter num. Example: 0 (sigarrets), 2 (per day)",
+
+    "done_habits": "Done Habits",
+    "realized_habits": "Realized habits",
+    "daily_perfomance": "Daily Perfomance"
+    
 
 
 

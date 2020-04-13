@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:habits_plus/core/models/habit.dart';
 import 'package:habits_plus/ui/view/create/create.dart';
@@ -24,21 +25,21 @@ class Router {
       // case 'loading'
       // return MaterialPageRouter(builder: (_) => )
       case 'login':
-        return MaterialPageRoute(builder: (_) => LoginPage());
+        return ScaleRoute(page: LoginPage());
       case 'signup':
-        return MaterialPageRoute(builder: (_) => SignUpPage());
+        return CupertinoPageRoute(builder: (_) => SignUpPage());
       case 'create':
-        return MaterialPageRoute(builder: (_) => CreateHabitPage());
+        return CupertinoPageRoute(builder: (_) => CreateHabitPage());
       case 'create_from_template':
         Habit habit = settings.arguments;
-        return MaterialPageRoute(
+        return CupertinoPageRoute(
           builder: (_) => CreateFromTemplatePage(templateHabit: habit),
         );
       case 'createHabit_1':
-        return MaterialPageRoute(builder: (_) => CreateHabitView1());
+        return CupertinoPageRoute(builder: (_) => CreateHabitView1());
       case 'createHabit_2':
         List _args = settings.arguments;
-        return MaterialPageRoute(
+        return CupertinoPageRoute(
           builder: (_) => CreateHabitView2(
             title: _args[0],
             desc: _args[1],
@@ -47,7 +48,7 @@ class Router {
         );
       case 'createHabit_3':
         List _args = settings.arguments;
-        return MaterialPageRoute(
+        return CupertinoPageRoute(
           builder: (_) => CreateHabitView3(
             title: _args[0],
             desc: _args[1],
@@ -58,7 +59,7 @@ class Router {
         );
       case 'createHabit_4':
         List _args = settings.arguments;
-        return MaterialPageRoute(
+        return CupertinoPageRoute(
           builder: (_) => CreateHabitView4(
             title: _args[0],
             desc: _args[1],
@@ -69,21 +70,52 @@ class Router {
           ),
         );
       case 'home':
-        return MaterialPageRoute(builder: (_) => HomePage());
+        return CupertinoPageRoute(builder: (_) => HomePage());
       case 'habit_detail':
         Habit _habit = settings.arguments;
-        return MaterialPageRoute(builder: (_) => DetailHabitPage(_habit));
+        return CupertinoPageRoute(builder: (_) => DetailHabitPage(_habit));
       case 'image_preview':
         List _arg = settings.arguments;
         print(_arg);
-        return MaterialPageRoute(
+        return CupertinoPageRoute(
           builder: (_) => ImagePreviewPage(
             image: _arg[0],
             tag: _arg[1],
           ),
         );
       default:
-        return MaterialPageRoute(builder: (_) => MainShell());
+        return CupertinoPageRoute(builder: (_) => MainShell());
     }
   }
+}
+
+class ScaleRoute extends PageRouteBuilder {
+  final Widget page;
+  ScaleRoute({this.page})
+      : super(
+          pageBuilder: (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+          ) =>
+              page,
+          transitionsBuilder: (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) =>
+              ScaleTransition(
+            scale: Tween<double>(
+              begin: 0.0,
+              end: 1.0,
+            ).animate(
+              CurvedAnimation(
+                parent: animation,
+                curve: Curves.fastOutSlowIn,
+              ),
+            ),
+            child: child,
+          ),
+        );
 }

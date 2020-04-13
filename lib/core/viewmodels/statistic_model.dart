@@ -1,9 +1,13 @@
+import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/material.dart';
 import 'package:habits_plus/core/enums/habitType.dart';
 import 'package:habits_plus/core/enums/viewstate.dart';
 import 'package:habits_plus/core/models/habit.dart';
+import 'package:habits_plus/core/models/statistic.dart';
 import 'package:habits_plus/core/util/constant.dart';
 import 'package:habits_plus/core/viewmodels/base_model.dart';
 import 'package:habits_plus/core/viewmodels/home_model.dart';
+import 'package:habits_plus/ui/widgets/statistic/all_habits_stat.dart';
 
 import '../../locator.dart';
 
@@ -11,150 +15,160 @@ class StatisticViewModel extends BaseViewModel {
   HomeViewModel _homeViewModel = locator<HomeViewModel>();
 
   List<Habit> _habits = [];
-  List<Habit> _weekHabits = [];
-  List<Habit> _monthHabits = [];
-  List<Habit> _topHabits = [];
+  List<WeekStatHabit> _weekHabits = [];
+  List<FlSpot> _monthHabits = [];
+  List<TopHabitStat> _topHabits = [];
+  List<DailyPerfomance> dailyProgress = [];
 
-  Map<int, List<DateTime>> _habitsDate = {};
-  Map<String, int> weekStats = {};
-  Map monthStats = {};
+  AllHabitStatData _allHabitStatData;
 
   List<Habit> get habits => _habits;
-  List<Habit> get weekHabit => _weekHabits;
-  List<Habit> get monthHabit => _monthHabits;
-  List<Habit> get topHabits => _topHabits;
+  List<WeekStatHabit> get weekHabit => _weekHabits;
+  List<FlSpot> get monthHabits => _monthHabits;
+  List<TopHabitStat> get topHabits => _topHabits;
+  AllHabitStatData get allHabitStatData => _allHabitStatData;
 
   void setupHabits() {
     _habits = _homeViewModel.habits;
-    setMarkedDates();
-    setHabitsDates();
+    setAllHabitsStat();
     setWeekStats();
     setMonthStats();
+    setDailyProgress();
     setTopHabits();
     setState(ViewState.Idle);
   }
 
-  void setMarkedDates() {
-    _habitsDate = {};
+  void setAllHabitsStat() {
+    int _done = 0;
+    double _summOfPercentage = 0;
     for (var i = 0; i < _habits.length; i++) {
-      DateTime start = _habits[i].duration[0], end = _habits[i].duration[1];
+      DateTime now = dateFormater.parse(
+        DateTime.now().toString(),
+      );
+      bool hasDate = _habits[i].type == HabitType.Uncountable
+          ? _habits[i].progressBin.contains(now)
+          : _habits[i].countableProgress[now] != null;
 
-      // Check is habit off
-      if (_habits[i].isDisable) {
-        continue;
-      }
+      if (hasDate) _done += 1;
 
-      // init start
-      if (start.weekday != 1) {
-        start = start.subtract(
-          Duration(days: start.weekday - 1),
-        );
-      }
-
-      // init end
-      if (end.weekday != 7) {
-        end = end.add(
-          Duration(days: 7 - end.weekday),
-        );
-      }
-
-      // start --> end
-      for (var j = 0; j < start.difference(end).inDays.abs() + 1; j++) {
-        // If j-day (from start) is used i-habit
-        if (_habits[i].repeatDays[j % 7]) {
-          DateTime currentDate = start.add(Duration(days: j));
-
-          _habitsDate[i] == null
-              ? _habitsDate[i] = [dateFormater.parse(currentDate.toString())]
-              : _habitsDate[i].add(dateFormater.parse(currentDate.toString()));
+      if (_habits[i].type == HabitType.Uncountable) {
+        _summOfPercentage +=
+            _habits[i].progressBin.length / _habits[i].goalAmount;
+      } else {
+        int _doneAmount = 0;
+        for (var j in _habits[i].countableProgress.keys) {
+          _doneAmount += _habits[i].countableProgress[j][0];
         }
-      }
-      if (_habitsDate[i] == null) {
-        _habitsDate[i] = [];
-      }
-    }
-  }
-
-  void setHabitsDates() {
-    // Format date
-    DateTime now = DateTime.now();
-    var beginningNextMonth = (now.month < 12)
-        ? new DateTime(now.year, now.month + 1, 1)
-        : new DateTime(now.year + 1, 1, 1);
-    DateTime monthStart = new DateTime(now.year, now.month, 1);
-    DateTime monthEnd = beginningNextMonth.subtract(Duration(days: 1));
-    DateTime weekStart = now.subtract(Duration(days: now.weekday - 1));
-    DateTime weekEnd = now.add(Duration(days: 7 - now.weekday));
-
-    _weekHabits = [];
-    _monthHabits = [];
-
-    for (var i = 0; i < _habits.length; i++) {
-      // Check is disable
-      if (_habits[i].isDisable) {
-        continue;
+        _summOfPercentage += _doneAmount / _habits[i].goalAmount;
       }
 
-      for (var j = 0; j < _habitsDate[i].length; j++) {
-        DateTime date = _habitsDate[i][j];
-        if (date.isAfter(monthStart) && date.isBefore(monthEnd) ||
-            date == monthStart ||
-            date == monthEnd) {
-          if (!_monthHabits.contains(_habits[i])) {
-            _monthHabits.add(_habits[i]);
-          }
-        }
-        if (date.isAfter(weekStart) && date.isBefore(weekEnd) ||
-            date == weekStart ||
-            date == weekEnd) {
-          if (!_weekHabits.contains(_habits[i])) {
-            _weekHabits.add(_habits[i]);
-          }
-        }
-      }
+      _allHabitStatData = AllHabitStatData(
+        all: _habits.length,
+        today: locator<HomeViewModel>().todayHabits.length,
+        done: _done,
+        percent: (_summOfPercentage / _habits.length * 100).toInt(),
+      );
     }
   }
 
   void setWeekStats() {
+    _weekHabits = [];
+
     DateTime now = dateFormater.parse(DateTime.now().toString());
     DateTime weekStart = now.subtract(Duration(days: now.weekday - 1));
     DateTime weekEnd = now.add(Duration(days: 7 - now.weekday));
 
-    int completions = 0;
-    for (var i = 0; i < _weekHabits.length; i++) {
-      for (var j = 0; j < _weekHabits[i].progressBin.length; j++) {
-        DateTime date = _weekHabits[i].progressBin[j];
-        if (date.isAfter(weekStart) && date.isBefore(weekEnd) ||
+    for (var habit in _habits) {
+      if (habit.isDisable) continue;
+
+      DateTime start = habit.duration[0];
+      DateTime end = habit.duration[1];
+      int diff = start.difference(end).inDays.abs() + 1;
+
+      bool isThisWeek = false;
+      for (var i = 0; i < diff; i++) {
+        DateTime date = start.add(Duration(days: i));
+        if (weekEnd.isAfter(date) && weekStart.isBefore(date) ||
             date == weekStart ||
             date == weekEnd) {
-          completions++;
+          isThisWeek = true;
+          break;
         }
       }
-    }
+      if (!isThisWeek) continue;
 
-    int all = 0;
+      if (habit.type == HabitType.Uncountable) {
+        // count all
+        int countAll = 0;
+        habit.repeatDays.forEach((bool val) => val ? countAll += 1 : 0);
 
-    for (var i = 0; i < _habits.length; i++) {
-      // Check is habit disable
+        // count completed
+        int completed = 0;
+        for (var date in habit.progressBin) {
+          bool isThisWeek = weekEnd.isAfter(date) && weekStart.isBefore(date) ||
+              date == weekStart ||
+              date == weekEnd;
 
-      DateTime _weekStart = weekStart;
-      for (var j = 0; j < 7; j++) {
-        if (_habitsDate[i] != null) {
-          if (_habitsDate[i].contains(_weekStart.add(Duration(days: j)))) {
-            all++;
+          if (isThisWeek) completed += 1;
+        }
+
+        // calc percent
+        double percent = completed / countAll;
+
+        WeekStatHabit _habit = WeekStatHabit(
+          origin: habit,
+          allWeek: countAll,
+          doneWeek: completed,
+          percent: percent,
+        );
+
+        _weekHabits.add(_habit);
+      } else {
+        // count all
+        int countAll = 0;
+        habit.repeatDays.forEach((bool val) => val ? countAll += 1 : 0);
+
+        // count completed
+        int completed = 0;
+        for (var date in habit.countableProgress.keys) {
+          DateTime _date = dateFormater.parse(date);
+          bool isThisWeek =
+              weekEnd.isAfter(_date) && weekStart.isBefore(_date) ||
+                  _date == weekStart ||
+                  _date == weekEnd;
+
+          if (isThisWeek) completed += 1;
+        }
+
+        // calc percent
+        double percent = completed / countAll;
+
+        WeekStatHabit _habit = WeekStatHabit(
+          origin: habit,
+          allWeek: countAll,
+          doneWeek: completed,
+          percent: percent,
+        );
+
+        _weekHabits.add(_habit);
+      }
+
+      // Sort
+      for (var i = 0; i < _weekHabits.length; i++) {
+        for (var j = 0; j < _weekHabits.length - 1; j++) {
+          if (_weekHabits[j].percent < _weekHabits[j + 1].percent) {
+            WeekStatHabit tmp = _weekHabits[j];
+            _weekHabits[j] = _weekHabits[j + 1];
+            _weekHabits[j + 1] = tmp;
           }
         }
       }
     }
-
-    weekStats = {
-      'count': _weekHabits.length,
-      'completions': completions,
-      'percent': all == 0 ? 0 : (completions / all * 100).toInt(),
-    };
   }
 
   void setMonthStats() {
+    _monthHabits = [];
+
     DateTime now = dateFormater.parse(DateTime.now().toString());
     var beginningNextMonth = (now.month < 12)
         ? new DateTime(now.year, now.month + 1, 1)
@@ -162,112 +176,119 @@ class StatisticViewModel extends BaseViewModel {
     DateTime monthStart = new DateTime(now.year, now.month, 1);
     DateTime monthEnd = beginningNextMonth.subtract(Duration(days: 1));
 
-    List<int> data = now.month == 2 ? [0, 0, 0, 0, 0] : [0, 0, 0, 0, 0, 0];
-    int completions = 0;
-    for (var i = 0; i < _monthHabits.length; i++) {
-      if (_monthHabits[i].type == HabitType.Uncountable) {
-        for (var j = 0; j < _monthHabits[i].progressBin.length; j++) {
-          DateTime date = _monthHabits[i].progressBin[j];
-          if (date.isAfter(monthStart) && date.isBefore(monthEnd) ||
-              date == monthStart ||
-              date == monthEnd) {
-            completions++;
-            data[(date.day / 5).floor()] += 1;
+    List<int> all = now.month == 2 ? [0, 0, 0, 0, 0, 0] : [0, 0, 0, 0, 0, 0, 0];
+    List done = now.month == 2 ? [0, 0, 0, 0, 0, 0] : [0, 0, 0, 0, 0, 0, 0];
+
+    for (var habit in _habits) {
+      int diff =
+          habit.duration[0].difference(habit.duration[1]).inDays.abs() + 1;
+      DateTime start = habit.duration[0];
+
+      if (habit.type == HabitType.Uncountable) {
+        for (var i = 0; i < diff; i++) {
+          // All
+          DateTime date = start.add(Duration(days: i));
+          if (habit.repeatDays[date.weekday - 1]) {
+            if (date.isAfter(monthStart) && date.isBefore(monthEnd) ||
+                date == monthStart ||
+                date == monthStart) {
+              all[(date.day / 5).floor()]++;
+            }
           }
         }
-      } else {
-        for (var j = 0;
-            j < _monthHabits[i].countableProgress.keys.length;
-            j++) {
-          DateTime date = DateTime.parse(
-            _monthHabits[i].countableProgress.keys.toList()[j],
-          );
+
+        // Done
+        for (var date in habit.progressBin) {
           if (date.isAfter(monthStart) && date.isBefore(monthEnd) ||
               date == monthStart ||
-              date == monthEnd) {
-            completions++;
-            data[(date.day / 5).floor()] += 1;
+              date == monthStart) {
+            done[(date.day / 5).floor()]++;
+          }
+        }
+      }
+      //
+      else {
+        for (var i = 0; i < diff; i++) {
+          // All
+          DateTime date = start.add(Duration(days: i));
+          if (habit.repeatDays[date.weekday - 1]) {
+            if (date.isAfter(monthStart) && date.isBefore(monthEnd) ||
+                date == monthStart ||
+                date == monthStart) {
+              all[(date.day / 5).floor()]++;
+            }
+          }
+        }
+
+        // Done
+        for (var _date in habit.countableProgress.keys) {
+          DateTime date = dateFormater.parse(_date);
+          if (date.isAfter(monthStart) && date.isBefore(monthEnd) ||
+              date == monthStart ||
+              date == monthStart) {
+            done[(date.day / 5).floor()]++;
           }
         }
       }
     }
 
-    int all = 0;
-
-    for (var i = 0; i < _habits.length; i++) {
-      // Check is habit disable
-
-      DateTime _mon = monthStart;
-      for (var j = 0;
-          j < monthStart.difference(monthEnd).inDays.abs() + 1;
-          j++) {
-        if (_habitsDate[i] != null) {
-          if (_habitsDate[i].contains(monthStart.add(Duration(days: j)))) {
-            all++;
-          }
-        }
-      }
+    for (var i = 0; i < all.length; i++) {
+      _monthHabits.add(
+        FlSpot(
+          (i * 5).toDouble(),
+          all[i] == 0 ? 0.0 : ((done[i] / all[i]) * 100).toInt().toDouble(),
+        ),
+      );
     }
-
-    for (var i = data.length - 1; i >= now.day ~/ 5; i--) {
-      print(i);
-      if (data[i] != 0) break;
-
-      if (data[i] == 0) data[i] = null;
-    }
-
-    monthStats = {
-      'chart': data,
-      'percent': all == 0 ? 0 : (completions / all * 100).toInt(),
-    };
   }
 
-  List<Habit> bubbleSort(List<Habit> list) {
-    if (list == null || list.length == 0) return [];
+  void setDailyProgress() {
+    DateTime now = dateFormater.parse(DateTime.now().toString());
+    var beginningNextMonth = (now.month < 12)
+        ? new DateTime(now.year, now.month + 1, 1)
+        : new DateTime(now.year + 1, 1, 1);
+    DateTime monthStart = new DateTime(now.year, now.month, 1);
+    DateTime monthEnd = beginningNextMonth.subtract(Duration(days: 1));
+    int monthDiff = monthStart.difference(monthEnd).inDays.abs();
 
-    int n = list.length;
-    int i, step;
-    for (step = 0; step < n; step++) {
-      for (i = 0; i < n - step - 1; i++) {
-        double percentage1;
-        if (list[i].type == HabitType.Countable) {
-          double sum = 0;
-          list[i].countableProgress.forEach((_, elem) {
-            sum += elem[0];
-          });
-          percentage1 = sum / list[i].goalAmount;
-        } else {
-          percentage1 = list[i].progressBin.length / list[i].goalAmount;
-        }
+    int countWorkingHabits = 0;
+    List<int> countDone = [0, 0, 0, 0, 0, 0, 0];
 
-        double percentage2;
-        if (list[i + 1].type == HabitType.Countable) {
-          double sum = 0;
-          list[i + 1].countableProgress.forEach((_, elem) {
-            sum += elem[0];
-          });
-          print(list[i + 1].goalAmount);
-          percentage2 = sum / list[i + 1].goalAmount;
-        } else {
-          percentage2 = list[i + 1].progressBin.length / list[i + 1].goalAmount;
-        }
+    dailyProgress = [];
 
-        if (percentage1 > percentage2) {
-          Habit temp = list[i];
-          list[i] = list[i + 1];
-          list[i + 1] = temp;
+    for (var habit in _habits) {
+      if (habit.isDisable) continue;
+
+      int diff =
+          habit.duration[0].difference(habit.duration[1]).inDays.abs() + 1;
+
+      for (var i = 0; i < diff; i++) {
+        DateTime date = habit.duration[0].add(Duration(days: i));
+        bool isThisMonth =
+            monthEnd.isAfter(date) && monthStart.isBefore(date) ||
+                date == monthStart ||
+                date == monthEnd;
+
+        if (isThisMonth) {
+          countWorkingHabits += 1;
+          for (var j = 0; j < 7; j++) {
+            if (habit.repeatDays[j]) countDone[j]++;
+          }
+          break;
         }
       }
     }
-    return list;
+
+    for (var i = 0; i < 7; i++) {
+      dailyProgress.add(
+        DailyPerfomance(
+          countDone[i] / countWorkingHabits * 100,
+        ),
+      );
+    }
   }
 
   void setTopHabits() {
-    _topHabits = bubbleSort(_monthHabits).reversed.toList();
-  }
-
-  Map setupSingleHabitMonthStats(int i) {
-
     DateTime now = dateFormater.parse(DateTime.now().toString());
     var beginningNextMonth = (now.month < 12)
         ? new DateTime(now.year, now.month + 1, 1)
@@ -275,36 +296,97 @@ class StatisticViewModel extends BaseViewModel {
     DateTime monthStart = new DateTime(now.year, now.month, 1);
     DateTime monthEnd = beginningNextMonth.subtract(Duration(days: 1));
 
-    int all = 0;
-    for (var j = 0; j < monthStart.difference(monthEnd).inDays.abs() + 1; j++) {
-      if (_habitsDate[i] != null) {
-        if (_habitsDate[i].contains(monthStart.add(Duration(days: j)))) {
-          all++;
-        }
-      }
-    }
+    _topHabits = [];
 
-    int completions = 0;
-    if (_monthHabits[i].type == HabitType.Uncountable) {
-      for (var j = 0; j < _monthHabits[i].progressBin.length; j++) {
-        DateTime date = _monthHabits[i].progressBin[j];
-        if (date.isAfter(monthStart) && date.isBefore(monthEnd) ||
+    for (var habit in _habits) {
+      if (habit.isDisable) continue;
+
+      DateTime start = habit.duration[0];
+      DateTime end = habit.duration[1];
+      int diff = start.difference(end).inDays.abs() + 1;
+
+      bool _isThisMonth = false;
+      for (var i = 0; i < diff; i++) {
+        DateTime date = start.add(Duration(days: i));
+        if (monthEnd.isAfter(date) && monthStart.isBefore(date) ||
             date == monthStart ||
             date == monthEnd) {
-          completions++;
+          _isThisMonth = true;
+          break;
         }
       }
-    } else {
-      for (var j = 0; j < _monthHabits[i].countableProgress.keys.length; j++) {
-        DateTime date = DateTime.parse(
-          _monthHabits[i].countableProgress.keys.toList()[j],
+      if (!_isThisMonth) continue;
+
+      if (habit.type == HabitType.Uncountable) {
+        // count all
+        int countAll = 0;
+        for (var i = 0; i < diff; i++) {
+          // All
+          DateTime date = start.add(Duration(days: i));
+          if (habit.repeatDays[date.weekday - 1]) {
+            if (date.isAfter(monthStart) && date.isBefore(monthEnd) ||
+                date == monthStart ||
+                date == monthStart) {
+              countAll++;
+            }
+          }
+        }
+
+        // count completed
+        int completed = 0;
+        for (var date in habit.progressBin) {
+          bool isThisMonth =
+              monthEnd.isAfter(date) && monthStart.isBefore(date) ||
+                  date == monthStart ||
+                  date == monthEnd;
+
+          if (isThisMonth) completed += 1;
+        }
+
+        // calc percent
+        int percent = (completed / countAll * 100).toInt();
+
+        TopHabitStat _habit = TopHabitStat(
+          origin: habit,
+          percent: percent,
         );
+        topHabits.add(_habit);
+      } else {
+        // count all
+        int countAll = 0;
+        habit.repeatDays.forEach((bool val) => val ? countAll += 1 : 0);
+
+        // count completed
+        int completed = 0;
+        for (var date in habit.countableProgress.keys) {
+          DateTime _date = dateFormater.parse(date);
+          bool isThisMonth =
+              monthEnd.isAfter(_date) && monthStart.isBefore(_date) ||
+                  _date == monthStart ||
+                  _date == monthEnd;
+
+          if (isThisMonth) completed += 1;
+        }
+
+        // calc percent
+        int percent = (completed / countAll * 100).toInt();
+        TopHabitStat _habit = TopHabitStat(
+          origin: habit,
+          percent: percent,
+        );
+        topHabits.add(_habit);
       }
     }
 
-    return {
-      'completions': completions,
-      'percent': (completions / all * 100).toInt(),
-    };
+    //  bubble sort
+    for (var i = 0; i < topHabits.length; i++) {
+      for (var j = 0; j < topHabits.length - 1; j++) {
+        if (topHabits[j].percent < topHabits[j + 1].percent) {
+          TopHabitStat tmp = topHabits[j];
+          topHabits[j] = topHabits[j + 1];
+          topHabits[j + 1] = tmp;
+        }
+      }
+    }
   }
 }

@@ -1,14 +1,15 @@
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 
 import '../../localization.dart';
 
 class IntroPageWidget extends StatelessWidget {
-  String imageLocalizationPath;
+  String flarePath;
   String titleLocalizationPath;
   String subtitleLocalizationPath;
 
   IntroPageWidget({
-    this.imageLocalizationPath,
+    this.flarePath,
     this.titleLocalizationPath,
     this.subtitleLocalizationPath,
   });
@@ -17,38 +18,44 @@ class IntroPageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 72),
         height: MediaQuery.of(context).size.height * 0.75,
-        color: Theme.of(context).primaryColor,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Expanded(
               child: Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage(imageLocalizationPath),
-                  ),
+                child: FlareActor(
+                  flarePath,
+                  alignment: Alignment.center,
+                  animation: "Untitled",
+                  fit: BoxFit.contain,
                 ),
               ),
             ),
-            SizedBox(height: 85),
-            Text(
-              AppLocalizations.of(context).translate(titleLocalizationPath),
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 22,
-                fontWeight: FontWeight.w600,
+            // SizedBox(height: 85),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              child: Text(
+                AppLocalizations.of(context).translate(titleLocalizationPath),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Theme.of(context).primaryColor,
+                  fontSize: 26,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
-            SizedBox(height: 10),
-            Text(
-              AppLocalizations.of(context).translate(subtitleLocalizationPath),
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
+            SizedBox(height: 5),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              child: Text(
+                AppLocalizations.of(context)
+                    .translate(subtitleLocalizationPath),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Theme.of(context).textSelectionColor,
+                  fontSize: 16,
+                ),
               ),
             ),
           ],

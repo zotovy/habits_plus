@@ -1,59 +1,61 @@
 import 'package:flutter/material.dart';
-import 'package:habits_plus/core/enums/habitType.dart';
-import 'package:habits_plus/core/models/habit.dart';
+import 'package:habits_plus/core/models/statistic.dart';
+import 'package:habits_plus/core/util/constant.dart';
 
-class TopHabitsWidget extends StatelessWidget {
-  List<Habit> habits;
+class TopHabitsWidget extends StatefulWidget {
+  List<TopHabitStat> stat;
 
-  TopHabitsWidget({
-    this.habits,
-  });
+  TopHabitsWidget(this.stat);
 
-  Widget _tile(context, int i) {
-    int percentage;
+  @override
+  _TopHabitsWidgetState createState() => _TopHabitsWidgetState();
+}
 
-    if (habits[i].type == HabitType.Countable) {
-      double sum = 0;
-      habits[i].countableProgress.forEach((_, elem) {
-        sum += elem[0];
-      });
-      percentage = (sum / habits[i].goalAmount * 100).toInt();
-    } else {
-      percentage =
-          (habits[i].progressBin.length / habits[i].goalAmount * 100).toInt();
-    }
+class _TopHabitsWidgetState extends State<TopHabitsWidget> {
+  Widget tile(int i) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 3),
+      child: Row(
+        children: <Widget>[
+          // icon
+          Container(
+            width: 45,
+            height: 45,
+            decoration: BoxDecoration(
+              color: Theme.of(context).disabledColor.withOpacity(0.05),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(
+              habitsIcons[widget.stat[i].origin.iconCode],
+              color: Theme.of(context).primaryColor,
+              size: 28,
+            ),
+          ),
+          SizedBox(width: 10),
 
-    return GestureDetector(
-      onTap: () => Navigator.pushNamed(
-        context,
-        'habit_detail',
-        arguments: habits[i],
-      ),
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 15),
-        padding: EdgeInsets.symmetric(vertical: 3),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text(
-              habits[i].title.length > 35
-                  ? habits[i].title.substring(0, 35) + '...'
-                  : habits[i].title,
-              style: TextStyle(
-                color: Theme.of(context).textSelectionHandleColor,
-                fontSize: 18,
+          // Title
+          Text(
+            widget.stat[i].origin.title,
+            style: TextStyle(
+              color: Theme.of(context).textSelectionHandleColor,
+              fontSize: 16,
+            ),
+          ),
+
+          // .. of ..
+          Expanded(
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                widget.stat[i].percent.toString() + '%',
+                style: TextStyle(
+                  color: Theme.of(context).primaryColor,
+                  fontSize: 16,
+                ),
               ),
             ),
-            Text(
-              percentage.toString() + '%',
-              style: TextStyle(
-                color: Theme.of(context).primaryColor,
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -61,11 +63,10 @@ class TopHabitsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.symmetric(horizontal: 15),
       child: Column(
-        children: List.generate(
-          habits.length,
-          (int i) => _tile(context, i),
-        ),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: List.generate(widget.stat.length, (int i) => tile(i)),
       ),
     );
   }

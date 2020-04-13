@@ -28,7 +28,7 @@ ThemeModel lightMode = ThemeModel(
   ThemeData(
     primaryColor: Color(0xFF6C3CD1),
     disabledColor: Colors.black26,
-    backgroundColor: Colors.white,
+    backgroundColor: Color(0xFFf8f9fa),
     textSelectionColor: Color(0xFF565656),
     textSelectionHandleColor: Color(0xFF282828),
     accentColor: Color(0xFF6C3CD1),

@@ -1,5 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flare_flutter/flare_cache.dart';
+import 'package:flare_flutter/flare_cache_asset.dart';
+import 'package:flare_flutter/provider/asset_flare.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:habits_plus/core/models/theme.dart';
 import 'package:habits_plus/core/models/userData.dart';
 import 'package:habits_plus/core/util/habit_templates.dart';
@@ -19,8 +23,31 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'localization.dart';
 
 void main() {
+  // Newer versions of Flutter require initializing widget-flutter binding
+  // prior to warming up the cache.
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Don't prune the Flare cache, keep loaded Flare files warm and ready
+  // to be re-displayed.
+  FlareCache.doesPrune = false;
+
   setupLocator();
-  runApp(MyApp());
+  setupFlare().then((_) {
+    runApp(MyApp());
+  });
+}
+
+final _filesToWarmup = [
+  AssetFlare(bundle: rootBundle, name: "assets/flare/intro_1.flr"),
+  AssetFlare(bundle: rootBundle, name: "assets/flare/intro_2.flr"),
+  AssetFlare(bundle: rootBundle, name: "assets/flare/intro_3.flr"),
+];
+
+Future<bool> setupFlare() async {
+  for (final filename in _filesToWarmup) {
+    await cachedActor(filename);
+  }
+  return true;
 }
 
 class MyApp extends StatelessWidget {
@@ -106,12 +133,22 @@ class _MainAppState extends State<MainApp> {
             return MainShell();
           } else if (snap.connectionState == ConnectionState.done &&
               snap.data == null) {
-            return IntroPage();
+            return FutureBuilder(
+              future: setupFlare(),
+              builder: (_, snap) {
+                return snap.hasData ? IntroPage() : LoadingPage();
+              },
+            );
           }
           return LoadingPage();
         },
       ),
-      // home: (),
+      // home: FutureBuilder(
+      //   future: setupFlare(),
+      //   builder: (_, snap) {
+      //     return snap.hasData ? IntroPage() : LoadingPage();
+      //   },
+      // ),
       title: 'Habits+',
       onGenerateRoute: (RouteSettings settings) =>
           Router.generateRoute(settings, context),
