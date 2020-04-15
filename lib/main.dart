@@ -6,15 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habits_plus/core/models/theme.dart';
 import 'package:habits_plus/core/models/userData.dart';
+import 'package:habits_plus/core/services/database.dart';
 import 'package:habits_plus/core/util/habit_templates.dart';
 import 'package:habits_plus/core/viewmodels/drawer_model.dart';
 import 'package:habits_plus/core/viewmodels/home_model.dart';
 import 'package:habits_plus/locator.dart';
 import 'package:habits_plus/ui/router.dart';
-import 'package:habits_plus/ui/view/create/create_from_template.dart';
 import 'package:habits_plus/ui/view/intro.dart';
 import 'package:habits_plus/ui/view/loading.dart';
-import 'package:habits_plus/ui/view/login.dart';
 import 'package:habits_plus/ui/view/shell.dart';
 import 'package:habits_plus/core/util/constant.dart';
 import 'package:provider/provider.dart';
@@ -56,7 +55,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<ThemeModel>(
-          create: (_) => darkMode,
+          create: (_) => lightMode,
         ),
         ChangeNotifierProvider<UserData>(
           create: (_) => UserData(),
@@ -83,8 +82,8 @@ class _MainAppState extends State<MainApp> {
         try {
           String id = snapshot.data.uid;
           Provider.of<UserData>(context).currentUserId = id;
-          locator<HomeViewModel>().fetch(id);
-          locator<DrawerViewModel>().fetchUser(id);
+          locator<HomeViewModel>().fetch();
+          locator<DrawerViewModel>().fetchUser();
           return MainShell();
         } catch (e) {
           return IntroPage();
@@ -122,14 +121,14 @@ class _MainAppState extends State<MainApp> {
       },
       debugShowCheckedModeBanner: false,
       home: FutureBuilder(
-        future: FirebaseAuth.instance.currentUser(),
+        future: locator<DatabaseServices>().setupSharedPrefferences(),
         builder: (_, snap) {
           if (snap.connectionState == ConnectionState.done &&
               snap.data != null) {
-            String id = snap.data.uid;
-            Provider.of<UserData>(context, listen: false).currentUserId = id;
-            locator<HomeViewModel>().fetch(id);
-            locator<DrawerViewModel>().fetchUser(id);
+            // String id = snap.data.uid;
+            // Provider.of<UserData>(context, listen: false).currentUserId = id;
+            locator<HomeViewModel>().fetch();
+            locator<DrawerViewModel>().fetchUser();
             return MainShell();
           } else if (snap.connectionState == ConnectionState.done &&
               snap.data == null) {

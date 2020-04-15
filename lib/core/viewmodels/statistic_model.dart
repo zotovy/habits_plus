@@ -69,6 +69,9 @@ class StatisticViewModel extends BaseViewModel {
         percent: (_summOfPercentage / _habits.length * 100).toInt(),
       );
     }
+    _allHabitStatData = _allHabitStatData == null
+        ? AllHabitStatData(all: 0, today: 0, done: 0, percent: 0)
+        : _allHabitStatData;
   }
 
   void setWeekStats() {
@@ -100,7 +103,7 @@ class StatisticViewModel extends BaseViewModel {
       if (habit.type == HabitType.Uncountable) {
         // count all
         int countAll = 0;
-        habit.repeatDays.forEach((bool val) => val ? countAll += 1 : 0);
+        habit.repeatDays.forEach((val) => val ? countAll += 1 : 0);
 
         // count completed
         int completed = 0;
@@ -126,7 +129,7 @@ class StatisticViewModel extends BaseViewModel {
       } else {
         // count all
         int countAll = 0;
-        habit.repeatDays.forEach((bool val) => val ? countAll += 1 : 0);
+        habit.repeatDays.forEach((val) => val ? countAll += 1 : 0);
 
         // count completed
         int completed = 0;
@@ -282,7 +285,7 @@ class StatisticViewModel extends BaseViewModel {
     for (var i = 0; i < 7; i++) {
       dailyProgress.add(
         DailyPerfomance(
-          countDone[i] / countWorkingHabits * 100,
+          countWorkingHabits == 0 ? 0 : countDone[i] / countWorkingHabits * 100,
         ),
       );
     }
@@ -354,7 +357,7 @@ class StatisticViewModel extends BaseViewModel {
       } else {
         // count all
         int countAll = 0;
-        habit.repeatDays.forEach((bool val) => val ? countAll += 1 : 0);
+        habit.repeatDays.forEach((val) => val ? countAll += 1 : 0);
 
         // count completed
         int completed = 0;

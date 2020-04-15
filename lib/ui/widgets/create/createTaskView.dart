@@ -440,10 +440,7 @@ class _CreateTaskState extends State<CreateTask> {
 
                                             // Push data to DB
                                             bool dbCode =
-                                                await model.createTask(
-                                              task,
-                                              userId,
-                                            );
+                                                await model.createTask(task);
 
                                             // Check DataBase Code (dbCode)
                                             if (!dbCode) {

@@ -35,7 +35,7 @@ class DetailAppBar extends StatelessWidget implements PreferredSizeWidget {
       List tmp = model.habit.repeatDays
           .asMap()
           .map(
-            (int i, bool _val) => MapEntry(
+            (int i, _val) => MapEntry(
                 i,
                 _val
                     ? AppLocalizations.of(context).translate(dayNames[i])[0]

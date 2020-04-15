@@ -41,7 +41,8 @@ class DetailPageView extends BaseViewModel {
 
   void fetchComments(String userId) async {
     setState(ViewState.Busy);
-    _comments = await _databaseServices.getCommentsByHabitId(userId, _habit.id);
+    _comments = (await _databaseServices.getCommentsByHabitId(_habit.id))
+        .cast<Comment>();
     setState(ViewState.Idle);
   }
 
@@ -65,7 +66,7 @@ class DetailPageView extends BaseViewModel {
       timestamp: DateTime.now(),
     );
     setCommentState(ViewState.Busy);
-    bool dbcode = await _databaseServices.createComment(_comment, userId);
+    bool dbcode = await _databaseServices.saveComment(_comment);
     _comments.add(_comment);
     setCommentState(ViewState.Idle);
 

@@ -24,19 +24,31 @@ class Task {
     this.done,
   });
 
-  factory Task.fromDoc(DocumentSnapshot doc) {
-    return Task(
-      id: doc.documentID,
-      title: doc['title'],
-      description: doc['description'],
-      date: doc['date'] != null ? (doc['date'] as Timestamp).toDate() : null,
-      timestamp: (doc['timeStamp'] as Timestamp).toDate(),
-      time: doc['hasTime']
-          ? TimeOfDay.fromDateTime((doc['time'] as Timestamp).toDate())
-          : null,
-      isEveryDay: doc['isEveryDay'],
-      hasTime: doc['hasTime'],
-      done: doc['done'],
+  Task.fromJson(Map<String, dynamic> json) {
+    Task(
+      id: json['id'],
+      title: json['title'],
+      description: json['description'],
+      date: json['date'] != null ? json['date'] : null,
+      timestamp: json['timeStamp'],
+      time: json['hasTime'] ? json['time'] : null,
+      isEveryDay: json['isEveryDay'],
+      hasTime: json['hasTime'],
+      done: json['done'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'description': description,
+      'date': date,
+      'timestamp': timestamp,
+      'time': time,
+      'isEveryDay': isEveryDay,
+      'hasTime': hasTime,
+      'done': done,
+    };
   }
 }

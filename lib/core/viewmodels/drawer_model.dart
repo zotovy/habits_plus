@@ -1,5 +1,7 @@
+import 'package:habits_plus/core/enums/viewstate.dart';
 import 'package:habits_plus/core/models/user.dart';
 import 'package:habits_plus/core/services/database.dart';
+import 'package:habits_plus/core/util/constant.dart';
 import 'package:habits_plus/core/viewmodels/base_model.dart';
 
 import '../../locator.dart';
@@ -10,7 +12,12 @@ class DrawerViewModel extends BaseViewModel {
 
   User get user => _user;
 
-  Future fetchUser(String userId) async {
-    _user = await _databaseServices.getUserById(userId);
+  Future fetchUser() async {
+    setState(ViewState.Busy);
+    _user = await _databaseServices.getUser();
+    if (_user == null) {
+      _user = userNotFound;
+    }
+    setState(ViewState.Idle);
   }
 }

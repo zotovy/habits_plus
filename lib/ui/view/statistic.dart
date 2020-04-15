@@ -1,9 +1,12 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:habits_plus/core/enums/viewstate.dart';
+import 'package:habits_plus/core/util/constant.dart';
 import 'package:habits_plus/core/viewmodels/statistic_model.dart';
 import 'package:habits_plus/localization.dart';
 import 'package:habits_plus/locator.dart';
+import 'package:habits_plus/ui/view/drawer.dart';
 import 'package:habits_plus/ui/view/loading.dart';
 import 'package:habits_plus/ui/widgets/statistic/all_habits_stat.dart';
 import 'package:habits_plus/ui/widgets/statistic/daily_perfomance.dart';
@@ -52,10 +55,12 @@ class _StatisticPageState extends State<StatisticPage> {
       SizedBox(height: 20),
 
       DailyPerfomanceWidget(model.dailyProgress),
-      SizedBox(height: 20),
+      model.topHabits.length == 0 ? SizedBox.shrink() : SizedBox(height: 20),
 
       // "Top habits"
-      titleText(context, 'top_habits'),
+      model.topHabits.length == 0
+          ? SizedBox.shrink()
+          : titleText(context, 'top_habits'),
       TopHabitsWidget(model.topHabits),
       SizedBox(height: 15),
     ];
@@ -72,11 +77,12 @@ class _StatisticPageState extends State<StatisticPage> {
               : GestureDetector(
                   // onTap: () => Focus.of(context).unfocus(),
                   child: Scaffold(
+                    backgroundColor: Theme.of(context).backgroundColor,
                     appBar: AppBar(
                       leading: IconButton(
                         color: Theme.of(context).textSelectionHandleColor,
                         icon: Icon(EvaIcons.menu),
-                        onPressed: () => print('go to scaffold'),
+                        onPressed: () => drawerController.toggle(),
                       ),
                       backgroundColor: Colors.transparent,
                       elevation: 0,

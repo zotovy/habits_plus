@@ -148,9 +148,7 @@ class _HomePageState extends State<HomePage>
       child: Consumer<HomeViewModel>(
         builder: (_, HomeViewModel model, child) {
           return RefreshIndicator(
-            onRefresh: () async => _model.fetch(
-              Provider.of<UserData>(context, listen: false).currentUserId,
-            ),
+            onRefresh: () async => _model.fetch(),
             child: SafeArea(
               child: model.state == ViewState.Busy
                   ? LoadingPage()

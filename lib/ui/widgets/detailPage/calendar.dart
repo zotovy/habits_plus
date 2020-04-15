@@ -34,7 +34,7 @@ class _CalendarDetailWidgetState extends State<CalendarDetailWidget> {
       margin: EdgeInsets.all(20),
       padding: EdgeInsets.all(10),
       child: _Calendar(
-        selection: widget.progress,
+        selection: widget.progress.cast<DateTime>(),
       ),
     );
   }

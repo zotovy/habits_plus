@@ -12,9 +12,9 @@ import '../../locator.dart';
 class CreateViewModel extends BaseViewModel {
   DatabaseServices _databaseServices = locator<DatabaseServices>();
 
-  Future<bool> createTask(Task task, String userId) async {
+  Future<bool> createTask(Task task) async {
     setState(ViewState.Busy);
-    bool dbcode = await _databaseServices.createTask(task, userId);
+    bool dbcode = await _databaseServices.saveTask(task);
     if (dbcode) {
       // If successed -> add task to home screen
       locator<HomeViewModel>().addTaskWithOutReload(task);
@@ -25,7 +25,7 @@ class CreateViewModel extends BaseViewModel {
 
   Future<bool> createHabit(Habit habit, String userId) async {
     setState(ViewState.Busy);
-    bool dbcode = await _databaseServices.createHabit(habit, userId);
+    bool dbcode = await _databaseServices.saveHabit(habit);
     if (dbcode) {
       // If successed -> add habit to home screen
       locator<HomeViewModel>().addHabit(habit);

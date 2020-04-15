@@ -19,15 +19,27 @@ class Comment {
     this.timestamp,
   });
 
-  factory Comment.fromJson(DocumentSnapshot snap) {
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'authorId': authorId,
+      'habitId': habitId,
+      'hasImage': hasImage,
+      'imageUrl': imageUrl,
+      'content': content,
+      'timestamp': timestamp.toString(),
+    };
+  }
+
+  factory Comment.fromJson(Map<String, dynamic> json) {
     return Comment(
-      id: snap.documentID,
-      authorId: snap['authorId'],
-      habitId: snap['habitId'],
-      hasImage: snap['hasImage'],
-      imageUrl: snap['imageUrl'],
-      content: snap['content'],
-      timestamp: (snap['timestamp'] as Timestamp).toDate(),
+      id: json['id'],
+      authorId: json['authorId'],
+      habitId: json['habitId'],
+      hasImage: json['hasImage'],
+      imageUrl: json['imageUrl'],
+      content: json['content'],
+      timestamp: DateTime.parse(json['timestamp']),
     );
   }
 }

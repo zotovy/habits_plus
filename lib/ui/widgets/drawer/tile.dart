@@ -26,16 +26,13 @@ class DrawerTile extends StatelessWidget {
           padding: EdgeInsets.all(15),
           child: Row(
             children: <Widget>[
-              Icon(
-                icon,
-                color: Colors.white,
-              ),
+              Icon(icon, color: Theme.of(context).primaryColor),
               SizedBox(width: 10),
               Text(
                 text,
                 style: TextStyle(
                   fontSize: 18,
-                  color: Colors.white,
+                  color: Theme.of(context).textSelectionColor,
                 ),
               ),
             ],

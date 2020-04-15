@@ -24,10 +24,10 @@ class Router {
         return MaterialPageRoute(builder: (_) => MainShell());
       // case 'loading'
       // return MaterialPageRouter(builder: (_) => )
-      case 'login':
-        return ScaleRoute(page: LoginPage());
-      case 'signup':
-        return CupertinoPageRoute(builder: (_) => SignUpPage());
+      // case 'login':
+      //   return ScaleRoute(page: LoginPage());
+      // case 'signup':
+      //   return CupertinoPageRoute(builder: (_) => SignUpPage());
       case 'create':
         return CupertinoPageRoute(builder: (_) => CreateHabitPage());
       case 'create_from_template':

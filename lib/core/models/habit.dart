@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:habits_plus/core/enums/habitType.dart';
+import 'package:habits_plus/core/models/comment.dart';
 import 'package:habits_plus/core/util/constant.dart';
 
 class Habit {
@@ -16,14 +17,13 @@ class Habit {
   List<bool> repeatDays;
   int goalAmount;
   int iconCode;
-  int almostDone; // Todo: add to create page
+  int almostDone;
   List<DateTime> progressBin;
+  List<Comment> comments;
 
   /// List<DateTime, List>
   Map countableProgress;
   int timesADay;
-
-  double percent;
 
   Habit({
     this.id,
@@ -42,123 +42,97 @@ class Habit {
     this.timesADay,
     this.progressBin,
     this.countableProgress,
-    this.percent,
+    this.comments,
   });
 
-  factory Habit.fromDoc(DocumentSnapshot doc) {
-    // Implement repeat days
-    String str = doc['repeatDays'];
-    List<bool> repeatDays = [];
-    for (var i = 0; i < str.length; i++) {
-      repeatDays.add(str[i] == '1' ? true : false);
-    }
-
-    List<DateTime> progressBin = (doc['progressBin'] as List)
-        .map(
-          (val) => (val as Timestamp).toDate(),
-        )
-        .toList();
-    List<DateTime> duration = (doc['duration'] as List)
-        .map(
-          (val) => (val as Timestamp).toDate(),
-        )
-        .toList();
-    HabitType type =
-        doc['type'] == 1 ? HabitType.Countable : HabitType.Uncountable;
-    Map countableProgress =
-        doc['countableProgress'] == null ? {} : doc['countableProgress'];
-
-    // Setup percentage
-    DateTime now = DateTime.now();
-    DateTime weekStart = dateFormater.parse(
-      now.subtract(Duration(days: now.weekday - 1)).toString(),
-    );
-    DateTime weekEnd = now.add(Duration(days: 7 - now.weekday));
-    var completions = 0;
-    var all = 0;
-    if (type == HabitType.Uncountable) {
-      for (var j = 0; j < progressBin.length; j++) {
-        DateTime date = progressBin[j];
-        if (date.isAfter(weekStart) && date.isBefore(weekEnd) ||
-            date == weekStart ||
-            date == weekEnd) {
-          completions++;
-        }
-      }
-    } else {
-      for (var item in countableProgress.keys) {
-        DateTime date = dateFormater.parse(item);
-        if (date.isAfter(weekStart) && date.isBefore(weekEnd) ||
-            date == weekStart ||
-            date == weekEnd) {
-          completions++;
-        }
-      }
-    }
-
-    DateTime start = duration[0], end = duration[1];
-    List<DateTime> dates = [];
-
-    // Check is habit off
-    if (!doc['disable']) {
-      // init start
-      if (start.weekday != 1) {
-        start = start.subtract(
-          Duration(days: start.weekday - 1),
-        );
-      }
-
-      // init end
-      if (end.weekday != 7) {
-        end = end.add(
-          Duration(days: 7 - end.weekday),
-        );
-      }
-
-      // start --> end
-      for (var j = 0; j < start.difference(end).inDays.abs() + 1; j++) {
-        // If j-day (from start) is used i-habit
-        if (repeatDays[j % 7]) {
-          DateTime currentDate = start.add(Duration(days: j));
-
-          dates.add(dateFormater.parse(currentDate.toString()));
-        }
-      }
-    }
-
-    DateTime _weekStart = weekStart;
-    for (var j = 0; j <= 7; j++) {
-      if (dates != null) {
-        if (dates.contains(_weekStart.add(Duration(days: j)))) {
-          all++;
-        }
-      }
-    }
-
-    var percent = all == 0 ? 0 : completions / all;
-
-    // Create habit
+  factory Habit.fromJson(Map<String, dynamic> json) {
     return Habit(
-      id: doc.documentID,
-      title: doc['title'],
-      description: doc['description'],
-      type: type,
-      goalAmount: doc['goalAmount'],
-      almostDone: doc['almostDone'],
-      iconCode: doc['iconCode'],
-      isDisable: doc['disable'],
-      hasReminder: doc['hasReminder'],
-      timeStamp: (doc['timeStamp'] as Timestamp).toDate(),
-      duration: duration,
-      timeOfDay: doc['timeToRemind'] != '' && doc['timeToRemind'] != null
-          ? TimeOfDay.fromDateTime((doc['timeToRemind'] as Timestamp).toDate())
-          : null,
-      repeatDays: repeatDays,
-      timesADay: doc['timesADay'],
-      progressBin: progressBin,
-      countableProgress: countableProgress,
-      percent: percent.toDouble(),
+      id: json['id'],
+      title: json['title'],
+      description: json['description'],
+      type: json['type'] ? HabitType.Countable : HabitType.Uncountable,
+      goalAmount: json['goalAmount'],
+      iconCode: json['iconCode'],
+      almostDone: json['almostDone'],
+      isDisable: json['isDisable'],
+      hasReminder: json['hasReminder'],
+      timeStamp: DateTime.parse(json['timeStamp']),
+      duration: json['duration']
+          .map(
+            (_) => dateFormater.parse(_),
+          )
+          .toList()
+          .cast<DateTime>(),
+      timeOfDay: json['timeOfDay'] == null
+          ? null
+          : TimeOfDay.fromDateTime(DateTime.parse(json['timeOfDay'])),
+      repeatDays: json['repeatDays'].cast<bool>(),
+      comments: json['comments']
+          .map(
+            (_) {
+              var tmp = Comment.fromJson(_);
+              print(tmp.timestamp);
+              return tmp;
+            },
+          )
+          .toList()
+          .cast<Comment>(),
+      countableProgress: (json['countableProgress'] as Map).map(
+        (key, val) => MapEntry(dateFormater.parse(key), val),
+      ),
+      progressBin: json['progressBin']
+          .map(
+            (val) => dateFormater.parse(val),
+          )
+          .toList()
+          .cast<DateTime>(),
+      timesADay: json['timesADay'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    DateTime now = DateTime.now();
+    return {
+      'id': id,
+      'title': title,
+      'description': description,
+      'type': type == HabitType.Countable,
+      'goalAmount': goalAmount,
+      'iconCode': iconCode,
+      'almostDone': almostDone,
+      'isDisable': isDisable,
+      'hasReminder': hasReminder,
+      'timeStamp': timeStamp.toIso8601String(),
+      'duration': duration
+          .map(
+            (date) => date.toString(),
+          )
+          .toList(),
+      'timeOfDay': timeOfDay == null
+          ? null
+          : DateTime(
+              now.year,
+              now.month,
+              now.day,
+              timeOfDay.hour,
+              timeOfDay.minute,
+            ),
+      'repeatDays': repeatDays,
+      'comments': comments
+          .map(
+            (val) => val.toJson(),
+          )
+          .toList(),
+      'countableProgress': countableProgress.map(
+        (key, val) => MapEntry(key.toString(), val),
+      ),
+      'progressBin': progressBin
+          .map(
+            (val) => val.toString(),
+          )
+          .toList(),
+      'timesADay': timesADay,
+    };
   }
 
   bool getDoneProperty(DateTime date) {

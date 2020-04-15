@@ -48,10 +48,10 @@ class HomeViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future fetch(String userId) async {
+  Future fetch() async {
     setState(ViewState.Busy);
-    _habits = await _databaseServices.getAllHabitsById(userId);
-    _tasks = await _databaseServices.getAllTasksById(userId);
+    _habits = await _databaseServices.getHabits();
+    _tasks = await _databaseServices.getTasks();
 
     setMarkedDates();
     setToday(DateTime.now());
@@ -66,7 +66,7 @@ class HomeViewModel extends BaseViewModel {
   ) {
     todayHabits[index].countableProgress[
         dateFormater.parse(currentDate.toString()).toString()] = _data;
-    _databaseServices.updateHabit(todayHabits[index], userId);
+    _databaseServices.updateHabit(todayHabits[index]);
   }
 
   void addHabitWithOutReload(Habit habit) {
@@ -236,11 +236,11 @@ class HomeViewModel extends BaseViewModel {
   }
 
   void updateHabit(Habit habit, String userId) async {
-    await _databaseServices.updateHabit(habit, userId);
+    await _databaseServices.updateHabit(habit);
   }
 
   void updateTask(Task task, userId) async {
-    await _databaseServices.updateTask(task, userId);
+    await _databaseServices.updateTask(task);
   }
 
   void addToProgressBin(int index, DateTime date) {
@@ -293,6 +293,6 @@ class HomeViewModel extends BaseViewModel {
   }
 
   Future<bool> removeTaskFromDB(Task task, String userId) async {
-    await _databaseServices.deleteTask(task.id, userId);
+    await _databaseServices.deleteTask(task.id);
   }
 }

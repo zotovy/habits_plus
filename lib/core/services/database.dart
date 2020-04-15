@@ -1,296 +1,371 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:habits_plus/core/enums/habitType.dart';
+import 'dart:convert';
+
 import 'package:habits_plus/core/models/comment.dart';
 import 'package:habits_plus/core/models/habit.dart';
 import 'package:habits_plus/core/models/task.dart';
 import 'package:habits_plus/core/models/user.dart';
 import 'package:habits_plus/core/util/constant.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 class DatabaseServices {
-  static Future<bool> isUserExists(String id) async {
+  SharedPreferences prefs;
+
+  /// Setup SharedPreferences
+  Future<bool> setupSharedPrefferences() async {
     try {
-      final user = await userRef.document(id).get();
-      if (user.data != null) {
-        return true;
-      } else {
-        return false;
-      }
+      prefs = await SharedPreferences.getInstance();
+      // prefs.clear();
+      return true;
     } catch (e) {
-      print(
-          'getUserError: trying get user with ID: $id,\n Time: ${DateTime.now()}');
+      print('Error while setup SharedPrefferences $e');
       return false;
     }
   }
 
-  Future<dynamic> getUserById(String id) async {
-    bool isExists = await isUserExists(id);
-    if (isExists) {
-      DocumentSnapshot snap = await userRef.document(id).get();
-      User user = User.fromDoc(snap);
-      return user;
+  bool checkPref() => prefs == null;
+
+  /// Function localy save task Shared Preferences
+  Future<bool> saveTask(Task task) async {
+    if (checkPref()) {
+      print('SharedPreferences is null!');
+      return null;
     }
-    return false;
+
+    try {
+      // Get current List<Task>
+      List<String> _ = prefs.getStringList('tasks');
+      List<Task> _data = _ == null
+          ? []
+          : _
+              .map(
+                (String _) => Task.fromJson(json.decode(_)),
+              )
+              .toList();
+
+      // Check id
+      if (task.id == null || task.id == '') task.id = Uuid().v4();
+
+      // Add task -> current List<Task>
+      _data.add(task);
+
+      // Encode back from List<Task> -> List<String>
+      List<String> _listOfString = _data
+          .map(
+            (i) => jsonEncode(i.toJson()),
+          )
+          .toList();
+
+      await prefs.setStringList('tasks', _listOfString);
+
+      // DB code
+      return true;
+    } catch (e) {
+      print('Error while save task: $e');
+      return false;
+    }
   }
 
-  // Pass new habit to Firebase
-  Future<bool> createHabit(
-    Habit habit,
-    String userId,
-  ) async {
-    bool isExists = await isUserExists(userId);
-    DateTime now = DateTime.now();
-    if (isExists) {
-      // generate document ID
-      String docId = Uuid().v4();
+  /// Function localy save task Shared Preferences
+  Future<bool> saveHabit(Habit habit) async {
+    if (checkPref()) {
+      print('SharedPreferences is null!');
+      return null;
+    }
 
-      // rewrite List<bool> -> binary String '1110001'
-      String days = '';
-      for (var i = 0; i < habit.repeatDays.length; i++) {
-        if (habit.repeatDays[i])
-          days += '1';
-        else
-          days += '0';
+    try {
+      // Get current List<Habit>
+      List<Habit> _data = await getHabits();
+
+      print('debug: $_data');
+
+      // Check id
+      if (habit.id == null || habit.id == '') habit.id = Uuid().v4();
+
+      // Add habit -> current List<Habit>
+      _data.add(habit);
+
+      print(_data);
+
+      // Encode back from List<Habit> -> List<String>
+      List<String> _listOfString = _data.map(
+        (i) {
+          return jsonEncode(i.toJson());
+        },
+      ).toList();
+
+      await prefs.setStringList('habits', _listOfString);
+
+      // DB code
+      return true;
+    } catch (e) {
+      print('Error while save habit: $e');
+      return false;
+    }
+  }
+
+  Future<List<Habit>> getHabits() async {
+    if (checkPref()) {
+      print('SharedPreferences is null!');
+      return null; // Error code
+    }
+
+    try {
+      // Get & decode List<Habit>
+      List<String> _ = prefs.getStringList('habits');
+      List<Habit> _data = _ == null
+          ? []
+          : _.map(
+              (String _) {
+                return Habit.fromJson(json.decode(_));
+              },
+            ).toList();
+
+      return _data ?? [];
+    } catch (e) {
+      print('Error while get habits $e');
+      return null; // Error code
+    }
+  }
+
+  Future<List<Task>> getTasks() async {
+    if (checkPref()) {
+      print('SharedPreferences is null!');
+      return null; // Error code
+    }
+
+    try {
+      // Get & decode List<Task>
+      List<String> _ = prefs.getStringList('tasks');
+      List<Task> _data = _ == null
+          ? []
+          : _
+              .map(
+                (String _) => Task.fromJson(json.decode(_)),
+              )
+              .toList();
+
+      return _data ?? [];
+    } catch (e) {
+      print('Error while get tasks $e');
+      return null; // Error code
+    }
+  }
+
+  Future<Habit> getHabitById(String habitId) async {
+    if (checkPref()) {
+      print('SharedPreferences is null!');
+      return null; // Error code
+    }
+
+    try {
+      // Get Habits
+      List<Habit> habits = await getHabits();
+      if (habits == null) return null; // Error code
+
+      // Search for habit
+      Habit habit = habits.firstWhere((Habit val) => val.id == habitId);
+
+      // Return habit
+      return habit;
+    } catch (e) {
+      print('Error while get habit $e');
+      return null; // Error code
+    }
+  }
+
+  Future<List> getCommentsByHabitId(String habitId) async {
+    if (checkPref()) {
+      print('SharedPreferences is null!');
+      return null; // Error code
+    }
+
+    try {
+      // Get Habit
+      Habit habit = await getHabitById(habitId);
+      if (habit == null) return null; // Error code
+
+      // Return comments
+      return habit.comments;
+    } catch (e) {
+      print('Error while get habit by id $e');
+      return null; // Error code
+    }
+  }
+
+  Future saveComment(Comment comment) async {
+    if (checkPref()) {
+      print('SharedPreferences is null!');
+      return null; // Error code
+    }
+
+    try {
+      // Get Habit
+      List<Habit> habits = await getHabits();
+      if (habits == null) return null; // Error code
+
+      habits
+          .firstWhere((Habit habit) => habit.id == comment.habitId)
+          .comments
+          .add(comment);
+
+      // Encode back from List<Habit> -> List<String>
+      List<String> _listOfString = habits
+          .map(
+            (i) => jsonEncode(i.toJson()),
+          )
+          .toList();
+
+      await prefs.setStringList('habits', _listOfString);
+
+      // Return dbcode
+      return true;
+    } catch (e) {
+      print('Error while save comment $e');
+      return null; // Error code
+    }
+  }
+
+  Future<User> getUser() async {
+    if (checkPref()) {
+      print('SharedPreferences is null!');
+      return null; // Error code
+    }
+
+    try {
+      // Get User decoded String
+      String _ = prefs.getString('user');
+
+      // check if string == null
+      if (_ == null) {
+        return userNotFound;
       }
 
-      // Write document into DB
-      habitsRef.document(userId).collection('habits').document(docId).setData(
-        {
-          'goalAmount': habit.goalAmount,
-          'description': habit.description,
-          'disable': false,
-          'hasReminder': habit.hasReminder,
-          'repeatDays': days,
-          'timeStamp': Timestamp.now(),
-          'timeToRemind': habit.timeOfDay != null
-              ? DateTime(
-                  now.year,
-                  now.month,
-                  now.day,
-                  habit.timeOfDay.hour,
-                  habit.timeOfDay.minute,
-                )
-              : null,
-          'timesADay': habit.timesADay,
-          'title': habit.title,
-          'type': habit.type == HabitType.Countable ? 1 : 0,
-          'progressBin': <DateTime>[],
-          'iconCode': habit.iconCode,
-          'duration': habit.duration,
-        },
-      );
+      // Decode String -> User
+      User user = User.fromJson(json.decode(_));
 
-      return true;
+      // Return User / null
+      return user ?? userNotFound;
+    } catch (e) {
+      print('Error while get user $e');
+      return null;
     }
-    return false;
   }
 
-  // Create new habit and pass it to Firebase
-  Future<bool> createTask(Task task, String userId) async {
-    // Check user id
-    bool isExists = await isUserExists(userId);
-    if (isExists) {
-      // generate document ID
-      String docId = Uuid().v4();
-
-      DateTime now = DateTime.now();
-
-      // Write document into DB
-      tasksRef.document(userId).collection('tasks').document(docId).setData(
-        {
-          'title': task.title,
-          'description': task.description,
-          'time': task.time != null
-              ? DateTime(
-                  now.year,
-                  now.month,
-                  now.day,
-                  task.time.hour,
-                  task.time.minute,
-                )
-              : null,
-          'date': task.date,
-          'timeStamp': task.timestamp,
-          'isEveryDay': task.isEveryDay,
-          'hasTime': task.hasTime,
-          'done': task.done,
-        },
-      );
-
-      return true;
-    }
-    return false;
-  }
-
-  Future<bool> createComment(Comment comment, String userId) async {
-    // Check userId
-    bool isUserExist = await isUserExists(userId);
-
-    if (isUserExist && comment.habitId != null) {
-      // generate document ID
-      String docId = Uuid().v4();
-
-      // Write doc into DB
-      await commentsRef
-          .document(userId)
-          .collection('comments')
-          .document(comment.habitId)
-          .collection('comments')
-          .document(docId)
-          .setData(
-        {
-          'authorId': comment.authorId,
-          'habitId': comment.habitId,
-          'hasImage': comment.hasImage,
-          'imageUrl': comment.imageUrl,
-          'content': comment.content,
-          'timestamp': comment.timestamp,
-        },
-      );
-
-      return true;
+  Future<bool> updateHabit(Habit _habit) async {
+    if (checkPref()) {
+      print('SharedPreferences is null!');
+      return null; // Error code
     }
 
-    return false;
-  }
+    try {
+      // Get Habit
+      List<Habit> habits = await getHabits();
+      if (habits == null) return false; // Error code
 
-  Future<List<Habit>> getAllHabitsById(String id) async {
-    QuerySnapshot snap =
-        await habitsRef.document(id).collection('habits').getDocuments();
-    List<Habit> habits = snap.documents
-        .map((DocumentSnapshot doc) => Habit.fromDoc(doc))
-        .toList();
-    return habits;
-  }
+      // Seatch for habit
+      int i = habits.indexWhere((Habit __habit) => __habit.id == _habit.id);
 
-  Future<List<Task>> getAllTasksById(String id) async {
-    QuerySnapshot snap =
-        await tasksRef.document(id).collection('tasks').getDocuments();
-    List<Task> tasks = snap.documents
-        .map((DocumentSnapshot doc) => Task.fromDoc(doc))
-        .toList();
-    return tasks;
-  }
+      if (i != null) {
+        habits[i] = _habit;
+      } else {
+        print('Cant find habit with id ${_habit.id}(${_habit.title})');
+        return false; //Error code
+      }
 
-  Future<List<Comment>> getCommentsByHabitId(
-      String userId, String habitId) async {
-    QuerySnapshot snap = await commentsRef
-        .document(userId)
-        .collection('comments')
-        .document(habitId)
-        .collection('comments')
-        .getDocuments();
-    List<Comment> _comments = snap.documents
-        .map(
-          (DocumentSnapshot doc) => Comment.fromJson(doc),
-        )
-        .toList();
-    return _comments;
-  }
+      // Encode back from List<Habit> -> List<String>
+      List<String> _listOfString = habits
+          .map(
+            (i) => jsonEncode(i.toJson()),
+          )
+          .toList();
 
-  Future updateHabit(Habit habit, String userId) async {
-    // rewrite List<bool> -> binary String '1110001'
-    String days = '';
-    for (var i = 0; i < habit.repeatDays.length; i++) {
-      if (habit.repeatDays[i])
-        days += '1';
-      else
-        days += '0';
-    }
-    DateTime now = DateTime.now();
+      // Save
+      await prefs.setStringList('habits', _listOfString);
 
-    // Update data in firebase
-    await habitsRef
-        .document(userId)
-        .collection('habits')
-        .document(habit.id)
-        .updateData(
-      {
-        'goalAmount': habit.goalAmount,
-        'description': habit.description,
-        'disable': false,
-        'hasReminder': habit.hasReminder,
-        'repeatDays': days,
-        'timeStamp': Timestamp.fromDate(habit.timeStamp),
-        'timeToRemind': habit.timeOfDay == null
-            ? null
-            : DateTime(
-                now.year,
-                now.month,
-                now.day,
-                habit.timeOfDay.hour,
-                habit.timeOfDay.minute,
-              ),
-        'timesADay': habit.timesADay,
-        'title': habit.title,
-        'type': habit.type == HabitType.Countable ? 1 : 0,
-        'progressBin': habit.progressBin,
-        'iconCode': habit.iconCode,
-        'duration': habit.duration,
-        'countableProgress': habit.countableProgress,
-      },
-    );
-  }
-
-  void updateTask(Task task, String userId) {
-    DateTime now = DateTime.now();
-
-    // Update data in firebase
-    tasksRef.document(userId).collection('tasks').document(task.id).updateData(
-      {
-        'title': task.title,
-        'description': task.description,
-        'time': task.time != null
-            ? DateTime(
-                now.year,
-                now.month,
-                now.day,
-                task.time.hour,
-                task.time.minute,
-              )
-            : null,
-        'date': task.date,
-        'timeStamp': task.timestamp,
-        'isEveryDay': task.isEveryDay,
-        'hasTime': task.hasTime,
-        'done': task.done,
-      },
-    );
-  }
-
-  void updateComment(Comment comment) {
-    // Update data in firebase
-    commentsRef
-        .document(comment.authorId)
-        .collection('comments')
-        .document(comment.authorId)
-        .collection('comments')
-        .document(comment.id)
-        .setData(
-      {
-        'authorId': comment.authorId,
-        'habitId': comment.habitId,
-        'hasImage': comment.hasImage,
-        'imageUrl': comment.imageUrl,
-        'content': comment.content,
-        'timestamp': comment.timestamp,
-      },
-    );
-  }
-
-  Future<bool> deleteTask(String taskId, String userId) async {
-    if (await isUserExists(userId)) {
-      // Delete firebase
-      await tasksRef
-          .document(userId)
-          .collection('tasks')
-          .document(taskId)
-          .delete();
+      // Return dbcode
       return true;
-    } else {
-      return false;
+    } catch (e) {
+      print('Error while update habit $e');
+      return false; // Error code
+    }
+  }
+
+  Future<bool> updateTask(Task task) async {
+    if (checkPref()) {
+      print('SharedPreferences is null!');
+      return null; // Error code
+    }
+
+    try {
+      // Get Tasks
+      List<Task> tasks = await getTasks();
+      if (tasks == null) return false; // Error code
+
+      // Seatch for Task
+      int i = tasks.indexWhere((Task __task) => __task.id == task.id);
+
+      if (i != null) {
+        tasks[i] = task;
+      } else {
+        print('Cant find task with id ${task.id}(${task.title})');
+        return false; //Error code
+      }
+
+      // Encode back from List<Habit> -> List<String>
+      List<String> _listOfString = tasks
+          .map(
+            (i) => jsonEncode(i.toJson()),
+          )
+          .toList();
+
+      // Save
+      await prefs.setStringList('tasks', _listOfString);
+
+      // Return dbcode
+      return true;
+    } catch (e) {
+      print('Error while update task $e');
+      return false; // Error code
+    }
+  }
+
+  Future<bool> deleteTask(String taskId) async {
+    if (checkPref()) {
+      print('SharedPreferences is null!');
+      return null; // Error code
+    }
+
+    try {
+      // Get Tasks
+      List<Task> tasks = await getTasks();
+      if (tasks == null) return false; // Error code
+
+      // Seatch for Task
+      int i = tasks.indexWhere((Task __task) => __task.id == taskId);
+
+      if (i != null) {
+        tasks.removeAt(i);
+      } else {
+        print('Cant find task with id $taskId');
+        return false; //Error code
+      }
+
+      // Encode back from List<Habit> -> List<String>
+      List<String> _listOfString = tasks
+          .map(
+            (i) => jsonEncode(i.toJson()),
+          )
+          .toList();
+
+      // Save
+      await prefs.setStringList('tasks', _listOfString);
+
+      // Return dbcode
+      return true;
+    } catch (e) {
+      print('Error while delete task $e');
+      return false; // Error code
     }
   }
 }

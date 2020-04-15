@@ -11,12 +11,19 @@ class User {
     this.profileImg,
   });
 
-  factory User.fromDoc(DocumentSnapshot doc) {
+  Map<String, dynamic> toJson() {
+    return {
+      'email': email,
+      'name': name,
+      'profileImg': profileImg,
+    };
+  }
+
+  User.fromJson(Map<String, dynamic> json) {
     User user = User(
-      email: doc['email'],
-      name: doc['name'],
-      profileImg: doc['profileImageUrl'],
+      email: json['email'],
+      name: json['name'],
+      profileImg: json['profileImg'],
     );
-    return user;
   }
 }

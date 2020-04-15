@@ -7,6 +7,7 @@ import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:habits_plus/core/models/theme.dart';
+import 'package:habits_plus/core/models/user.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -94,3 +95,9 @@ const List<String> monthNames = [
 ];
 final habitDurationMarkDate = DateTime.utc(2005, 11, 21);
 final drawerController = ZoomDrawerController();
+
+final User userNotFound = User(
+  email: '',
+  name: 'User',
+  profileImg: '',
+);

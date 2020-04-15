@@ -566,6 +566,7 @@ class _CreateHabitView4State extends State<CreateHabitView4>
                               timeStamp: DateTime.now(),
                               title: widget.title,
                               type: widget.habitType,
+                              comments: [],
                             );
                             String userId =
                                 Provider.of<UserData>(context, listen: false)

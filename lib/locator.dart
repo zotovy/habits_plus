@@ -16,9 +16,9 @@ GetIt locator = GetIt.instance;
 
 void setupLocator() {
   locator.registerLazySingleton<BaseViewModel>(() => BaseViewModel());
-  locator.registerLazySingleton<LoginViewModel>(() => LoginViewModel());
-  locator.registerLazySingleton<AuthService>(() => AuthService());
-  locator.registerLazySingleton<SignUpViewModel>(() => SignUpViewModel());
+  // locator.registerLazySingleton<LoginViewModel>(() => LoginViewModel());
+  // // locator.registerLazySingleton<AuthService>(() => AuthService());
+  // locator.registerLazySingleton<SignUpViewModel>(() => SignUpViewModel());
   locator.registerLazySingleton<CreateViewModel>(
     () => CreateViewModel(),
   );
