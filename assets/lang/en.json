@@ -182,7 +182,13 @@
 
     "done_habits": "Done Habits",
     "realized_habits": "Realized habits",
-    "daily_perfomance": "Daily Perfomance"
+    "daily_perfomance": "Daily Perfomance",
+
+    "start_title": "Welcome!",
+    "start_desc": "How can I call you?",
+    "start_name": "Enter your name",
+    "start_email": "Enter your email",
+    "start_choose_image": "Choose profile image"
     
 
 

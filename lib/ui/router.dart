@@ -13,6 +13,7 @@ import 'package:habits_plus/ui/view/create/habit_view1.dart';
 import 'package:habits_plus/ui/view/create/habit_view2.dart';
 import 'package:habits_plus/ui/view/create/habit_view3.dart';
 import 'package:habits_plus/ui/view/create/habit_view4.dart';
+import 'package:habits_plus/ui/view/start.dart';
 
 const String initialRoute = 'login';
 
@@ -26,8 +27,8 @@ class Router {
       // return MaterialPageRouter(builder: (_) => )
       // case 'login':
       //   return ScaleRoute(page: LoginPage());
-      // case 'signup':
-      //   return CupertinoPageRoute(builder: (_) => SignUpPage());
+      case 'start':
+        return CupertinoPageRoute(builder: (_) => StartPage());
       case 'create':
         return CupertinoPageRoute(builder: (_) => CreateHabitPage());
       case 'create_from_template':

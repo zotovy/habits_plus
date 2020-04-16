@@ -99,9 +99,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 color: Theme.of(context).disabledColor,
                 shape: BoxShape.circle,
                 image: DecorationImage(
-                  image: user.profileImg == ''
+                  image: user.profileImg == null
                       ? AssetImage('assets/images/white_man.png')
-                      : CachedNetworkImageProvider(user.profileImg),
+                      : user.profileImg,
                   fit: BoxFit.contain,
                 ),
               ),
@@ -111,7 +111,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
           // Name
           Text(
-            user.name,
+            user.name == null ? 'User' : user.name,
             style: TextStyle(
               color: Theme.of(context).textSelectionHandleColor,
               fontWeight: FontWeight.w600,

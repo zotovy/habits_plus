@@ -1,29 +1,31 @@
 import 'package:flutter/material.dart';
 
-import '../../localization.dart';
+import '../../../localization.dart';
 
-class LoginTextField extends StatefulWidget {
+class StartTextField extends StatefulWidget {
   Function onSaved;
   String errorLocalizationPath;
   String labelLocalizationPath;
   Function validator;
   bool hasObscure = false;
+  IconData prefix;
 
-  LoginTextField({
+  StartTextField({
     this.onSaved,
     this.errorLocalizationPath,
     this.labelLocalizationPath,
     this.hasObscure,
     this.validator,
+    this.prefix,
   }) {
     if (hasObscure == null) hasObscure = false;
   }
 
   @override
-  _LoginTextFieldState createState() => _LoginTextFieldState();
+  _StartTextFieldState createState() => _StartTextFieldState();
 }
 
-class _LoginTextFieldState extends State<LoginTextField> {
+class _StartTextFieldState extends State<StartTextField> {
   String _submit(String value) {
     return value == '' && widget.errorLocalizationPath != null
         ? AppLocalizations.of(context).translate(
@@ -56,6 +58,12 @@ class _LoginTextFieldState extends State<LoginTextField> {
         validator: widget.validator,
         onSaved: widget.onSaved,
         decoration: InputDecoration(
+          prefixIcon: widget.prefix != null
+              ? Icon(
+                  widget.prefix,
+                  color: Theme.of(context).disabledColor,
+                )
+              : null,
           labelStyle: TextStyle(
             color: Colors.black38,
           ),

@@ -62,6 +62,7 @@ class _AllHabitStatWidgetState extends State<AllHabitStatWidget> {
           children: <Widget>[
             Text(
               _text[i],
+              textAlign: TextAlign.center,
               style: TextStyle(
                 color: Theme.of(context).primaryColor,
                 fontWeight: FontWeight.w600,
@@ -71,6 +72,7 @@ class _AllHabitStatWidgetState extends State<AllHabitStatWidget> {
             SizedBox(height: 3),
             Text(
               _subText[i],
+              textAlign: TextAlign.center,
             )
           ],
         ),

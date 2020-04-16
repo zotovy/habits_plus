@@ -99,5 +99,4 @@ final drawerController = ZoomDrawerController();
 final User userNotFound = User(
   email: '',
   name: 'User',
-  profileImg: '',
 );

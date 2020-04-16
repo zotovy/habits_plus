@@ -6,6 +6,7 @@ import 'package:habits_plus/core/viewmodels/detail_model.dart';
 import 'package:habits_plus/core/viewmodels/drawer_model.dart';
 import 'package:habits_plus/core/viewmodels/home_model.dart';
 import 'package:habits_plus/core/viewmodels/login_model.dart';
+import 'package:habits_plus/core/viewmodels/start_model.dart';
 import 'package:habits_plus/core/viewmodels/statistic_model.dart';
 
 import 'core/services/database.dart';
@@ -18,7 +19,7 @@ void setupLocator() {
   locator.registerLazySingleton<BaseViewModel>(() => BaseViewModel());
   // locator.registerLazySingleton<LoginViewModel>(() => LoginViewModel());
   // // locator.registerLazySingleton<AuthService>(() => AuthService());
-  // locator.registerLazySingleton<SignUpViewModel>(() => SignUpViewModel());
+  locator.registerLazySingleton<StartViewModel>(() => StartViewModel());
   locator.registerLazySingleton<CreateViewModel>(
     () => CreateViewModel(),
   );

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../../localization.dart';
+import '../../../localization.dart';
 
-class LoginConfirmButton extends StatelessWidget {
+class StartConfirmButton extends StatelessWidget {
   Function submit;
   String text;
 
-  LoginConfirmButton({this.submit, this.text});
+  StartConfirmButton({this.submit, this.text});
 
   @override
   Widget build(BuildContext context) {

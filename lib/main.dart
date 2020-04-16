@@ -40,6 +40,7 @@ final _filesToWarmup = [
   AssetFlare(bundle: rootBundle, name: "assets/flare/intro_1.flr"),
   AssetFlare(bundle: rootBundle, name: "assets/flare/intro_2.flr"),
   AssetFlare(bundle: rootBundle, name: "assets/flare/intro_3.flr"),
+  AssetFlare(bundle: rootBundle, name: "assets/flare/start.flr"),
 ];
 
 Future<bool> setupFlare() async {
@@ -55,7 +56,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<ThemeModel>(
-          create: (_) => lightMode,
+          create: (_) => darkMode,
         ),
         ChangeNotifierProvider<UserData>(
           create: (_) => UserData(),
@@ -124,14 +125,14 @@ class _MainAppState extends State<MainApp> {
         future: locator<DatabaseServices>().setupSharedPrefferences(),
         builder: (_, snap) {
           if (snap.connectionState == ConnectionState.done &&
-              snap.data != null) {
+              snap.data == true) {
             // String id = snap.data.uid;
             // Provider.of<UserData>(context, listen: false).currentUserId = id;
             locator<HomeViewModel>().fetch();
             locator<DrawerViewModel>().fetchUser();
             return MainShell();
           } else if (snap.connectionState == ConnectionState.done &&
-              snap.data == null) {
+              snap.data == false) {
             return FutureBuilder(
               future: setupFlare(),
               builder: (_, snap) {

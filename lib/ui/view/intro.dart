@@ -92,7 +92,7 @@ class __IntroPageState extends State<_IntroPage>
             top: 30,
             right: 28,
             child: GestureDetector(
-              onTap: () => Navigator.pushNamed(context, 'login'),
+              onTap: () => Navigator.pushNamed(context, 'start'),
               child: Text(
                 AppLocalizations.of(context).translate('intro_skip'),
                 style: TextStyle(
@@ -142,7 +142,7 @@ class __IntroPageState extends State<_IntroPage>
                 duration: Duration(milliseconds: 300),
                 opacity: currentPage == 2 ? 1 : 0,
                 child: GestureDetector(
-                  onTap: () => Navigator.pushNamed(context, 'login'),
+                  onTap: () => Navigator.pushNamed(context, 'start'),
                   child: currentPage == 2
                       ? Text(
                           AppLocalizations.of(context).translate('intro_next'),

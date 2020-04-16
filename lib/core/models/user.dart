@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 class User {
   String email;
   String name;
-  String profileImg;
+  Image profileImg;
 
   User({
     this.email,
@@ -15,15 +18,13 @@ class User {
     return {
       'email': email,
       'name': name,
-      'profileImg': profileImg,
     };
   }
 
-  User.fromJson(Map<String, dynamic> json) {
-    User user = User(
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
       email: json['email'],
       name: json['name'],
-      profileImg: json['profileImg'],
     );
   }
 }

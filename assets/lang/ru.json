@@ -177,7 +177,13 @@
 
     "done_habits": "Выполненные привычки",
     "realized_habits": "Реализованных привычек",
-    "daily_perfomance": "Ежедненая продуктивность"
+    "daily_perfomance": "Ежедненая продуктивность",
+
+    "start_title": "Добро пожаловать!",
+    "start_desc": "Как я могу вас называть?",
+    "start_name": "Введите ваше имя",
+    "start_email": "Введите ваш email",
+    "start_choose_image": "Выбрать аватарку"
 
 
 

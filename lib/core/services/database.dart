@@ -1,5 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:flutter/cupertino.dart';
 import 'package:habits_plus/core/models/comment.dart';
 import 'package:habits_plus/core/models/habit.dart';
 import 'package:habits_plus/core/models/task.dart';
@@ -15,8 +18,10 @@ class DatabaseServices {
   Future<bool> setupSharedPrefferences() async {
     try {
       prefs = await SharedPreferences.getInstance();
-      // prefs.clear();
-      return true;
+      // await prefs.remove('user');
+
+      User _user = await getUser();
+      return _user != null;
     } catch (e) {
       print('Error while setup SharedPrefferences $e');
       return false;
@@ -76,8 +81,6 @@ class DatabaseServices {
     try {
       // Get current List<Habit>
       List<Habit> _data = await getHabits();
-
-      print('debug: $_data');
 
       // Check id
       if (habit.id == null || habit.id == '') habit.id = Uuid().v4();
@@ -238,7 +241,7 @@ class DatabaseServices {
 
       // check if string == null
       if (_ == null) {
-        return userNotFound;
+        return null;
       }
 
       // Decode String -> User
@@ -249,6 +252,24 @@ class DatabaseServices {
     } catch (e) {
       print('Error while get user $e');
       return null;
+    }
+  }
+
+  Future<bool> setUser(User _user) async {
+    if (checkPref()) {
+      print('SharedPreferences is null!');
+      return false; // Error code
+    }
+
+    try {
+      // Get User decoded String
+      await prefs.setString('user', json.encode(_user.toJson()));
+
+      // Return dbcode
+      return true;
+    } catch (e) {
+      print('Error while get user $e');
+      return false;
     }
   }
 
@@ -366,6 +387,47 @@ class DatabaseServices {
     } catch (e) {
       print('Error while delete task $e');
       return false; // Error code
+    }
+  }
+
+  Future<Image> getProfileImg() async {
+    if (checkPref()) {
+      print('SharedPreferences is null!');
+      return null; // Error code
+    }
+
+    try {
+      // get image as String
+      String _ = prefs.getString('profileImage');
+
+      if (_ == null) return null; // Error code
+
+      return Image.memory(
+        base64Decode(_),
+        fit: BoxFit.fill,
+      );
+    } catch (e) {
+      print('Error while delete task $e');
+      return null; // Error code
+    }
+  }
+
+  Future<bool> saveProfileImg(File image) async {
+    if (checkPref()) {
+      print('SharedPreferences is null!');
+      return null; // Error code
+    }
+
+    try {
+      // get image as String
+      String str = base64Encode(image.readAsBytesSync());
+
+      await prefs.setString('profileImage', str);
+
+      return true;
+    } catch (e) {
+      print('Error while delete task $e');
+      return null; // Error code
     }
   }
 }
