@@ -3,6 +3,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:habits_plus/core/enums/viewstate.dart';
 import 'package:habits_plus/core/models/user.dart';
+import 'package:habits_plus/core/services/images.dart';
 import 'package:habits_plus/core/viewmodels/drawer_model.dart';
 import 'package:habits_plus/ui/widgets/drawer/tile.dart';
 import 'package:provider/provider.dart';
@@ -98,13 +99,12 @@ class _CustomDrawerState extends State<CustomDrawer> {
               decoration: BoxDecoration(
                 color: Theme.of(context).disabledColor,
                 shape: BoxShape.circle,
-                image: DecorationImage(
-                  image: user.profileImg == null
-                      ? AssetImage('assets/images/white_man.png')
-                      : user.profileImg,
-                  fit: BoxFit.contain,
-                ),
               ),
+              child: user.profileImgBase64String == null
+                  ? Image(image: AssetImage('assets/images/white_man.png'))
+                  : locator<ImageServices>().imageFromBase64String(
+                      user.profileImgBase64String,
+                    ),
             ),
           ),
           SizedBox(width: 10),

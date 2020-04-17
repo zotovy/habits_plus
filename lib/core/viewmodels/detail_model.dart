@@ -4,7 +4,7 @@ import 'package:habits_plus/core/enums/viewstate.dart';
 import 'package:habits_plus/core/models/comment.dart';
 import 'package:habits_plus/core/models/habit.dart';
 import 'package:habits_plus/core/services/database.dart';
-import 'package:habits_plus/core/services/storage.dart';
+import 'package:habits_plus/core/services/images.dart';
 import 'package:habits_plus/core/viewmodels/base_model.dart';
 import 'package:habits_plus/core/viewmodels/home_model.dart';
 import 'package:uuid/uuid.dart';
@@ -13,7 +13,6 @@ import '../../locator.dart';
 
 class DetailPageView extends BaseViewModel {
   DatabaseServices _databaseServices = locator<DatabaseServices>();
-  StorageServices _storageServices = locator<StorageServices>();
 
   Habit _habit;
   List<Comment> _comments = [];
@@ -49,10 +48,12 @@ class DetailPageView extends BaseViewModel {
   Future createComment(String userId) async {
     String _id = Uuid().v4();
 
-    // Upload image
+    // Get path
     String _imagePath;
     if (_commentImage != null) {
-      _imagePath = await _storageServices.uploadCommentImage(_commentImage);
+      _imagePath = locator<ImageServices>().base64String(
+        _commentImage.readAsBytesSync(),
+      );
     }
 
     // Create comment & uplod him
@@ -62,7 +63,7 @@ class DetailPageView extends BaseViewModel {
       habitId: _habit.id,
       hasImage: _imagePath == null ? false : true,
       id: _id,
-      imageUrl: _imagePath == null ? '' : _imagePath,
+      imageBase64String: _imagePath == null ? '' : _imagePath,
       timestamp: DateTime.now(),
     );
     setCommentState(ViewState.Busy);

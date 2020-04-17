@@ -2,8 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:habits_plus/core/models/comment.dart';
+import 'package:habits_plus/core/services/images.dart';
 import 'package:habits_plus/core/util/constant.dart';
 import 'package:habits_plus/localization.dart';
+
+import '../../../locator.dart';
 
 class CommentTile extends StatefulWidget {
   Comment comment;
@@ -20,7 +23,10 @@ class _CommentTileState extends State<CommentTile> {
             padding: EdgeInsets.only(right: 10),
             child: InkWell(
               onTap: () => Navigator.pushNamed(context, 'image_preview',
-                  arguments: [widget.comment.imageUrl, widget.comment.id]),
+                  arguments: [
+                    widget.comment.imageBase64String,
+                    widget.comment.id
+                  ]),
               child: Container(
                 width: 45,
                 height: 45,
@@ -41,11 +47,11 @@ class _CommentTileState extends State<CommentTile> {
                   child: Container(
                     decoration: BoxDecoration(
                       color: Theme.of(context).disabledColor,
-                      image: DecorationImage(
-                        image:
-                            CachedNetworkImageProvider(widget.comment.imageUrl),
-                        fit: BoxFit.cover,
-                      ),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: locator<ImageServices>().imageFromBase64String(
+                      widget.comment.imageBase64String,
+                      fit: BoxFit.cover,
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),

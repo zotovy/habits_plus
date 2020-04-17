@@ -18,7 +18,7 @@ class DatabaseServices {
   Future<bool> setupSharedPrefferences() async {
     try {
       prefs = await SharedPreferences.getInstance();
-      // await prefs.remove('user');
+      // await prefs.remove('habits');
 
       User _user = await getUser();
       return _user != null;

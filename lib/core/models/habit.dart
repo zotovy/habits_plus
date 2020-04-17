@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:habits_plus/core/enums/habitType.dart';
 import 'package:habits_plus/core/models/comment.dart';

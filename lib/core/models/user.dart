@@ -1,23 +1,23 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class User {
   String email;
   String name;
-  Image profileImg;
+  String profileImgBase64String;
 
   User({
     this.email,
     this.name,
-    this.profileImg,
+    this.profileImgBase64String,
   });
 
   Map<String, dynamic> toJson() {
     return {
       'email': email,
       'name': name,
+      'profileImgBase64String': profileImgBase64String,
     };
   }
 
@@ -25,6 +25,7 @@ class User {
     return User(
       email: json['email'],
       name: json['name'],
+      profileImgBase64String: json['profileImgBase64String'],
     );
   }
 }

@@ -2,15 +2,18 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:habits_plus/core/services/images.dart';
 import 'package:photo_view/photo_view.dart';
+
+import '../../locator.dart';
 
 class ImagePreviewPage extends StatelessWidget {
   String tag;
-  var image;
+  String imageBase64String;
 
   ImagePreviewPage({
     this.tag,
-    this.image,
+    this.imageBase64String,
   });
 
   @override
@@ -23,9 +26,10 @@ class ImagePreviewPage extends StatelessWidget {
             Hero(
               tag: tag,
               child: PhotoView(
-                imageProvider: image.runtimeType != String
-                    ? FileImage(image)
-                    : CachedNetworkImageProvider(image),
+                imageProvider:
+                    locator<ImageServices>().imageProviderFromBase64String(
+                  imageBase64String,
+                ),
               ),
             ),
 

@@ -1,11 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class Comment {
   String id;
   String authorId;
   String habitId;
   bool hasImage;
-  String imageUrl;
+  String imageBase64String;
   String content;
   DateTime timestamp;
 
@@ -15,7 +13,7 @@ class Comment {
     this.habitId,
     this.content,
     this.hasImage,
-    this.imageUrl,
+    this.imageBase64String,
     this.timestamp,
   });
 
@@ -25,7 +23,7 @@ class Comment {
       'authorId': authorId,
       'habitId': habitId,
       'hasImage': hasImage,
-      'imageUrl': imageUrl,
+      'imageBase64String': imageBase64String,
       'content': content,
       'timestamp': timestamp.toString(),
     };
@@ -37,7 +35,7 @@ class Comment {
       authorId: json['authorId'],
       habitId: json['habitId'],
       hasImage: json['hasImage'],
-      imageUrl: json['imageUrl'],
+      imageBase64String: json['imageBase64String'],
       content: json['content'],
       timestamp: DateTime.parse(json['timestamp']),
     );

@@ -1,26 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:habits_plus/core/models/theme.dart';
 import 'package:habits_plus/core/models/user.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-// Firebase
-final auth = FirebaseAuth.instance;
-final GoogleSignIn googleSignIn = GoogleSignIn();
-final FacebookLogin facebookSignIn = FacebookLogin();
-final _firestore = Firestore.instance;
-final storageRef = FirebaseStorage.instance.ref();
-final userRef = _firestore.collection('users');
-final habitsRef = _firestore.collection('habits');
-final tasksRef = _firestore.collection('tasks');
-final commentsRef = _firestore.collection('comments');
 final DateFormat dateFormater = DateFormat('yyyy-MM-dd');
 final TimeOfDay nullTime = TimeOfDay(hour: 3, minute: 59);
 

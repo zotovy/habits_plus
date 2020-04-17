@@ -7,12 +7,11 @@ import '../../locator.dart';
 class StartViewModel extends BaseViewModel {
   DatabaseServices _databaseServices = locator<DatabaseServices>();
 
-  User _user;
+  // User _user;
 
-  Future getUser() async {
-    _user = await _databaseServices.getUser();
-    _user.profileImg = await _databaseServices.getProfileImg();
-  }
+  // Future getUser() async {
+  //   _user = await _databaseServices.getUser();
+  // }
 
   Future setUser(User user) {
     _databaseServices.setUser(user);

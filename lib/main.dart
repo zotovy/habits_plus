@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flare_flutter/flare_cache.dart';
 import 'package:flare_flutter/flare_cache_asset.dart';
 import 'package:flare_flutter/provider/asset_flare.dart';
@@ -73,25 +72,25 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
-  Widget _getPage(BuildContext context) {
-    // FirebaseAuth.instance
-    return StreamBuilder<FirebaseUser>(
-      stream: FirebaseAuth.instance.onAuthStateChanged,
-      builder: (BuildContext context, snapshot) {
-        // print(snapshot.data);
+  // Widget _getPage(BuildContext context) {
+  //   // FirebaseAuth.instance
+  //   return StreamBuilder<FirebaseUser>(
+  //     stream: FirebaseAuth.instance.onAuthStateChanged,
+  //     builder: (BuildContext context, snapshot) {
+  //       // print(snapshot.data);
 
-        try {
-          String id = snapshot.data.uid;
-          Provider.of<UserData>(context).currentUserId = id;
-          locator<HomeViewModel>().fetch();
-          locator<DrawerViewModel>().fetchUser();
-          return MainShell();
-        } catch (e) {
-          return IntroPage();
-        }
-      },
-    );
-  }
+  //       try {
+  //         String id = snapshot.data.uid;
+  //         Provider.of<UserData>(context).currentUserId = id;
+  //         locator<HomeViewModel>().fetch();
+  //         locator<DrawerViewModel>().fetchUser();
+  //         return MainShell();
+  //       } catch (e) {
+  //         return IntroPage();
+  //       }
+  //     },
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {

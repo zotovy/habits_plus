@@ -80,7 +80,7 @@ class Router {
         print(_arg);
         return CupertinoPageRoute(
           builder: (_) => ImagePreviewPage(
-            image: _arg[0],
+            imageBase64String: _arg[0],
             tag: _arg[1],
           ),
         );
