@@ -115,7 +115,7 @@ class Habit {
               now.day,
               timeOfDay.hour,
               timeOfDay.minute,
-            ),
+            ).toString(),
       'repeatDays': repeatDays,
       'comments': comments
           .map(

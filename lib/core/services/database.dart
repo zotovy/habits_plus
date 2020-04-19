@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:habits_plus/core/models/comment.dart';
 import 'package:habits_plus/core/models/habit.dart';
+import 'package:habits_plus/core/models/notification.dart';
 import 'package:habits_plus/core/models/task.dart';
 import 'package:habits_plus/core/models/user.dart';
 import 'package:habits_plus/core/util/constant.dart';
@@ -18,7 +18,7 @@ class DatabaseServices {
   Future<bool> setupSharedPrefferences() async {
     try {
       prefs = await SharedPreferences.getInstance();
-      // await prefs.remove('habits');
+      await prefs.remove('habits');
 
       User _user = await getUser();
       return _user != null;
@@ -427,6 +427,367 @@ class DatabaseServices {
       return true;
     } catch (e) {
       print('Error while delete task $e');
+      return null; // Error code
+    }
+  }
+
+  Future<bool> setupLatestNotifId(int value) async {
+    if (checkPref()) {
+      print('SharedPreferences is null!');
+      return null; // Error code
+    }
+
+    try {
+      await prefs.setInt('latest_id', value);
+
+      return true;
+    } catch (e) {
+      print('Error while getting latest notification id $e');
+      return false; // Error code
+    }
+  }
+
+  Future<bool> changeLatestNotifId(int changeTo) async {
+    if (checkPref()) {
+      print('SharedPreferences is null!');
+      return false; // Error code
+    }
+
+    try {
+      // get latest
+      int latest = await getLatestNotificationId();
+
+      // increment / dicrement counter
+      latest += changeTo;
+
+      // save
+      await prefs.setInt('latest_id', latest);
+
+      return true;
+    } catch (e) {
+      print('Error while getting latest notification id $e');
+      return false; // Error code
+    }
+  }
+
+  Future<int> getLatestNotificationId() async {
+    if (checkPref()) {
+      print('SharedPreferences is null!');
+      return null; // Error code
+    }
+
+    try {
+      // get id & check
+      int _ = prefs.getInt('latest_id');
+
+      print('latest (DB): $_');
+
+      if (_ == null) return 0; // Error code
+
+      return _;
+    } catch (e) {
+      print('Error while getting latest notification id $e');
+      return null; // Error code
+    }
+  }
+
+  Future<List<HabitNotification>> getAllNotification() async {
+    if (checkPref()) {
+      print('SharedPreferences is null!');
+      return null; // Error code
+    }
+
+    try {
+      // get notifications as List<String>
+      List<String> _ = prefs.getStringList('notification');
+
+      // check if storage data == null => return [] as no notifications;
+      if (_ == null) return [];
+
+      // decode List<String> -> List<HabitNotification>
+      List<HabitNotification> notifs = _
+          .map(
+            (String str) => HabitNotification.fromJson(
+              json.decode(str),
+            ),
+          )
+          .toList()
+          .cast<HabitNotification>();
+
+      print('Notifs:  $notifs');
+
+      return notifs;
+    } catch (e) {
+      print('Error while getting latest notification id $e');
+      return null; // Error code
+    }
+  }
+
+  Future<List<HabitNotification>> getAllHabitNotification(Habit habit) async {
+    if (checkPref()) {
+      print('SharedPreferences is null!');
+      return null; // Error code
+    }
+
+    try {
+      // get all notifications
+      List<HabitNotification> _ = await getAllNotification();
+
+      // check if storage notifications is []
+      // => return null as no notifications
+      if (_ == null) return null;
+
+      // Look for a habit
+      List<HabitNotification> notifs = [];
+      _.forEach((HabitNotification elem) {
+        if (elem.habitId == habit.id) notifs.add(elem);
+      });
+
+      return notifs;
+    } catch (e) {
+      print('Error while getting latest notification id $e');
+      return null; // Error code
+    }
+  }
+
+  Future<bool> createNotification(HabitNotification notification) async {
+    if (checkPref()) {
+      print('SharedPreferences is null!');
+      return null; // Error code
+    }
+
+    try {
+      // get all notifications
+      List<HabitNotification> notifications = await getAllNotification();
+
+      // add notification
+      notifications.add(notification);
+
+      // save all notifications
+      prefs.setStringList(
+        'notifications',
+        notifications
+            .map(
+              (HabitNotification elem) => json.encode(
+                elem.toJson(),
+              ),
+            )
+            .toList()
+            .cast<String>(),
+      );
+
+      return true; // return success
+    } catch (e) {
+      print('Error while create notification id $e');
+      return null; // Error code
+    }
+  }
+
+  Future<bool> removeNotification(HabitNotification notification) async {
+    if (checkPref()) {
+      print('SharedPreferences is null!');
+      return null; // Error code
+    }
+
+    try {
+      // get all notifications
+      List<HabitNotification> notifications = await getAllNotification();
+
+      // remove notification
+      notifications.removeWhere(
+        (HabitNotification elem) =>
+            elem.notificationId == notification.notificationId,
+      );
+
+      // save all notifications
+      prefs.setStringList(
+        'notifications',
+        notifications
+            .map(
+              (HabitNotification elem) => json.encode(
+                elem.toJson(),
+              ),
+            )
+            .toList()
+            .cast<String>(),
+      );
+
+      return true; // return success
+    } catch (e) {
+      print('Error while remove notification id $e');
+      return null; // Error code
+    }
+  }
+
+  Future<bool> removeHabitNotification(Habit habit) async {
+    if (checkPref()) {
+      print('SharedPreferences is null!');
+      return null; // Error code
+    }
+
+    try {
+      // get all notifications
+      List<HabitNotification> notifications = await getAllNotification();
+
+      // remove all notifications
+      notifications.removeWhere(
+        (HabitNotification elem) => elem.habitId == habit.id,
+      );
+
+      // save all notifications
+      prefs.setStringList(
+        'notifications',
+        notifications
+            .map(
+              (HabitNotification elem) => json.encode(
+                elem.toJson(),
+              ),
+            )
+            .toList()
+            .cast<String>(),
+      );
+
+      return true; // return success
+    } catch (e) {
+      print('Error while remove notification id $e');
+      return null; // Error code
+    }
+  }
+
+  Future<bool> removeNotificationsByDate(DateTime date) async {
+    if (checkPref()) {
+      print('SharedPreferences is null!');
+      return null; // Error code
+    }
+
+    try {
+      // Formate date
+      date = dateFormater.parse(date.toString());
+
+      // get all notifications
+      List<HabitNotification> notifications = await getAllNotification();
+
+      // remove all notifications
+      notifications.removeWhere(
+        (HabitNotification elem) => elem.date == date,
+      );
+
+      // save all notifications
+      prefs.setStringList(
+        'notifications',
+        notifications
+            .map(
+              (HabitNotification elem) => json.encode(
+                elem.toJson(),
+              ),
+            )
+            .toList()
+            .cast<String>(),
+      );
+
+      return true; // return success
+    } catch (e) {
+      print('Error while remove notification id $e');
+      return null; // Error code
+    }
+  }
+
+  /// This function return Map<DateTime, int>, where
+  ///  - DateTime is date, which notification is assigned to
+  ///  - int is amount of notification, which assigned to this day
+  Future<Map<DateTime, int>> getNotificationDates() async {
+    if (checkPref()) {
+      print('SharedPreferences is null!');
+      return null; // Error code
+    }
+
+    try {
+      // get data as String
+      List<String> _ = prefs.getStringList('notifications_dates');
+
+      // if data == null => return {}
+      if (_ == null) return {};
+
+      // decode String -> Map<DateTime, int>
+      Map<DateTime, int> data = {};
+      _.forEach((String elem) {
+        Map<String, String> decoded = json.decode(elem).cast<String, String>();
+        data[DateTime.parse(decoded['date'])] = int.parse(decoded['amount']);
+      });
+
+      return data; // return success
+    } catch (e) {
+      print('Error while get notifications dates notification id $e');
+      return null; // Error code
+    }
+  }
+
+  /// This function increment or dicrement date's amount
+  /// [amount] - need to pass positive if you need to add,
+  ///       and negative if you need to remove.
+  Future<bool> changeNotificationsDates(DateTime date, int amount) async {
+    if (checkPref()) {
+      print('SharedPreferences is null!');
+      return null; // Error code
+    }
+
+    try {
+      // get data
+      Map<DateTime, int> data = await getNotificationDates();
+
+      // Check reliability of data
+      if (data == null) return false; // Error code
+
+      if (data[date] == null) {
+        data[date] = amount;
+      } else {
+        // Change value
+        data[date] += amount;
+      }
+
+      // Encode Map<DateTime, int> => List<String>
+      List<String> encodedData = [];
+      data.forEach((DateTime _data, int _amount) {
+        Map<String, String> elem = {
+          'date': _data.toString(),
+          'amount': _amount.toString(),
+        };
+        encodedData.add(json.encode(elem));
+      });
+
+      // Save data
+      prefs.setStringList(
+        'notifications_dates',
+        encodedData,
+      );
+
+      return true; // success code
+    } catch (e) {
+      print('Error while change notifications dates notification id $e');
+      return null; // Error code
+    }
+  }
+
+  Future<int> getNotificationAmountByDate(DateTime date) async {
+    if (checkPref()) {
+      print('SharedPreferences is null!');
+      return null; // Error code
+    }
+
+    try {
+      // Format passed date
+      date = dateFormater.parse(date.toString());
+
+      // get data as String
+      Map<DateTime, int> data = await getNotificationDates();
+
+      // Check reliability of data & function arguments
+      if (data == {} || data == null) return null; // Error code
+      if (!data.values.contains(date)) return 0; // Error code
+
+      return data[date];
+    } catch (e) {
+      print('Error while change notifications dates notification id $e');
       return null; // Error code
     }
   }

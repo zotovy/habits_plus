@@ -43,7 +43,7 @@ List<IconData> habitsIcons = [
   MdiIcons.car,
   MdiIcons.scaleBathroom,
   MdiIcons.heart,
-  MdiIcons.basketball,
+  MdiIcons.run,
   MdiIcons.alarm,
   MdiIcons.post,
   MdiIcons.instagram,

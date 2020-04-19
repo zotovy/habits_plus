@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:habits_plus/core/enums/habitType.dart';
 import 'package:habits_plus/core/models/habit.dart';
 import 'package:habits_plus/core/models/userData.dart';
+import 'package:habits_plus/core/services/notifications.dart';
 import 'package:habits_plus/core/util/constant.dart';
 import 'package:habits_plus/core/viewmodels/create_model.dart';
 import 'package:habits_plus/localization.dart';
@@ -577,6 +578,13 @@ class _CreateHabitView4State extends State<CreateHabitView4>
                               userId,
                             );
                             if (dbCode) {
+                              // plan notifications
+                              await locator<NotificationServices>()
+                                  .createNotifications(
+                                context,
+                                habit,
+                              );
+
                               Navigator.pushNamed(context, '/');
                               return null;
                             }

@@ -6,7 +6,6 @@ import 'package:habits_plus/core/models/habit.dart';
 import 'package:habits_plus/core/services/database.dart';
 import 'package:habits_plus/core/services/images.dart';
 import 'package:habits_plus/core/viewmodels/base_model.dart';
-import 'package:habits_plus/core/viewmodels/home_model.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../locator.dart';

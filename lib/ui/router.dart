@@ -23,10 +23,7 @@ class Router {
     switch (settings.name) {
       case '/':
         return MaterialPageRoute(builder: (_) => MainShell());
-      // case 'loading'
-      // return MaterialPageRouter(builder: (_) => )
-      // case 'login':
-      //   return ScaleRoute(page: LoginPage());
+
       case 'start':
         return CupertinoPageRoute(builder: (_) => StartPage());
       case 'create':

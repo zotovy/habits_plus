@@ -1,11 +1,9 @@
 import 'package:habits_plus/core/enums/viewstate.dart';
 import 'package:habits_plus/core/models/habit.dart';
 import 'package:habits_plus/core/models/task.dart';
-import 'package:habits_plus/core/models/userData.dart';
 import 'package:habits_plus/core/services/database.dart';
 import 'package:habits_plus/core/viewmodels/base_model.dart';
 import 'package:habits_plus/core/viewmodels/home_model.dart';
-import 'package:provider/provider.dart';
 
 import '../../locator.dart';
 

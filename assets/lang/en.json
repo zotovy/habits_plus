@@ -188,7 +188,10 @@
     "start_desc": "How can I call you?",
     "start_name": "Enter your name",
     "start_email": "Enter your email",
-    "start_choose_image": "Choose profile image"
+    "start_choose_image": "Choose profile image",
+
+    "notifications_multi1": "Hurry up, you have a lot of work to do today! There are ",
+    "notifications_multi2": "habits to do!"
     
 
 

@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<ThemeModel>(
-          create: (_) => darkMode,
+          create: (_) => lightMode,
         ),
         ChangeNotifierProvider<UserData>(
           create: (_) => UserData(),

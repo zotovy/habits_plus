@@ -183,7 +183,10 @@
     "start_desc": "Как я могу вас называть?",
     "start_name": "Введите ваше имя",
     "start_email": "Введите ваш email",
-    "start_choose_image": "Выбрать аватарку"
+    "start_choose_image": "Выбрать аватарку",
+
+    "notifications_multi1": "Поторопитесь, по плану ",
+    "notifications_multi2": "привычки! "
 
 
 
