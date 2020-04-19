@@ -1,0 +1,77 @@
+[
+    {
+        "user": {
+            "name": "Zotov Yaroslav",
+            "email": "the1ime@yandex.ru",
+            "profileImgBase64Byte": "4AAQSkZJRgABAAEAlgCWAAD//gAfTEVBRCBUZWN..." 
+        },
+        "habits": {
+            "habits": [
+                {
+                    "title": "Read books",
+                    "description": "I would like to read books",
+                    "type": "1",
+                    "duration": [
+                        "2020-04-17 07:00:55.028707",
+                        "2020-05-21 07:01:27.897721"
+                    ], 
+                    "repeatDays": [
+                        true, true, false, true, true, false, false, true
+                    ],
+                    "goalAmount": 31,
+                    "progressBin": [
+                        "2020-04-21 07:00:55.028707",
+                        "2020-04-22 07:01:27.897721",
+                        "2020-05-01 07:00:55.028707",
+                        "2020-05-02 07:01:27.897721"
+                    ], 
+                    "iconCode": 7,
+                    "hasReminder": true,
+                    "timeOfDay": "0001-01-01 07:00:00.00000",
+                    "timeStamp":  "2020-04-17 07:00:55.028707",
+                    "comments": [
+                        {
+                            "hasImage": true,
+                            "imageBase64String": "4AAQSkZJRgABAAEAlgCWAAD//gAfTEVBRCBUZWN...", 
+                            "content": "I read some book",
+                            "timestamp": "2020-04-24 07:00:55.028707"
+                        }
+                    ]
+                }
+            ],
+            "statistic": {
+                "doneHabits": 3,
+                "allHabits": 5,
+                "realizedHabits": 0.6,
+                "monthProgress": [
+                    0.1,
+                    0,
+                    0.25,
+                    0.71,
+                    1,
+                    0.21,
+                    0.91
+                ],
+                "dailyProgress": [
+                    0.1,
+                    0.2,
+                    0.11,
+                    0.9,
+                    0.25,
+                    0.87,
+                    0.1                    
+                ]
+            }
+        },
+        "tasks": [
+            {
+                "title": "Cook dinner",
+                "description": "I want to cook this dinner",
+                "date": "2020-04-21 07:00:55.028707",
+                "timestamp": "2020-04-19 07:00:55.028707",
+                "time": "0001-00-00 14:00:00.000000",
+                "done": false
+            }
+        ]
+    }
+]

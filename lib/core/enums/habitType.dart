@@ -1,0 +1,1 @@
+enum HabitType { Countable, Uncountable }
