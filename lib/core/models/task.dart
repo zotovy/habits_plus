@@ -23,14 +23,20 @@ class Task {
     this.done,
   });
 
-  Task.fromJson(Map<String, dynamic> json) {
-    Task(
+  factory Task.fromJson(Map<String, dynamic> json) {
+    return Task(
       id: json['id'],
       title: json['title'],
       description: json['description'],
-      date: json['date'] != null ? json['date'] : null,
-      timestamp: json['timeStamp'],
-      time: json['hasTime'] ? json['time'] : null,
+      date: DateTime.parse(json['date']),
+      timestamp: DateTime.parse(json['timestamp']),
+      time: json['hasTime']
+          ? TimeOfDay.fromDateTime(
+              DateTime.parse(
+                json['time'],
+              ),
+            )
+          : null,
       isEveryDay: json['isEveryDay'],
       hasTime: json['hasTime'],
       done: json['done'],
@@ -38,13 +44,22 @@ class Task {
   }
 
   Map<String, dynamic> toJson() {
+    DateTime now = DateTime.now();
     return {
       'id': id,
       'title': title,
       'description': description,
-      'date': date,
-      'timestamp': timestamp,
-      'time': time,
+      'date': date.toString(),
+      'timestamp': timestamp.toString(),
+      'time': hasTime
+          ? DateTime(
+              now.year,
+              now.month,
+              now.day,
+              time.hour,
+              time.minute,
+            )
+          : '',
       'isEveryDay': isEveryDay,
       'hasTime': hasTime,
       'done': done,

@@ -18,7 +18,7 @@ class DatabaseServices {
   Future<bool> setupSharedPrefferences() async {
     try {
       prefs = await SharedPreferences.getInstance();
-      await prefs.remove('habits');
+      // await prefs.remove('tasks');
 
       User _user = await getUser();
       return _user != null;
@@ -144,11 +144,15 @@ class DatabaseServices {
           ? []
           : _
               .map(
-                (String _) => Task.fromJson(json.decode(_)),
+                (String _) {
+                  print(json.decode(_)["hasTime"]);
+                  return Task.fromJson(json.decode(_));
+                },
               )
-              .toList();
+              .toList()
+              .cast<Task>();
 
-      return _data ?? [];
+      return _data;
     } catch (e) {
       print('Error while get tasks $e');
       return null; // Error code

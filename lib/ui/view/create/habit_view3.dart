@@ -116,6 +116,15 @@ class _CreateHabitView3State extends State<CreateHabitView3>
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    _checkboxTransitionController.dispose();
+    _descTransitionController.dispose();
+    _cardsTransitionFadeController.dispose();
+    _confirmButtonTransitionController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),

@@ -134,8 +134,9 @@ class HomeViewModel extends BaseViewModel {
     }
 
     // Tasks
-    for (var i = 0; i < tasks.length; i++) {
-      if (tasks[i].date != null) {
+    print('_tasks: $_tasks');
+    for (var i = 0; i < _tasks.length; i++) {
+      if (_tasks[i].date != null) {
         _markedDates.add(tasks[i].date);
       }
     }
@@ -187,6 +188,7 @@ class HomeViewModel extends BaseViewModel {
         }
       } else {
         _todayTasks.add(tasks[i]);
+        print(tasks[i].toJson());
         if (tasks[i].done) {
           _doneTodayTasks.add(tasks[i]);
         } else {

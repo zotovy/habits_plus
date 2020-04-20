@@ -170,6 +170,18 @@ class _CreateHabitView4State extends State<CreateHabitView4>
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    _pushExampleTransController.dispose();
+    _iconTransitionController.dispose();
+    _nameTransitionController.dispose();
+    _descTransController.dispose();
+    _switchTransController.dispose();
+    _timePickerTransController.dispose();
+    _confirmButtonTransController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
       value: _model,

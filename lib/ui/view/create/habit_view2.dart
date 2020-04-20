@@ -100,6 +100,15 @@ class _CreateHabitView2State extends State<CreateHabitView2>
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    boxController.dispose();
+    desc1Controller.dispose();
+    title2Controller.dispose();
+    calendarController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     DateTime _firstDayOfWeek =
         dateFormater.parse(DateTime.now().toString()).weekday != 1

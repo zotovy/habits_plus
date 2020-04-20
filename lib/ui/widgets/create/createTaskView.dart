@@ -5,6 +5,7 @@ import 'package:habits_plus/core/models/userData.dart';
 import 'package:habits_plus/core/viewmodels/create_model.dart';
 import 'package:habits_plus/locator.dart';
 import 'package:habits_plus/ui/view/shell.dart';
+import 'package:habits_plus/ui/widgets/create/single_picker_calendar.dart';
 import 'package:habits_plus/ui/widgets/progress_bar.dart';
 import 'package:habits_plus/ui/widgets/textField_create.dart';
 import 'package:intl/intl.dart';
@@ -90,147 +91,27 @@ class _CreateTaskState extends State<CreateTask> {
 
 //========================================================================================
 /*                                                                                      *
- *                                      DATE PICKER                                     *
+ *                                       Calendar                                       *
  *                                                                                      */
 //========================================================================================
 
-                            // Date
-                            Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                onTap: () async {
-                                  if (!isEveryDay) {
-                                    DateTime _date;
-                                    try {
-                                      _date = await showDatePicker(
-                                        context: context,
-                                        initialDate: DateTime.now(),
-                                        firstDate: DateTime.now()
-                                            .subtract(Duration(days: 1000)),
-                                        lastDate: DateTime.now()
-                                            .add(Duration(days: 1000)),
-                                      );
-                                    } catch (e) {
-                                      _date = null;
-
-                                      // Show date error
-                                      _scaffoldKey.currentState.showSnackBar(
-                                        SnackBar(
-                                          content: Text(
-                                            AppLocalizations.of(context)
-                                                .translate(
-                                                    'error_date_picking'),
-                                          ),
-                                          backgroundColor: Colors.redAccent,
-                                        ),
-                                      );
-                                    }
-                                    setState(() => date = _date);
-                                  }
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(vertical: 10),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Container(
-                                        child: Row(
-                                          children: <Widget>[
-                                            Icon(
-                                              Icons.date_range,
-                                              size: 24,
-                                              color: !isEveryDay
-                                                  ? Theme.of(context)
-                                                      .textSelectionColor
-                                                  : Theme.of(context)
-                                                      .disabledColor,
-                                            ),
-                                            SizedBox(width: 10),
-                                            Text(
-                                              date == null
-                                                  ? AppLocalizations.of(context)
-                                                      .translate(
-                                                      'todos_choose_date',
-                                                    )
-                                                  : '${date.day} ${AppLocalizations.of(context).translate(DateFormat("MMMM").format(date))}',
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                color: !isEveryDay
-                                                    ? Theme.of(context)
-                                                        .textSelectionHandleColor
-                                                    : Theme.of(context)
-                                                        .disabledColor,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Icon(
-                                        Icons.navigate_next,
-                                        size: 24,
-                                        color: !isEveryDay
-                                            ? Theme.of(context)
-                                                .textSelectionColor
-                                            : Theme.of(context).disabledColor,
-                                      ),
-                                    ],
-                                  ),
+                            // CalendarSinglePicker(
+                            //   onDateSelected: (DateTime day) => date = day,
+                            // ),
+                            Container(
+                              padding: EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: Theme.of(context).primaryColor,
+                                  width: 2,
                                 ),
                               ),
-                            ),
-                            SizedBox(height: 5),
-
-//========================================================================================
-/*                                                                                      *
- *                                     Is every day                                     *
- *                                                                                      */
-//========================================================================================
-
-                            GestureDetector(
-                              onTap: () =>
-                                  setState(() => isEveryDay = !isEveryDay),
-                              child: Container(
-                                child: Row(
-                                  children: <Widget>[
-                                    // CheckBox
-                                    AnimatedContainer(
-                                      duration: Duration(milliseconds: 150),
-                                      padding: EdgeInsets.all(3),
-                                      width: 25,
-                                      height: 25,
-                                      decoration: BoxDecoration(
-                                        color: isEveryDay
-                                            ? Theme.of(context).primaryColor
-                                            : Theme.of(context).disabledColor,
-                                        borderRadius: BorderRadius.circular(5),
-                                      ),
-                                      child: AnimatedOpacity(
-                                        duration: Duration(milliseconds: 100),
-                                        opacity: isEveryDay ? 1 : 0,
-                                        child: Icon(
-                                          Icons.done,
-                                          color: Colors.white,
-                                          size: 16,
-                                        ),
-                                      ),
-                                    ),
-
-                                    SizedBox(width: 10),
-                                    Text(
-                                      AppLocalizations.of(context)
-                                          .translate('createHabit_everyday'),
-                                      style: TextStyle(
-                                        color: Theme.of(context)
-                                            .textSelectionHandleColor,
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                              child: CalendarSinglePicker(
+                                onDateSelected: (DateTime day) => date = day,
                               ),
                             ),
-                            SizedBox(height: 15),
+                            SizedBox(height: 25),
 
 //========================================================================================
 /*                                                                                      *
@@ -409,10 +290,11 @@ class _CreateTaskState extends State<CreateTask> {
                                               // Show warning message
                                               _scaffoldKey.currentState
                                                   .showSnackBar(SnackBar(
-                                                content: Text(AppLocalizations
-                                                        .of(context)
-                                                    .translate(
-                                                        'todos_date_warning')),
+                                                content: Text(
+                                                  AppLocalizations.of(context)
+                                                      .translate(
+                                                          'todos_date_warning'),
+                                                ),
                                               ));
 
                                               // Exit from function _submitTask
@@ -420,6 +302,12 @@ class _CreateTaskState extends State<CreateTask> {
                                             }
 
                                             // Create new Task obj and get user ID
+                                            print(_title);
+                                            print(_description);
+                                            print(date);
+                                            print(timeRemind);
+                                            print(isEveryDay);
+
                                             Task task = Task(
                                               title: _title,
                                               description: _description,
@@ -427,9 +315,7 @@ class _CreateTaskState extends State<CreateTask> {
                                                   .now(), // Creation date
                                               date: date,
                                               time: timeRemind,
-                                              hasTime: timeRemind != null
-                                                  ? true
-                                                  : false,
+                                              hasTime: timeRemind != null,
                                               isEveryDay: isEveryDay,
                                               done: false,
                                             );
@@ -446,14 +332,18 @@ class _CreateTaskState extends State<CreateTask> {
                                             if (!dbCode) {
                                               // If operation has error -> make failed message
                                               _scaffoldKey.currentState
-                                                  .showSnackBar(SnackBar(
-                                                content: Text(
-                                                  AppLocalizations.of(context)
-                                                      .translate(
-                                                    'error_user_doent_exists',
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                  behavior:
+                                                      SnackBarBehavior.floating,
+                                                  content: Text(
+                                                    AppLocalizations.of(context)
+                                                        .translate(
+                                                      'error_user_doent_exists',
+                                                    ),
                                                   ),
                                                 ),
-                                              ));
+                                              );
 
                                               // Exit from function _submitTask
                                               return null;
