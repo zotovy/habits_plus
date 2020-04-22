@@ -134,7 +134,6 @@ class HomeViewModel extends BaseViewModel {
     }
 
     // Tasks
-    print('_tasks: $_tasks');
     for (var i = 0; i < _tasks.length; i++) {
       if (_tasks[i].date != null) {
         _markedDates.add(tasks[i].date);

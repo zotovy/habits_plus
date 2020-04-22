@@ -6,9 +6,9 @@ import 'package:habits_plus/ui/view/create/create_from_template.dart';
 import 'package:habits_plus/ui/view/detail_habit.dart';
 import 'package:habits_plus/ui/view/home.dart';
 import 'package:habits_plus/ui/view/image_preview.dart';
-import 'package:habits_plus/ui/view/login.dart';
+import 'package:habits_plus/ui/view/settings.dart';
+import 'package:habits_plus/ui/view/settings/darkmode.dart';
 import 'package:habits_plus/ui/view/shell.dart';
-import 'package:habits_plus/ui/view/signup.dart';
 import 'package:habits_plus/ui/view/create/habit_view1.dart';
 import 'package:habits_plus/ui/view/create/habit_view2.dart';
 import 'package:habits_plus/ui/view/create/habit_view3.dart';
@@ -23,9 +23,14 @@ class Router {
     switch (settings.name) {
       case '/':
         return MaterialPageRoute(builder: (_) => MainShell());
-
       case 'start':
         return CupertinoPageRoute(builder: (_) => StartPage());
+      case 'settings':
+        return CupertinoPageRoute(builder: (_) => SettingsPage());
+      case 'settings/darkmode':
+        return CupertinoPageRoute(
+          builder: (_) => DarkModeSettingsPage(),
+        );
       case 'create':
         return CupertinoPageRoute(builder: (_) => CreateHabitPage());
       case 'create_from_template':

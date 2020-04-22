@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:habits_plus/core/models/app_settings.dart';
 import 'package:habits_plus/core/models/comment.dart';
 import 'package:habits_plus/core/models/habit.dart';
 import 'package:habits_plus/core/models/notification.dart';
@@ -20,12 +21,25 @@ class DatabaseServices {
       prefs = await SharedPreferences.getInstance();
       // await prefs.remove('tasks');
 
-      User _user = await getUser();
-      return _user != null;
+      return true;
     } catch (e) {
       print('Error while setup SharedPrefferences $e');
-      return false;
+      return null;
     }
+  }
+
+  Future<AppSettings> setupApp() async {
+    bool ready = await setupSharedPrefferences();
+
+    if (!ready) return null;
+
+    bool _isDarkMode = isDarkMode();
+    bool isUserLogin = (await getUser()) != null;
+
+    return AppSettings(
+      isDarkMode: _isDarkMode,
+      isUserLogin: isUserLogin,
+    );
   }
 
   bool checkPref() => prefs == null;
@@ -87,8 +101,6 @@ class DatabaseServices {
 
       // Add habit -> current List<Habit>
       _data.add(habit);
-
-      print(_data);
 
       // Encode back from List<Habit> -> List<String>
       List<String> _listOfString = _data.map(
@@ -484,8 +496,6 @@ class DatabaseServices {
       // get id & check
       int _ = prefs.getInt('latest_id');
 
-      print('latest (DB): $_');
-
       if (_ == null) return 0; // Error code
 
       return _;
@@ -782,7 +792,7 @@ class DatabaseServices {
       // Format passed date
       date = dateFormater.parse(date.toString());
 
-      // get data as String
+      // get data
       Map<DateTime, int> data = await getNotificationDates();
 
       // Check reliability of data & function arguments
@@ -792,6 +802,42 @@ class DatabaseServices {
       return data[date];
     } catch (e) {
       print('Error while change notifications dates notification id $e');
+      return null; // Error code
+    }
+  }
+
+  bool isDarkMode() {
+    if (checkPref()) {
+      print('SharedPreferences is null!');
+      return null; // Error code
+    }
+
+    try {
+      // get data as String
+      bool data = prefs.getBool('isDarkMode');
+
+      print('DB $data');
+
+      return data == null ? false : data;
+    } catch (e) {
+      print('Error while get dark mode $e');
+      return null; // Error code
+    }
+  }
+
+  Future<bool> setDarkMode(bool value) async {
+    if (checkPref()) {
+      print('SharedPreferences is null!');
+      return null; // Error code
+    }
+
+    try {
+      // save
+      await prefs.setBool('isDarkMode', value);
+
+      return true; // Success code
+    } catch (e) {
+      print('Error while set dark mode $e');
       return null; // Error code
     }
   }

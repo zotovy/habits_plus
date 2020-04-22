@@ -10,28 +10,24 @@ final DateFormat dateFormater = DateFormat('yyyy-MM-dd');
 final TimeOfDay nullTime = TimeOfDay(hour: 3, minute: 59);
 
 // UI
-ThemeModel lightMode = ThemeModel(
-  ThemeData(
-    primaryColor: Color(0xFF6C3CD1),
-    disabledColor: Colors.black26,
-    backgroundColor: Color(0xFFf8f9fa),
-    textSelectionColor: Color(0xFF565656),
-    textSelectionHandleColor: Color(0xFF282828),
-    accentColor: Color(0xFF6C3CD1),
-    canvasColor: Colors.transparent,
-  ),
+ThemeData lightMode = ThemeData(
+  primaryColor: Color(0xFF9563FF),
+  disabledColor: Colors.black26,
+  backgroundColor: Color(0xFFf8f9fa),
+  textSelectionColor: Color(0xFF565656),
+  textSelectionHandleColor: Color(0xFF282828),
+  accentColor: Color(0xFF6C3CD1),
+  canvasColor: Colors.transparent,
 );
-ThemeModel darkMode = ThemeModel(
-  ThemeData(
-    brightness: Brightness.dark,
-    primaryColor: Color(0xFF6C3CD1),
-    disabledColor: Colors.white12,
-    backgroundColor: Color(0xFF161616),
-    textSelectionColor: Colors.white70,
-    textSelectionHandleColor: Colors.white,
-    accentColor: Color(0xFF6C3CD1),
-    canvasColor: Colors.transparent,
-  ),
+ThemeData darkMode = ThemeData(
+  brightness: Brightness.dark,
+  primaryColor: Color(0xFF9563FF),
+  disabledColor: Colors.white24,
+  backgroundColor: Color(0xFF161616),
+  textSelectionColor: Colors.white70,
+  textSelectionHandleColor: Colors.white,
+  accentColor: Color(0xFF6C3CD1),
+  canvasColor: Colors.transparent,
 );
 
 // Habits icons

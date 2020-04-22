@@ -67,7 +67,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                 DrawerTile(
                                   icon: EvaIcons.settings,
                                   text: 'Settings',
-                                  onPressed: () => print('go to settigns'),
+                                  onPressed: () => Navigator.pushNamed(
+                                    context,
+                                    'settings',
+                                  ),
                                 ),
                               ],
                             ),

@@ -1,16 +1,20 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:habits_plus/core/services/database.dart';
+import 'package:habits_plus/locator.dart';
 
 class ThemeModel extends ChangeNotifier {
-  ThemeData theme;
+  bool isDarkMode = false;
+  DatabaseServices _databaseServices = locator<DatabaseServices>();
 
-  ThemeModel(this.theme);
-
-  getTheme() => theme;
-
-  setTheme(ThemeData newTheme) {
-    theme = newTheme;
-
+  void setMode(bool val) {
+    isDarkMode = val;
     notifyListeners();
+  }
+
+  void reverseMode() {
+    isDarkMode = !isDarkMode;
+    notifyListeners();
+    _databaseServices.setDarkMode(isDarkMode);
   }
 }

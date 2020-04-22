@@ -186,7 +186,20 @@
     "start_choose_image": "Выбрать аватарку",
 
     "notifications_multi1": "Поторопитесь, по плану ",
-    "notifications_multi2": "привычки! "
+    "notifications_multi2": "привычки!",
+
+    "account": "Аккаунт",
+    "darkmode": "Темная тема",
+    "notifications": "Уведомления",
+    "security": "Безопасность",
+    "app_sound": "Звук приложения",
+    "language": "Язык",
+    "report_bug": "Сообщить о баге",
+    "contact_us": "Связаться с нами",
+    "logout": "Выйти",
+
+    "darkMode": "Темная тема",
+    "lightMode": "Светлая тема"
 
 
 

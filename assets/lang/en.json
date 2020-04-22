@@ -191,7 +191,20 @@
     "start_choose_image": "Choose profile image",
 
     "notifications_multi1": "Hurry up, you have a lot of work to do today! There are ",
-    "notifications_multi2": "habits to do!"
+    "notifications_multi2": "habits to do!",
+
+    "account": "Account",
+    "darkmode": "Dark Mode",
+    "notifications": "Notifications",
+    "security": "Security",
+    "app_sound": "App sound",
+    "language": "Language",
+    "report_bug": "Report bug",
+    "contact_us": "Contact us",
+    "logout": "Logout",
+
+    "darkMode": "Dark Mode",
+    "lightMode": "Light Mode"
     
 
 

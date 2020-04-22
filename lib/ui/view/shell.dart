@@ -4,6 +4,7 @@ import 'package:habits_plus/core/enums/viewstate.dart';
 import 'package:habits_plus/core/models/userData.dart';
 import 'package:habits_plus/core/util/constant.dart';
 import 'package:habits_plus/core/viewmodels/home_model.dart';
+import 'package:habits_plus/core/viewmodels/settings_model.dart';
 import 'package:habits_plus/core/viewmodels/statistic_model.dart';
 import 'package:habits_plus/ui/view/drawer.dart';
 import 'package:habits_plus/ui/view/home.dart';
@@ -39,6 +40,7 @@ class _MainShellState extends State<MainShell> {
     locator<HomeViewModel>().fetch().then((val) {
       locator<StatisticViewModel>().setupHabits();
     });
+    locator<SettingsViewModel>().fetch(context);
     _pageController = PageController(initialPage: _currentPage);
   }
 
