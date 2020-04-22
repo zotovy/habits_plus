@@ -6,6 +6,7 @@ import 'package:habits_plus/core/util/constant.dart';
 import 'package:habits_plus/localization.dart';
 import 'package:habits_plus/ui/router.dart';
 import 'package:habits_plus/ui/view/circles_loading.dart';
+import 'package:habits_plus/ui/widgets/settings/appbar.dart';
 import 'package:provider/provider.dart';
 
 class DarkModeSettingsPage extends StatefulWidget {
@@ -232,26 +233,7 @@ class _DarkModeSettingsPageState extends State<DarkModeSettingsPage>
 
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
-      appBar: AppBar(
-        title: Text(
-          AppLocalizations.of(context).translate('darkmode'),
-          style: TextStyle(
-            color: Theme.of(context).textSelectionHandleColor,
-            fontSize: 18,
-          ),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: GestureDetector(
-          onTap: () => Navigator.pop(context),
-          child: Icon(
-            Icons.chevron_left,
-            color: Theme.of(context).textSelectionHandleColor,
-            size: 28,
-          ),
-        ),
-      ),
+      appBar: SettingsPageAppBar('darkmode'),
       body: SafeArea(
         child: Stack(
           children: <Widget>[

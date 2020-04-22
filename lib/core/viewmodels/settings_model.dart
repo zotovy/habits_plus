@@ -1,12 +1,18 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:habits_plus/core/enums/viewstate.dart';
 import 'package:habits_plus/core/models/user.dart';
 import 'package:habits_plus/core/services/database.dart';
+import 'package:habits_plus/core/services/images.dart';
 import 'package:habits_plus/core/viewmodels/base_model.dart';
+import 'package:habits_plus/core/viewmodels/drawer_model.dart';
 import 'package:habits_plus/locator.dart';
 
 class SettingsViewModel extends BaseViewModel {
   DatabaseServices _databaseServices = locator<DatabaseServices>();
+  ImageServices _imageServices = locator<ImageServices>();
+
   User _user;
   bool _isDarkMode;
 
@@ -20,9 +26,17 @@ class SettingsViewModel extends BaseViewModel {
     setState(ViewState.Idle);
   }
 
-  set isDarkMode(bool val) {
-    _isDarkMode = val;
-    // notifyListeners();
+  Future<bool> setProfileImage(File image) async {
+    String encodedImage = _imageServices.base64String(image.readAsBytesSync());
+
+    _user.profileImgBase64String = encodedImage;
+
+    bool success = await _databaseServices.setUser(_user);
+
+    notifyListeners();
+    locator<DrawerViewModel>().user = _user;
+
+    return success;
   }
 
   set user(User __user) {

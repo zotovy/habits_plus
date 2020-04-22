@@ -204,7 +204,12 @@
     "logout": "Logout",
 
     "darkMode": "Dark Mode",
-    "lightMode": "Light Mode"
+    "lightMode": "Light Mode",
+
+    "camera": "Camera",
+    "gallery": "Gallery",
+
+    "cant_save_profile_image_error": "Can't save your profile image now:( Please, try again"
     
 
 

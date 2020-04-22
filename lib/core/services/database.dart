@@ -1,7 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:habits_plus/core/models/app_settings.dart';
 import 'package:habits_plus/core/models/comment.dart';
 import 'package:habits_plus/core/models/habit.dart';
@@ -406,47 +404,6 @@ class DatabaseServices {
     }
   }
 
-  Future<Image> getProfileImg() async {
-    if (checkPref()) {
-      print('SharedPreferences is null!');
-      return null; // Error code
-    }
-
-    try {
-      // get image as String
-      String _ = prefs.getString('profileImage');
-
-      if (_ == null) return null; // Error code
-
-      return Image.memory(
-        base64Decode(_),
-        fit: BoxFit.fill,
-      );
-    } catch (e) {
-      print('Error while delete task $e');
-      return null; // Error code
-    }
-  }
-
-  Future<bool> saveProfileImg(File image) async {
-    if (checkPref()) {
-      print('SharedPreferences is null!');
-      return null; // Error code
-    }
-
-    try {
-      // get image as String
-      String str = base64Encode(image.readAsBytesSync());
-
-      await prefs.setString('profileImage', str);
-
-      return true;
-    } catch (e) {
-      print('Error while delete task $e');
-      return null; // Error code
-    }
-  }
-
   Future<bool> setupLatestNotifId(int value) async {
     if (checkPref()) {
       print('SharedPreferences is null!');
@@ -815,8 +772,6 @@ class DatabaseServices {
     try {
       // get data as String
       bool data = prefs.getBool('isDarkMode');
-
-      print('DB $data');
 
       return data == null ? false : data;
     } catch (e) {

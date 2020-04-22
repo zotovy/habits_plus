@@ -107,6 +107,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   ? Image(image: AssetImage('assets/images/white_man.png'))
                   : locator<ImageServices>().imageFromBase64String(
                       user.profileImgBase64String,
+                      borderRadius: BorderRadius.circular(100),
                     ),
             ),
           ),

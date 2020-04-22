@@ -45,7 +45,7 @@ class _SettingsPageState extends State<SettingsPage> {
     SettingsViewModel model,
   ) {
     List<Function> callbackG = [
-      () {},
+      () => Navigator.pushNamed(context, 'settings/account'),
       () => Navigator.pushNamed(context, 'settings/darkmode'),
       () {},
       () {},
@@ -56,7 +56,10 @@ class _SettingsPageState extends State<SettingsPage> {
       // User info
       SettingsUserRow(
         avatar: model.user.profileImgBase64String == null
-            ? Image(image: AssetImage('assets/images/white_man.png'))
+            ? ClipRRect(
+                child: Image(image: AssetImage('assets/images/white_man.png')),
+                borderRadius: BorderRadius.circular(100),
+              )
             : locator<ImageServices>().imageFromBase64String(
                 model.user.profileImgBase64String,
                 fit: BoxFit.cover,
@@ -96,8 +99,6 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    ThemeModel _theme = Provider.of(context);
-
     // Setup provider
     textG = [
       AppLocalizations.of(context).translate('account'),

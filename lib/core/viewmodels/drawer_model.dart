@@ -12,6 +12,11 @@ class DrawerViewModel extends BaseViewModel {
 
   User get user => _user;
 
+  set user(User user) {
+    _user = user;
+    notifyListeners();
+  }
+
   Future fetchUser() async {
     setState(ViewState.Busy);
     _user = await _databaseServices.getUser();

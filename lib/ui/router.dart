@@ -7,6 +7,7 @@ import 'package:habits_plus/ui/view/detail_habit.dart';
 import 'package:habits_plus/ui/view/home.dart';
 import 'package:habits_plus/ui/view/image_preview.dart';
 import 'package:habits_plus/ui/view/settings.dart';
+import 'package:habits_plus/ui/view/settings/account.dart';
 import 'package:habits_plus/ui/view/settings/darkmode.dart';
 import 'package:habits_plus/ui/view/shell.dart';
 import 'package:habits_plus/ui/view/create/habit_view1.dart';
@@ -30,6 +31,10 @@ class Router {
       case 'settings/darkmode':
         return CupertinoPageRoute(
           builder: (_) => DarkModeSettingsPage(),
+        );
+      case 'settings/account':
+        return CupertinoPageRoute(
+          builder: (_) => AccountSettingsPage(),
         );
       case 'create':
         return CupertinoPageRoute(builder: (_) => CreateHabitPage());

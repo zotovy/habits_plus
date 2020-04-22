@@ -199,7 +199,13 @@
     "logout": "Выйти",
 
     "darkMode": "Темная тема",
-    "lightMode": "Светлая тема"
+    "lightMode": "Светлая тема",
+
+    "camera": "Камера",
+    "gallery": "Галерея",
+
+    "cant_save_profile_image_error": "Can't save your profile image now:( Please, try again"
+
 
 
 

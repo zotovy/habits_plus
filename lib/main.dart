@@ -109,9 +109,9 @@ class _MainAppState extends State<MainApp> {
 
     return FutureBuilder(
       future: locator<DatabaseServices>().setupApp(),
-      // selector: (context, model) => model.isDarkMode,
       builder: (_, AsyncSnapshot<AppSettings> snap) {
         if (snap.connectionState == ConnectionState.done) {
+          // Set theme to provider
           if (snap.data.isDarkMode) {
             theme.setMode(true);
           }
@@ -154,7 +154,7 @@ class _MainAppState extends State<MainApp> {
                       return snap2.hasData ? MainShell() : LoadingPage();
                     },
                   );
-                } else if (snap.data == false) {
+                } else if (snap.data.isUserLogin == false) {
                   return FutureBuilder(
                     future: setupLoginFlare(),
                     builder: (_, snap2) {
@@ -178,6 +178,29 @@ class _MainAppState extends State<MainApp> {
           );
         } else {
           return MaterialApp(
+            supportedLocales: [
+              Locale('en', 'US'),
+              Locale('ru', 'RU'),
+            ],
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+            ],
+            // home: _getPage(context),
+            localeResolutionCallback: (locale, supportedLocales) {
+              // Check if the current device locale is supported
+              for (var supportedLocale in supportedLocales) {
+                if (supportedLocale.languageCode == locale.languageCode &&
+                    supportedLocale.countryCode == locale.countryCode) {
+                  return supportedLocale;
+                }
+              }
+              // If the locale of the device is not supported, use the first one
+              print('Not supported location $locale. Choose EN');
+              return supportedLocales.first;
+            },
+            debugShowCheckedModeBanner: false,
             theme: lightMode,
             home: LoadingPage(),
           );

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SettingsUserRow extends StatelessWidget {
-  Image avatar;
+  ClipRRect avatar;
   String name;
   String email;
 
@@ -22,6 +22,7 @@ class SettingsUserRow extends StatelessWidget {
 
           // Avatar
           CircleAvatar(
+            backgroundColor: Theme.of(context).disabledColor,
             radius: 50,
             child: avatar,
           ),

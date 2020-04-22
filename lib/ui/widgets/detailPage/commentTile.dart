@@ -1,5 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:habits_plus/core/models/comment.dart';
 import 'package:habits_plus/core/services/images.dart';
@@ -22,11 +20,14 @@ class _CommentTileState extends State<CommentTile> {
         ? Padding(
             padding: EdgeInsets.only(right: 10),
             child: InkWell(
-              onTap: () => Navigator.pushNamed(context, 'image_preview',
-                  arguments: [
-                    widget.comment.imageBase64String,
-                    widget.comment.id
-                  ]),
+              onTap: () => Navigator.pushNamed(
+                context,
+                'image_preview',
+                arguments: [
+                  widget.comment.imageBase64String,
+                  widget.comment.id
+                ],
+              ),
               child: Container(
                 width: 45,
                 height: 45,
