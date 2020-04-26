@@ -8,6 +8,7 @@ import 'package:habits_plus/localization.dart';
 import 'package:habits_plus/locator.dart';
 import 'package:habits_plus/ui/view/drawer.dart';
 import 'package:habits_plus/ui/view/loading.dart';
+import 'package:habits_plus/ui/view/settings.dart';
 import 'package:habits_plus/ui/widgets/statistic/all_habits_stat.dart';
 import 'package:habits_plus/ui/widgets/statistic/daily_perfomance.dart';
 import 'package:habits_plus/ui/widgets/statistic/moth_stat.dart';
@@ -23,6 +24,7 @@ class StatisticPage extends StatefulWidget {
 
 class _StatisticPageState extends State<StatisticPage> {
   StatisticViewModel _model = locator<StatisticViewModel>();
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   List<Widget> _mainView(StatisticViewModel model) {
     return [
@@ -75,14 +77,21 @@ class _StatisticPageState extends State<StatisticPage> {
           return model.state == ViewState.Busy
               ? LoadingPage()
               : GestureDetector(
-                  // onTap: () => Focus.of(context).unfocus(),
+                  onTap: () => FocusScope.of(context).unfocus(),
                   child: Scaffold(
+                    key: _scaffoldKey,
                     backgroundColor: Theme.of(context).backgroundColor,
                     appBar: AppBar(
                       leading: IconButton(
                         color: Theme.of(context).textSelectionHandleColor,
                         icon: Icon(EvaIcons.menu),
-                        onPressed: () => drawerController.toggle(),
+                        onPressed: () {
+                          showModalBottomSheet(
+                            builder: (BuildContext _) => SettingsPage(),
+                            context: context,
+                            isScrollControlled: true,
+                          );
+                        },
                       ),
                       backgroundColor: Colors.transparent,
                       elevation: 0,

@@ -21,7 +21,7 @@ class MainShell extends StatefulWidget {
 
 class _MainShellState extends State<MainShell> {
   // Page controll
-  int _currentPage = 0;
+  int _currentPage = 1;
   List<Widget> _pages;
   PageController _pageController;
 
@@ -40,7 +40,7 @@ class _MainShellState extends State<MainShell> {
     locator<HomeViewModel>().fetch().then((val) {
       locator<StatisticViewModel>().setupHabits();
     });
-    locator<SettingsViewModel>().fetch(context);
+    locator<SettingsViewModel>().fetch();
     _pageController = PageController(initialPage: _currentPage);
   }
 

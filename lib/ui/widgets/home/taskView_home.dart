@@ -51,13 +51,15 @@ class _TaskViewOnHomePageState extends State<TaskViewOnHomePage> {
     Future.delayed(Duration(milliseconds: 100)).then(
       (value) async {
         for (var i = 0; i < model.notDoneTodayTasks.length; i++) {
-          if (_keyDoneTask.currentState != null) {
+          if (_keyNotDoneTask.currentState != null) {
             _keyNotDoneTask.currentState.insertItem(i);
           }
           await Future.delayed(Duration(milliseconds: 250));
         }
       },
     );
+
+    model.setNeedReload(false);
   }
 
   /// Build [text] for Task Tile
@@ -571,38 +573,43 @@ class _TaskViewOnHomePageState extends State<TaskViewOnHomePage> {
 
   /// First block of main widget
   Widget _buildDoneTaskList(HomeViewModel model) {
-    return AnimatedList(
-      key: _keyDoneTask,
-      initialItemCount: 0,
-      itemBuilder:
-          (BuildContext context, int index, Animation<double> animation) {
-        return Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onLongPress: () => removeItemFromDoneList(index, model),
-            child: _buildDoneListTile(context, index, animation, model),
-          ),
-        );
-      },
-    );
+    return model.doneTodayTasks.length == 0
+        ? SizedBox.shrink()
+        : AnimatedList(
+            key: _keyDoneTask,
+            initialItemCount: 0,
+            itemBuilder:
+                (BuildContext context, int index, Animation<double> animation) {
+              return Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onLongPress: () => removeItemFromDoneList(index, model),
+                  child: _buildDoneListTile(context, index, animation, model),
+                ),
+              );
+            },
+          );
   }
 
   /// Second block of main widget
   Widget _buildNotDoneTaskList(HomeViewModel model) {
-    return AnimatedList(
-      key: _keyNotDoneTask,
-      initialItemCount: 0,
-      itemBuilder:
-          (BuildContext context, int index, Animation<double> animation) {
-        return Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: () => removeItemFromNotDoneList(index, model),
-            child: _buildNotDoneListTile(context, index, animation, model),
-          ),
-        );
-      },
-    );
+    return model.notDoneTodayTasks.length == 0
+        ? SizedBox.shrink()
+        : AnimatedList(
+            key: _keyNotDoneTask,
+            initialItemCount: 0,
+            itemBuilder:
+                (BuildContext context, int index, Animation<double> animation) {
+              return Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () => removeItemFromNotDoneList(index, model),
+                  child:
+                      _buildNotDoneListTile(context, index, animation, model),
+                ),
+              );
+            },
+          );
   }
 
   @override
@@ -611,10 +618,12 @@ class _TaskViewOnHomePageState extends State<TaskViewOnHomePage> {
       value: _model,
       child: Consumer(
         builder: (_, HomeViewModel model, child) {
+          //
           // Start animation
-          // if (isFirstBuild) {
-
-          // }
+          if (model.needTransition) {
+            _startDoneTaskAnimation(model);
+            _startNotDoneTaskAnimation(model);
+          }
 
           // print('tasks: ${model.tasks}');
           // print('done: ${model.doneTodayTasks}');

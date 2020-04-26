@@ -5,7 +5,6 @@ import 'package:habits_plus/core/services/database.dart';
 import 'package:habits_plus/core/util/constant.dart';
 import 'package:habits_plus/core/viewmodels/base_model.dart';
 import 'package:habits_plus/locator.dart';
-import 'package:provider/provider.dart';
 
 class HomeViewModel extends BaseViewModel {
   DatabaseServices _databaseServices = locator<DatabaseServices>();
@@ -19,6 +18,8 @@ class HomeViewModel extends BaseViewModel {
   List<Task> _notDoneTodayTasks = [];
   bool _hasDoneTasks = false;
   bool _hasNotDoneTasks = false;
+
+  bool needTransition = true;
 
   List<DateTime> _markedDates = [];
   Map<int, List<DateTime>> _habitsDate = {};
@@ -46,6 +47,15 @@ class HomeViewModel extends BaseViewModel {
   set hasNotDoneTasks(bool value) {
     _hasNotDoneTasks = value;
     notifyListeners();
+  }
+
+  void setHabitsNotification(int i, bool val) {
+    habits[i].hasReminder = val;
+    notifyListeners();
+  }
+
+  void setNeedReload(bool value) {
+    needTransition = value;
   }
 
   Future fetch() async {
@@ -147,6 +157,7 @@ class HomeViewModel extends BaseViewModel {
     setState(ViewState.Busy);
     setMarkedDates();
     setToday(date);
+    needTransition = true;
     setState(ViewState.Idle);
   }
 

@@ -8,10 +8,12 @@ import 'package:habits_plus/core/models/userData.dart';
 import 'package:habits_plus/core/services/database.dart';
 import 'package:habits_plus/core/viewmodels/drawer_model.dart';
 import 'package:habits_plus/core/viewmodels/home_model.dart';
+import 'package:habits_plus/core/viewmodels/settings_model.dart';
 import 'package:habits_plus/locator.dart';
 import 'package:habits_plus/ui/router.dart';
 import 'package:habits_plus/ui/view/intro.dart';
 import 'package:habits_plus/ui/view/loading.dart';
+import 'package:habits_plus/ui/view/lock.dart';
 import 'package:habits_plus/ui/view/shell.dart';
 import 'package:habits_plus/core/util/constant.dart';
 import 'package:provider/provider.dart';
@@ -42,6 +44,7 @@ final _flareLoginFiles = [
 final _flareMainFiles = [
   AssetFlare(bundle: rootBundle, name: "assets/flare/darkmode.flr"),
   AssetFlare(bundle: rootBundle, name: "assets/flare/circleLoading.flr"),
+  AssetFlare(bundle: rootBundle, name: "assets/flare/notifications.flr"),
 ];
 
 Future<bool> setupLoginFlare() async {
@@ -116,6 +119,9 @@ class _MainAppState extends State<MainApp> {
             theme.setMode(true);
           }
 
+          locator<SettingsViewModel>()
+            ..isNotifications = snap.data.isNotifications;
+
           return MaterialApp(
             supportedLocales: [
               Locale('en', 'US'),
@@ -126,7 +132,6 @@ class _MainAppState extends State<MainApp> {
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
             ],
-            // home: _getPage(context),
             localeResolutionCallback: (locale, supportedLocales) {
               // Check if the current device locale is supported
               for (var supportedLocale in supportedLocales) {
@@ -151,7 +156,11 @@ class _MainAppState extends State<MainApp> {
                   return FutureBuilder(
                     future: setupMainFlare(),
                     builder: (_, snap2) {
-                      return snap2.hasData ? MainShell() : LoadingPage();
+                      if (snap.data.hasPinCode) {
+                        return LockScreen(snap.data.pinCode);
+                      } else {
+                        return snap2.hasData ? MainShell() : LoadingPage();
+                      }
                     },
                   );
                 } else if (snap.data.isUserLogin == false) {

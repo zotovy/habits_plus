@@ -2,11 +2,15 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:habits_plus/core/models/user.dart';
 import 'package:habits_plus/core/services/images.dart';
 import 'package:habits_plus/core/viewmodels/settings_model.dart';
+import 'package:habits_plus/localization.dart';
 import 'package:habits_plus/locator.dart';
+import 'package:habits_plus/ui/widgets/create/confirm_button.dart';
 import 'package:habits_plus/ui/widgets/error_snackbar.dart';
 import 'package:habits_plus/ui/widgets/image_sourse.dart';
+import 'package:habits_plus/ui/widgets/rounded_textfield.dart';
 import 'package:habits_plus/ui/widgets/settings/appbar.dart';
 import 'package:habits_plus/ui/widgets/settings/circle_avatar.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -22,6 +26,19 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
   SettingsViewModel _model = locator<SettingsViewModel>();
   ImageServices _imageServices = locator<ImageServices>();
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  // Data
+  String oldName;
+  String oldEmail;
+
+  @override
+  void initState() {
+    super.initState();
+
+    oldName = _model.user.name;
+    oldEmail = _model.user.email;
+  }
 
   List<Widget> _ui(SettingsViewModel model) {
     return [
@@ -68,8 +85,104 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
                 _scaffoldKey.currentState.showSnackBar(
                   errorSnackBar(context, 'cant_save_profile_image_error'),
                 );
+                return null; // Exit function
               }
             }
+          }
+        },
+      ),
+      SizedBox(height: 40),
+
+      // Name
+      RoundedTextField(
+        errorLocalizationPath: 'no_name_error',
+        hint: 'name',
+        onSaved: (String val) {
+          User user = model.user;
+          user.name = val;
+          model.user = user;
+        },
+        prefix: Icons.person,
+        text: model.user.name,
+      ),
+      SizedBox(height: 10),
+
+      // Email
+      Container(
+        margin: EdgeInsets.symmetric(horizontal: 15),
+        child: Row(
+          children: <Widget>[
+            // Text Field
+            Expanded(
+              child: RoundedTextField(
+                validator: (String val) => null,
+                hint: 'email',
+                onSaved: (String val) {
+                  User user = model.user;
+                  user.email = val;
+                  model.user = user;
+                },
+                prefix: Icons.email,
+                text: model.user.email,
+                needMargin: false,
+              ),
+            ),
+
+            SizedBox(width: 10),
+
+            Tooltip(
+              message: model.user.isEmailConfirm
+                  ? AppLocalizations.of(context).translate(
+                      'email_confirm_tooltip',
+                    )
+                  : AppLocalizations.of(context).translate(
+                      'email_doesnt_confirm_tooltip',
+                    ),
+              child: InkWell(
+                onTap: () => print('confirm email'),
+                child: Container(
+                  height: 60,
+                  width: 60,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadiusDirectional.circular(10),
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  child: model.user.isEmailConfirm
+                      ? Icon(Icons.done, color: Colors.white)
+                      : Icon(Icons.close, color: Colors.white),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      SizedBox(height: 10),
+
+      // Confirm
+      ConfirmButton(
+        stringPath: 'confirm',
+        onPress: () async {
+          if (_formKey.currentState.validate()) {
+            // Save to user model
+            _formKey.currentState.save();
+
+            // If user didn't change anything -> pop()
+            if (oldName == model.user.name && oldEmail == model.user.email) {
+              Navigator.pop(context);
+              return null;
+            }
+
+            // Save in DB
+            bool dbcode = await model.updateDBUser();
+
+            if (!dbcode) {
+              _scaffoldKey.currentState.showSnackBar(
+                errorSnackBar(context, 'save_error'),
+              );
+              return null; // Exit function
+            }
+
+            Navigator.pop(context);
           }
         },
       ),
@@ -82,14 +195,20 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
       value: _model,
       child: Consumer<SettingsViewModel>(
         builder: (_, model, child) {
-          return Scaffold(
-            key: _scaffoldKey,
-            backgroundColor: Theme.of(context).backgroundColor,
-            appBar: SettingsPageAppBar('account'),
-            body: SafeArea(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: _ui(model),
+          return GestureDetector(
+            onTap: () => FocusScope.of(context).unfocus(),
+            child: Scaffold(
+              key: _scaffoldKey,
+              backgroundColor: Theme.of(context).backgroundColor,
+              appBar: SettingsPageAppBar('account'),
+              body: Form(
+                key: _formKey,
+                child: SafeArea(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: _ui(model),
+                    ),
+                  ),
                 ),
               ),
             ),

@@ -204,7 +204,24 @@
     "camera": "Камера",
     "gallery": "Галерея",
 
-    "cant_save_profile_image_error": "Can't save your profile image now:( Please, try again"
+    "cant_save_profile_image_error": "Can't save your profile image now:( Please, try again",
+    "no_name_error": "Вам нужно ввести имя",
+    "no_email_error": "Вам нужно ввести почту",
+
+
+    "email_doesnt_confirm_tooltip": "Ваша почта не подтверждена",
+    "email_confirm_tooltip": "Ваша почта подтверждена",
+    "save_user_error": "Ой... Какая-то ошибка прервала сохранение. Попробуйте позднее:(",
+    "email_notifications": "Уведомление на email",
+    "no_sync_tooltip": "Вам необходимо включить синхронизацию",
+    "sync_tooltip": "Уведомление на email",
+    "sound_notifications": "Звуковое уведомление",
+    "vibration": "Вибрация"
+
+
+
+
+
 
 
 

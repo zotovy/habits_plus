@@ -47,7 +47,7 @@ class _SettingsPageState extends State<SettingsPage> {
     List<Function> callbackG = [
       () => Navigator.pushNamed(context, 'settings/account'),
       () => Navigator.pushNamed(context, 'settings/darkmode'),
-      () {},
+      () => Navigator.pushNamed(context, 'settings/notifications'),
       () {},
       () {},
       () {},
@@ -116,14 +116,19 @@ class _SettingsPageState extends State<SettingsPage> {
         builder: (_, model, child) {
           return model.state == ViewState.Busy
               ? LoadingPage()
-              : Scaffold(
-                  backgroundColor: Theme.of(context).backgroundColor,
-                  body: SafeArea(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: _ui(context, model),
-                      ),
+              : Container(
+                  height: MediaQuery.of(context).size.height * 0.75,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).backgroundColor,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30),
+                    ),
+                  ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: _ui(context, model),
                     ),
                   ),
                 );

@@ -9,6 +9,7 @@ import 'package:habits_plus/ui/view/image_preview.dart';
 import 'package:habits_plus/ui/view/settings.dart';
 import 'package:habits_plus/ui/view/settings/account.dart';
 import 'package:habits_plus/ui/view/settings/darkmode.dart';
+import 'package:habits_plus/ui/view/settings/notifications.dart';
 import 'package:habits_plus/ui/view/shell.dart';
 import 'package:habits_plus/ui/view/create/habit_view1.dart';
 import 'package:habits_plus/ui/view/create/habit_view2.dart';
@@ -23,7 +24,7 @@ class Router {
       RouteSettings settings, BuildContext context) {
     switch (settings.name) {
       case '/':
-        return MaterialPageRoute(builder: (_) => MainShell());
+        return CupertinoPageRoute(builder: (_) => MainShell());
       case 'start':
         return CupertinoPageRoute(builder: (_) => StartPage());
       case 'settings':
@@ -35,6 +36,10 @@ class Router {
       case 'settings/account':
         return CupertinoPageRoute(
           builder: (_) => AccountSettingsPage(),
+        );
+      case 'settings/notifications':
+        return CupertinoPageRoute(
+          builder: (_) => NotificationsSettingsPage(),
         );
       case 'create':
         return CupertinoPageRoute(builder: (_) => CreateHabitPage());
@@ -81,7 +86,10 @@ class Router {
         return CupertinoPageRoute(builder: (_) => HomePage());
       case 'habit_detail':
         Habit _habit = settings.arguments;
-        return CupertinoPageRoute(builder: (_) => DetailHabitPage(_habit));
+        return CupertinoPageRoute(
+          builder: (_) => DetailHabitPage(_habit),
+          title: '123',
+        );
       case 'image_preview':
         List _arg = settings.arguments;
         print(_arg);

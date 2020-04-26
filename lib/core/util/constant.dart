@@ -12,7 +12,7 @@ final TimeOfDay nullTime = TimeOfDay(hour: 3, minute: 59);
 // UI
 ThemeData lightMode = ThemeData(
   primaryColor: Color(0xFF9563FF),
-  disabledColor: Colors.black26,
+  disabledColor: Color(0x42000000),
   backgroundColor: Color(0xFFf8f9fa),
   textSelectionColor: Color(0xFF565656),
   textSelectionHandleColor: Color(0xFF282828),
@@ -22,7 +22,7 @@ ThemeData lightMode = ThemeData(
 ThemeData darkMode = ThemeData(
   brightness: Brightness.dark,
   primaryColor: Color(0xFF9563FF),
-  disabledColor: Colors.white24,
+  disabledColor: Color(0x3DFFFFFF),
   backgroundColor: Color(0xFF161616),
   textSelectionColor: Colors.white70,
   textSelectionHandleColor: Colors.white,

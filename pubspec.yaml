@@ -37,7 +37,6 @@ dependencies:
   # flutter_facebook_login: ^3.0.0
 
   # UI
-  flutter_svg: ^0.17.1
   calendar_strip: ^1.0.4
   configurable_expansion_tile: ^1.0.0
   material_design_icons_flutter: ^4.0.5045
@@ -63,6 +62,7 @@ dependencies:
   image_picker: ^0.6.4
   image_cropper: ^1.2.1
   shared_preferences: ^0.5.6+3
+  logger: ^0.9.1
 
 dev_dependencies:
   flutter_test:

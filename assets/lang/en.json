@@ -1,7 +1,7 @@
 {
 
     "email": "Email",
-    "name": " Name",
+    "name": "Name",
     "password": "Password",
     "forgot_password": "Forgot password?",
     "cancel": "Cancel",
@@ -209,7 +209,20 @@
     "camera": "Camera",
     "gallery": "Gallery",
 
-    "cant_save_profile_image_error": "Can't save your profile image now:( Please, try again"
+    "cant_save_profile_image_error": "Can't save your profile image now:( Please, try again later",
+    "no_name_error": "You need to enter your name",
+    "no_email_error": "You need to enter your email",
+
+    "email_doesnt_confirm_tooltip": "Your email not confirmed",
+    "email_confirm_tooltip": "Your email confirmed",
+    "save_error": "Ooops.. Some error happened. I can't save your data:( Please, try again later",
+    "email_notifications": "Email notifications",
+    "no_sync_tooltip": "You need to turn on your synchronization",
+    "sync_tooltip": "Email Notifications",
+    "sound_notifications": "Sound notifications",
+    "vibration": "Vibration"
+        
+    
     
 
 

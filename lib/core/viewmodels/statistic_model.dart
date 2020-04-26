@@ -38,6 +38,11 @@ class StatisticViewModel extends BaseViewModel {
     setState(ViewState.Idle);
   }
 
+  void setHabitsNotification(int i, bool val) {
+    habits[i].hasReminder = val;
+    notifyListeners();
+  }
+
   void setAllHabitsStat() {
     int _done = 0;
     double _summOfPercentage = 0;

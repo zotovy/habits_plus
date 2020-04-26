@@ -3,6 +3,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:habits_plus/core/models/habit.dart';
 import 'package:habits_plus/core/models/notification.dart';
 import 'package:habits_plus/core/services/database.dart';
+import 'package:habits_plus/core/util/constant.dart';
 import 'package:habits_plus/localization.dart';
 import 'package:habits_plus/locator.dart';
 
@@ -49,7 +50,7 @@ class NotificationServices {
   }
 
   // This function show single notification
-  Future<bool> planNotif(HabitNotification notif) async {
+  Future<bool> planNotif(HabitNotification notif, bool sound) async {
     // check if Notification is available
     if (flutterLocalNotificationsPlugin == null) return false; // error code
 
@@ -63,6 +64,7 @@ class NotificationServices {
         'channel_id',
         'Channel name',
         'Channel description',
+        playSound: sound,
       );
 
       // Specify ios channel description
@@ -99,7 +101,8 @@ class NotificationServices {
   }
 
   // This function will create notification for whole habit duration
-  Future<bool> createNotifications(BuildContext context, Habit habit) async {
+  Future<bool> createNotifications(BuildContext context, Habit habit,
+      {bool sound = false}) async {
     // check if Notification is available
     if (flutterLocalNotificationsPlugin == null) {
       print('flutterLocalNotificationsPlugin is null');
@@ -107,6 +110,7 @@ class NotificationServices {
     } // error code
 
     try {
+      DateTime now = dateFormater.parse(DateTime.now().toString());
       DateTime start = habit.duration[0];
       DateTime end = habit.duration[1];
       int difference = start.difference(end).inDays.abs() + 1;
@@ -114,7 +118,8 @@ class NotificationServices {
       // Start -> end
       for (var i = 0; i < difference; i++) {
         DateTime thisDate = start.add(Duration(days: i));
-        if (habit.repeatDays[thisDate.weekday - 1]) {
+        if (habit.repeatDays[thisDate.weekday - 1] &&
+            (thisDate.isAfter(now) || thisDate == now)) {
           print('find day $thisDate');
 
           _databaseServices.changeNotificationsDates(thisDate, 1);
@@ -143,10 +148,13 @@ class NotificationServices {
               date: thisDate,
               title: title,
               description: '',
+              habit: habit,
+              isHabitDelete: false,
+              isOf: false,
             );
 
             // plan
-            planNotif(notification);
+            planNotif(notification, sound);
           } else {
             // Create notification
             HabitNotification notification = HabitNotification(
@@ -165,7 +173,7 @@ class NotificationServices {
             );
 
             // plan
-            planNotif(notification);
+            planNotif(notification, sound);
 
             // Add to DB
             _databaseServices.createNotification(notification);
