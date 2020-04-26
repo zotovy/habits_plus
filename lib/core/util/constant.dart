@@ -1,7 +1,6 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
-import 'package:habits_plus/core/models/theme.dart';
 import 'package:habits_plus/core/models/user.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -12,7 +11,7 @@ final TimeOfDay nullTime = TimeOfDay(hour: 3, minute: 59);
 // UI
 ThemeData lightMode = ThemeData(
   primaryColor: Color(0xFF9563FF),
-  disabledColor: Color(0x42000000),
+  disabledColor: Color(0xFFE2E3E4),
   backgroundColor: Color(0xFFf8f9fa),
   textSelectionColor: Color(0xFF565656),
   textSelectionHandleColor: Color(0xFF282828),
@@ -22,7 +21,7 @@ ThemeData lightMode = ThemeData(
 ThemeData darkMode = ThemeData(
   brightness: Brightness.dark,
   primaryColor: Color(0xFF9563FF),
-  disabledColor: Color(0x3DFFFFFF),
+  disabledColor: Color(0xFFECECEC),
   backgroundColor: Color(0xFF161616),
   textSelectionColor: Colors.white70,
   textSelectionHandleColor: Colors.white,

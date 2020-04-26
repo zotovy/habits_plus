@@ -27,10 +27,12 @@ class _CustomSwitchState extends State<CustomSwitch> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: !widget.isDisable
-          ? () => setState(() {
-                isOn = !isOn;
-                widget.callback(isOn);
-              })
+          ? () async {
+              bool value = await widget.callback(!isOn);
+              setState(() {
+                isOn = value;
+              });
+            }
           : () {},
       child: AnimatedContainer(
         duration: Duration(microseconds: 300),

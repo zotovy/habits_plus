@@ -220,7 +220,17 @@
     "no_sync_tooltip": "You need to turn on your synchronization",
     "sync_tooltip": "Email Notifications",
     "sound_notifications": "Sound notifications",
-    "vibration": "Vibration"
+    "vibration": "Vibration",
+    "lock_screen": "Lock Screen",
+    "edit": "Edit",
+    "delete": "Delete",
+    "create_pincode": "Come up with a pin code consisting of 4 digits",
+    "create_pincode2": "Repeat your pin code",
+    "pincode": "Enter your current pincode",
+
+    "delete_lock_title": "Are you sure you want to delete pincode?",
+    "yes": "Yes",
+    "no": "No"
         
     
     

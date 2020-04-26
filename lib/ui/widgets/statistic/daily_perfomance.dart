@@ -77,7 +77,7 @@ class _DailyPerfomanceWidgetState extends State<DailyPerfomanceWidget> {
               backDrawRodData: BackgroundBarChartRodData(
                 show: true,
                 y: 100,
-                color: Theme.of(context).disabledColor.withOpacity(0.05),
+                color: Theme.of(context).disabledColor,
               ),
             ),
           ],
@@ -144,7 +144,7 @@ class _DailyPerfomanceWidgetState extends State<DailyPerfomanceWidget> {
               backDrawRodData: BackgroundBarChartRodData(
                 show: true,
                 y: 100,
-                color: Colors.black.withOpacity(0.1),
+                color: Theme.of(context).disabledColor,
               ),
             ),
           ],

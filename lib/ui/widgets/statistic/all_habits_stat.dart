@@ -43,7 +43,7 @@ class _AllHabitStatWidgetState extends State<AllHabitStatWidget> {
         decoration: BoxDecoration(
           color: Theme.of(context).brightness == Brightness.light
               ? Colors.white
-              : Theme.of(context).disabledColor.withOpacity(0.05),
+              : Theme.of(context).disabledColor,
           boxShadow:
               Theme.of(context).brightness == Brightness.light && !isPressed[i]
                   ? [

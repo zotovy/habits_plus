@@ -35,7 +35,7 @@ class _ShellBottomBarState extends State<ShellBottomBar> {
               icon: Icon(EvaIcons.barChart),
               color: widget.currentPage == 0
                   ? Theme.of(context).textSelectionHandleColor
-                  : Theme.of(context).disabledColor.withOpacity(0.25),
+                  : Theme.of(context).textSelectionColor.withOpacity(0.5),
             ),
 
             // Home page
@@ -44,7 +44,7 @@ class _ShellBottomBarState extends State<ShellBottomBar> {
               icon: Icon(Icons.apps),
               color: widget.currentPage == 1
                   ? Theme.of(context).textSelectionHandleColor
-                  : Theme.of(context).disabledColor.withOpacity(0.25),
+                  : Theme.of(context).textSelectionColor.withOpacity(0.5),
             ),
 
             // // Add habit

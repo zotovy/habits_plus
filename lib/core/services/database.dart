@@ -44,7 +44,7 @@ class DatabaseServices {
     bool isUserLogin = (await getUser()) != null;
     bool isNotifications = getIsNotifications();
     String pinCode = getPinCode();
-    bool hasPinCode = pinCode != null;
+    bool hasPinCode = getPinCodeStatus();
 
     return AppSettings(
       isDarkMode: _isDarkMode,
@@ -926,7 +926,24 @@ class DatabaseServices {
 
       return data == null || data == '' ? null : data;
     } catch (e) {
-      logger.e('Error while get IsNotifications $e');
+      logger.e('Error while get pincode $e');
+      return null; // Error code
+    }
+  }
+
+  /// Return true if pincode is available, false if not
+  bool getPinCodeStatus() {
+    if (checkPref()) {
+      logger.e('SharedPreferences is null!');
+      return null; // Error code
+    }
+
+    try {
+      bool data = prefs.getBool('pincodeStatus');
+
+      return data == null ? false : data;
+    } catch (e) {
+      logger.e('Error while get pincode status $e');
       return null; // Error code
     }
   }
@@ -979,8 +996,25 @@ class DatabaseServices {
 
       return true; // Success code
     } catch (e) {
-      logger.e('Error while set isNotifications $e');
+      logger.e('Error while set pincode $e');
       return null; // Error code
+    }
+  }
+
+  Future<bool> setPinCodeStatus(bool value) async {
+    if (checkPref()) {
+      logger.e('SharedPreferences is null!');
+      return false; // Error code
+    }
+
+    try {
+      // save
+      await prefs.setBool('pincodeStatus', value);
+
+      return true; // Success code
+    } catch (e) {
+      logger.e('Error while set pincode status $e');
+      return false; // Error code
     }
   }
 }

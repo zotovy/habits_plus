@@ -45,6 +45,7 @@ final _flareMainFiles = [
   AssetFlare(bundle: rootBundle, name: "assets/flare/darkmode.flr"),
   AssetFlare(bundle: rootBundle, name: "assets/flare/circleLoading.flr"),
   AssetFlare(bundle: rootBundle, name: "assets/flare/notifications.flr"),
+  AssetFlare(bundle: rootBundle, name: "assets/flare/security.flr"),
 ];
 
 Future<bool> setupLoginFlare() async {

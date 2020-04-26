@@ -10,6 +10,7 @@ import 'package:habits_plus/ui/view/settings.dart';
 import 'package:habits_plus/ui/view/settings/account.dart';
 import 'package:habits_plus/ui/view/settings/darkmode.dart';
 import 'package:habits_plus/ui/view/settings/notifications.dart';
+import 'package:habits_plus/ui/view/settings/security.dart';
 import 'package:habits_plus/ui/view/shell.dart';
 import 'package:habits_plus/ui/view/create/habit_view1.dart';
 import 'package:habits_plus/ui/view/create/habit_view2.dart';
@@ -40,6 +41,10 @@ class Router {
       case 'settings/notifications':
         return CupertinoPageRoute(
           builder: (_) => NotificationsSettingsPage(),
+        );
+      case 'settings/security':
+        return CupertinoPageRoute(
+          builder: (_) => LockSettingsPage(),
         );
       case 'create':
         return CupertinoPageRoute(builder: (_) => CreateHabitPage());

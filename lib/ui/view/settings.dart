@@ -48,7 +48,7 @@ class _SettingsPageState extends State<SettingsPage> {
       () => Navigator.pushNamed(context, 'settings/account'),
       () => Navigator.pushNamed(context, 'settings/darkmode'),
       () => Navigator.pushNamed(context, 'settings/notifications'),
-      () {},
+      () => Navigator.pushNamed(context, 'settings/security'),
       () {},
       () {},
     ];

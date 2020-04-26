@@ -22,7 +22,7 @@ class _TopHabitsWidgetState extends State<TopHabitsWidget> {
             width: 45,
             height: 45,
             decoration: BoxDecoration(
-              color: Theme.of(context).disabledColor.withOpacity(0.05),
+              color: Theme.of(context).disabledColor.withOpacity(0.5),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(

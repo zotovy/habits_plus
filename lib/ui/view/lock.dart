@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
+import '../../localization.dart';
+
 class LockScreen extends StatefulWidget {
   String need;
+  Function(bool value) callback;
+  bool text;
 
-  LockScreen(this.need);
+  LockScreen(this.need, {this.callback, this.text});
   @override
   _LockScreenState createState() => _LockScreenState();
 }
@@ -46,13 +50,20 @@ class _LockScreenState extends State<LockScreen>
       Future.delayed(Duration(milliseconds: 150)).then((_) {
         errorControlled.reverse();
       });
+      if (widget.callback != null) {
+        widget.callback(false);
+      }
     } else {
       setState(() {
         isSuccess = true;
       });
-      Future.delayed(Duration(milliseconds: 500)).then((_) {
-        Navigator.pushReplacementNamed(context, 'mainShell');
-      });
+      if (widget.callback == null) {
+        Future.delayed(Duration(milliseconds: 500)).then((_) {
+          Navigator.pushReplacementNamed(context, 'mainShell');
+        });
+      } else {
+        widget.callback(true);
+      }
     }
   }
 
@@ -211,20 +222,28 @@ class _LockScreenState extends State<LockScreen>
       SizedBox(height: 15),
 
       // Hide / Show
-      GestureDetector(
-        onTap: () {
-          setState(() {
-            show = !show;
-          });
-        },
-        child: Icon(
-          show ? MdiIcons.eye : MdiIcons.eyeOff,
-          size: 32,
-          color: show
-              ? Theme.of(context).primaryColor
-              : Theme.of(context).disabledColor,
-        ),
-      ),
+      widget.text == null
+          ? GestureDetector(
+              onTap: () {
+                setState(() {
+                  show = !show;
+                });
+              },
+              child: Icon(
+                show ? MdiIcons.eye : MdiIcons.eyeOff,
+                size: 32,
+                color: show
+                    ? Theme.of(context).primaryColor
+                    : Theme.of(context).disabledColor,
+              ),
+            )
+          : Text(
+              AppLocalizations.of(context).translate('create_pincode'),
+              style: TextStyle(
+                color: Theme.of(context).textSelectionHandleColor,
+                fontSize: 18,
+              ),
+            ),
 
       SizedBox(height: 40),
 

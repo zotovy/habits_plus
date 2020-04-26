@@ -31,8 +31,7 @@ class _WeekStatWidgetState extends State<WeekStatWidget> {
                 lineWidth: 4.0,
                 percent: widget.stat[i].percent,
                 progressColor: Theme.of(context).primaryColor,
-                backgroundColor:
-                    Theme.of(context).disabledColor.withOpacity(0.15),
+                backgroundColor: Theme.of(context).disabledColor,
                 animation: true,
                 circularStrokeCap: CircularStrokeCap.round,
                 animationDuration: 500,
