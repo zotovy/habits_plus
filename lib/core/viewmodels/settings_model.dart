@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:habits_plus/core/enums/viewstate.dart';
 import 'package:habits_plus/core/models/habit.dart';
+import 'package:habits_plus/core/models/locale.dart';
 import 'package:habits_plus/core/models/notification.dart';
 import 'package:habits_plus/core/models/user.dart';
 import 'package:habits_plus/core/services/database.dart';
@@ -18,6 +19,7 @@ import 'package:habits_plus/locator.dart';
 import 'package:habits_plus/ui/view/lock.dart';
 import 'package:habits_plus/ui/view/lock/create_1.dart';
 import 'package:habits_plus/ui/widgets/error_snackbar.dart';
+import 'package:provider/provider.dart';
 
 class SettingsViewModel extends BaseViewModel {
   DatabaseServices _databaseServices = locator<DatabaseServices>();
@@ -143,6 +145,19 @@ class SettingsViewModel extends BaseViewModel {
         ),
       );
     }
+  }
+
+  Future<bool> setLocale(BuildContext context, String code) async {
+    bool dbcode = await _databaseServices.setLocaleCode(code);
+
+    if (!dbcode) return false; // Error code
+
+    Provider.of<LocaleModel>(context, listen: false).locale = Locale(
+      code,
+      code.toUpperCase(),
+    );
+
+    return true;
   }
 
   Future<bool> deleteCode(

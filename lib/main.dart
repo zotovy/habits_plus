@@ -3,6 +3,7 @@ import 'package:flare_flutter/provider/asset_flare.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habits_plus/core/models/app_settings.dart';
+import 'package:habits_plus/core/models/locale.dart';
 import 'package:habits_plus/core/models/theme.dart';
 import 'package:habits_plus/core/models/userData.dart';
 import 'package:habits_plus/core/services/database.dart';
@@ -73,6 +74,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<UserData>(
           create: (_) => UserData(),
         ),
+        ChangeNotifierProvider<LocaleModel>(
+          create: (_) => LocaleModel(),
+        ),
       ],
       child: MainApp(),
     );
@@ -86,7 +90,7 @@ class MainApp extends StatefulWidget {
 
 class _MainAppState extends State<MainApp> {
   ThemeModel theme;
-
+  LocaleModel locale;
   // Widget _getPage(BuildContext context) {
   //   // FirebaseAuth.instance
   //   return StreamBuilder<FirebaseUser>(
@@ -110,6 +114,7 @@ class _MainAppState extends State<MainApp> {
   @override
   Widget build(BuildContext context) {
     theme = Provider.of<ThemeModel>(context);
+    locale = Provider.of<LocaleModel>(context);
 
     return FutureBuilder(
       future: locator<DatabaseServices>().setupApp(),
@@ -119,13 +124,16 @@ class _MainAppState extends State<MainApp> {
           if (snap.data.isDarkMode) {
             theme.setMode(true);
           }
+          if (snap.data.locale != null) {
+            locale.locale = snap.data.locale;
+          }
 
           locator<SettingsViewModel>()
             ..isNotifications = snap.data.isNotifications;
 
           return MaterialApp(
             supportedLocales: [
-              Locale('en', 'US'),
+              Locale('en', 'EN'),
               Locale('ru', 'RU'),
             ],
             localizationsDelegates: [
@@ -133,6 +141,7 @@ class _MainAppState extends State<MainApp> {
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
             ],
+            locale: locale.locale,
             localeResolutionCallback: (locale, supportedLocales) {
               // Check if the current device locale is supported
               for (var supportedLocale in supportedLocales) {

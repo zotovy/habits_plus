@@ -50,7 +50,7 @@ class _SettingsPageState extends State<SettingsPage> {
       () => Navigator.pushNamed(context, 'settings/notifications'),
       () => Navigator.pushNamed(context, 'settings/security'),
       () {},
-      () {},
+      () => Navigator.pushNamed(context, 'settings/languages'),
     ];
     return [
       // User info

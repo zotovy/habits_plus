@@ -1,9 +1,12 @@
+import 'package:flutter/material.dart';
+
 class AppSettings {
   bool isDarkMode;
   bool isUserLogin;
   bool isNotifications;
   String pinCode;
   bool hasPinCode;
+  Locale locale;
 
   AppSettings({
     this.isDarkMode,
@@ -11,5 +14,6 @@ class AppSettings {
     this.isNotifications,
     this.pinCode,
     this.hasPinCode,
+    this.locale,
   });
 }

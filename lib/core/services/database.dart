@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:habits_plus/core/models/app_settings.dart';
 import 'package:habits_plus/core/models/comment.dart';
 import 'package:habits_plus/core/models/habit.dart';
@@ -45,6 +46,12 @@ class DatabaseServices {
     bool isNotifications = getIsNotifications();
     String pinCode = getPinCode();
     bool hasPinCode = getPinCodeStatus();
+    String _localeCode = getLocale();
+
+    // init locale
+    Locale locale = _localeCode == null
+        ? null
+        : Locale(_localeCode, _localeCode.toUpperCase());
 
     return AppSettings(
       isDarkMode: _isDarkMode,
@@ -52,6 +59,7 @@ class DatabaseServices {
       isNotifications: isNotifications,
       pinCode: pinCode,
       hasPinCode: hasPinCode,
+      locale: locale,
     );
   }
 
@@ -948,6 +956,22 @@ class DatabaseServices {
     }
   }
 
+  String getLocale() {
+    if (checkPref()) {
+      logger.e('SharedPreferences is null!');
+      return null; // Error code
+    }
+
+    try {
+      String data = prefs.getString('locale');
+
+      return data;
+    } catch (e) {
+      logger.e('Error while get locale $e');
+      return null; // Error code
+    }
+  }
+
 // -----------------------------------------------------------------------------
 
   Future<bool> setDarkMode(bool value) async {
@@ -1014,6 +1038,23 @@ class DatabaseServices {
       return true; // Success code
     } catch (e) {
       logger.e('Error while set pincode status $e');
+      return false; // Error code
+    }
+  }
+
+  Future<bool> setLocaleCode(String code) async {
+    if (checkPref()) {
+      logger.e('SharedPreferences is null!');
+      return false; // Error code
+    }
+
+    try {
+      // save
+      await prefs.setString('locale', code);
+
+      return true; // Success code
+    } catch (e) {
+      logger.e('Error while set locale $e');
       return false; // Error code
     }
   }

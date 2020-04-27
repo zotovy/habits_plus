@@ -19,6 +19,10 @@ class AppLocalizations {
 
   Map<String, dynamic> _localizedStrings;
   String lang;
+  Map<String, String> supportedLanguages = {
+    'en': "English",
+    'ru': "Russian",
+  };
 
   Future<bool> load() async {
     // Load the language JSON file from the "lang" folder
