@@ -5,15 +5,17 @@ import '../../../localization.dart';
 class ConfirmButton extends StatelessWidget {
   String stringPath;
   Function() onPress;
+  bool needMargin;
   ConfirmButton({
     this.stringPath = 'confirm',
     this.onPress,
+    this.needMargin = true,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 15),
+      margin: needMargin ? EdgeInsets.symmetric(horizontal: 15) : null,
       decoration: BoxDecoration(
         color: Theme.of(context).primaryColor,
         borderRadius: BorderRadius.circular(10),

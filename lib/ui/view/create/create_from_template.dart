@@ -1,7 +1,10 @@
+import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:habits_plus/core/enums/habitType.dart';
 import 'package:habits_plus/core/models/habit.dart';
 import 'package:habits_plus/core/models/userData.dart';
+import 'package:habits_plus/core/services/notifications.dart';
 import 'package:habits_plus/core/viewmodels/create_model.dart';
 import 'package:habits_plus/localization.dart';
 import 'package:habits_plus/locator.dart';
@@ -11,6 +14,7 @@ import 'package:habits_plus/ui/widgets/create/calendar.dart';
 import 'package:habits_plus/ui/widgets/create/confirm_button.dart';
 import 'package:habits_plus/ui/widgets/create/dayProgress.dart';
 import 'package:habits_plus/ui/widgets/create/texts.dart';
+import 'package:habits_plus/ui/widgets/error_snackbar.dart';
 import 'package:provider/provider.dart';
 
 class CreateFromTemplatePage extends StatefulWidget {
@@ -377,23 +381,15 @@ class _CreateFromTemplatePageState extends State<CreateFromTemplatePage> {
                           SizedBox(height: 20),
 
                           ConfirmButton(
-                            onPress: () {
+                            onPress: () async {
                               // Check is user choose habit duration
                               if (_formKey.currentState.validate()) {
                                 if (widget.templateHabit.duration[0] == null &&
                                     widget.templateHabit.duration[1] == null) {
                                   _scaffoldKey.currentState.showSnackBar(
-                                    SnackBar(
-                                      backgroundColor: Colors.redAccent,
-                                      content: Text(
-                                        AppLocalizations.of(context).translate(
-                                          'noDurationSelectedError',
-                                        ),
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
+                                    errorSnackBar(
+                                      context,
+                                      'noDurationSelectedError',
                                     ),
                                   );
                                   return null;
@@ -407,6 +403,25 @@ class _CreateFromTemplatePageState extends State<CreateFromTemplatePage> {
                                       widget.templateHabit.duration[0];
                                 }
 
+                                if (listEquals(
+                                  [
+                                    false,
+                                    false,
+                                    false,
+                                    false,
+                                    false,
+                                    false,
+                                    false
+                                  ],
+                                  widget.templateHabit.repeatDays,
+                                )) {
+                                  _scaffoldKey.currentState.showSnackBar(
+                                    errorSnackBar(
+                                        context, 'noDaySelectedError'),
+                                  );
+                                  return null;
+                                }
+
                                 // Save data
                                 _formKey.currentState.save();
 
@@ -418,13 +433,40 @@ class _CreateFromTemplatePageState extends State<CreateFromTemplatePage> {
                                         .inDays
                                         .abs() +
                                     1;
+                                widget.templateHabit.timeStamp = DateTime.now();
+                                widget.templateHabit.timesADay = 1;
 
                                 String userId = Provider.of<UserData>(
                                   context,
                                   listen: false,
                                 ).currentUserId;
-                                model.createHabit(widget.templateHabit, userId);
-                                Navigator.pushNamed(context, '/');
+                                bool dbcode = await model
+                                    .createHabit(widget.templateHabit);
+
+                                if (dbcode) {
+                                  // plan notifications
+                                  await locator<NotificationServices>()
+                                      .createNotifications(
+                                    context,
+                                    widget.templateHabit,
+                                  );
+
+                                  Navigator.pushNamed(context, '/');
+                                  return null;
+                                }
+
+                                _scaffoldKey.currentState.showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      AppLocalizations.of(context)
+                                          .translate('error_user_doent_exists'),
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    backgroundColor: Colors.redAccent,
+                                  ),
+                                );
                               }
                             },
                           ),

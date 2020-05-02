@@ -60,7 +60,7 @@ class _RoundedTextFieldState extends State<RoundedTextField> {
       margin: widget.needMargin ? widget.margin : null,
       child: TextFormField(
         style: TextStyle(
-          color: Colors.black87,
+          color: Theme.of(context).textSelectionColor,
         ),
         obscureText: widget.hasObscure,
         validator: widget.validator,
@@ -70,7 +70,7 @@ class _RoundedTextFieldState extends State<RoundedTextField> {
           prefixIcon: widget.prefix != null
               ? Icon(
                   widget.prefix,
-                  color: Theme.of(context).disabledColor,
+                  color: Theme.of(context).textSelectionColor.withOpacity(0.25),
                 )
               : null,
           hintText: AppLocalizations.of(context).translate(widget.hint),
@@ -81,7 +81,9 @@ class _RoundedTextFieldState extends State<RoundedTextField> {
             widget.labelLocalizationPath,
           ),
           enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.black12, width: 1),
+            borderSide: BorderSide(
+                color: Theme.of(context).textSelectionColor.withOpacity(0.25),
+                width: 1),
             borderRadius: BorderRadius.circular(10),
           ),
           border: OutlineInputBorder(

@@ -99,7 +99,9 @@ class _SettingsMenuTileState extends State<SettingsMenuTile> {
                         )
                       : Icon(
                           Icons.chevron_right,
-                          color: Theme.of(context).disabledColor,
+                          color: Theme.of(context)
+                              .textSelectionColor
+                              .withOpacity(0.65),
                         ),
                 ),
               ),

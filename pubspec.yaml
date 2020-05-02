@@ -28,13 +28,14 @@ dependencies:
   cupertino_icons: ^0.1.2
 
   # Firebase & Auth
-  # firebase_core: ^0.4.0+9
-  # firebase_analytics: ^5.0.2
-  # firebase_auth: ^0.14.0+5
-  # firebase_storage: ^3.1.1
-  # cloud_firestore: ^0.12.9+5
-  # google_sign_in: ^4.1.1
-  # flutter_facebook_login: ^3.0.0
+  firebase_core: ^0.4.0+9
+  firebase_analytics: ^5.0.2
+  firebase_auth: ^0.14.0+5
+  firebase_storage: ^3.1.1
+  cloud_firestore: ^0.12.9+5
+  google_sign_in: ^4.1.1
+  flutter_facebook_login: ^3.0.0
+  flutter_twitter_login: "^1.1.0"
 
   # UI
   calendar_strip: ^1.0.4

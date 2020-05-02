@@ -90,7 +90,7 @@ class _LockScreenState extends State<LockScreen>
                           ? Colors.greenAccent
                           : Theme.of(context).primaryColor
                   : Theme.of(context).brightness == Brightness.dark
-                      ? Colors.black
+                      ? Colors.white.withOpacity(0.05)
                       : Colors.white
               : Theme.of(context).brightness == Brightness.dark
                   ? Colors.black
@@ -161,7 +161,7 @@ class _LockScreenState extends State<LockScreen>
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: Theme.of(context).brightness == Brightness.dark
-                  ? Colors.black
+                  ? Colors.white.withOpacity(0.03)
                   : Colors.white,
             ),
             child: InkWell(
@@ -238,7 +238,7 @@ class _LockScreenState extends State<LockScreen>
               ),
             )
           : Text(
-              AppLocalizations.of(context).translate('create_pincode'),
+              AppLocalizations.of(context).translate('pincode'),
               style: TextStyle(
                 color: Theme.of(context).textSelectionHandleColor,
                 fontSize: 18,

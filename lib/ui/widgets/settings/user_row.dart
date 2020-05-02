@@ -44,7 +44,8 @@ class SettingsUserRow extends StatelessWidget {
               : Text(
                   email,
                   style: TextStyle(
-                    color: Theme.of(context).disabledColor,
+                    color:
+                        Theme.of(context).textSelectionColor.withOpacity(0.5),
                     fontSize: 16,
                   ),
                 ),

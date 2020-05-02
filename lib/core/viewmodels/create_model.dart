@@ -21,7 +21,7 @@ class CreateViewModel extends BaseViewModel {
     return dbcode;
   }
 
-  Future<bool> createHabit(Habit habit, String userId) async {
+  Future<bool> createHabit(Habit habit) async {
     setState(ViewState.Busy);
     bool dbcode = await _databaseServices.saveHabit(habit);
     if (dbcode) {

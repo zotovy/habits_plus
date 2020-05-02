@@ -16,7 +16,9 @@ import 'package:habits_plus/ui/view/intro.dart';
 import 'package:habits_plus/ui/view/loading.dart';
 import 'package:habits_plus/ui/view/lock.dart';
 import 'package:habits_plus/ui/view/shell.dart';
+import 'package:habits_plus/ui/view/settings/sync.dart';
 import 'package:habits_plus/core/util/constant.dart';
+import 'package:habits_plus/ui/view/sync/exit.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -47,6 +49,8 @@ final _flareMainFiles = [
   AssetFlare(bundle: rootBundle, name: "assets/flare/circleLoading.flr"),
   AssetFlare(bundle: rootBundle, name: "assets/flare/notifications.flr"),
   AssetFlare(bundle: rootBundle, name: "assets/flare/security.flr"),
+  AssetFlare(bundle: rootBundle, name: "assets/flare/sync.flr"),
+  AssetFlare(bundle: rootBundle, name: "assets/flare/done.flr"),
 ];
 
 Future<bool> setupLoginFlare() async {
@@ -163,16 +167,13 @@ class _MainAppState extends State<MainApp> {
                 if (snap.data.isUserLogin == true) {
                   locator<HomeViewModel>().fetch();
                   locator<DrawerViewModel>().fetchUser();
-                  return FutureBuilder(
-                    future: setupMainFlare(),
-                    builder: (_, snap2) {
-                      if (snap.data.hasPinCode) {
-                        return LockScreen(snap.data.pinCode);
-                      } else {
-                        return snap2.hasData ? MainShell() : LoadingPage();
-                      }
-                    },
-                  );
+                  setupMainFlare();
+                  if (snap.data.hasPinCode) {
+                    return LockScreen(snap.data.pinCode);
+                  } else {
+                    // return SyncExitScreen();
+                    return snap.hasData ? MainShell() : LoadingPage();
+                  }
                 } else if (snap.data.isUserLogin == false) {
                   return FutureBuilder(
                     future: setupLoginFlare(),
@@ -198,7 +199,7 @@ class _MainAppState extends State<MainApp> {
         } else {
           return MaterialApp(
             supportedLocales: [
-              Locale('en', 'US'),
+              Locale('en', 'EN'),
               Locale('ru', 'RU'),
             ],
             localizationsDelegates: [

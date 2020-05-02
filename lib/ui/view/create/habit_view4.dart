@@ -587,7 +587,6 @@ class _CreateHabitView4State extends State<CreateHabitView4>
 
                             bool dbCode = await model.createHabit(
                               habit,
-                              userId,
                             );
                             if (dbCode) {
                               // plan notifications

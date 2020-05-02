@@ -31,7 +31,7 @@ class SettingsViewModel extends BaseViewModel {
   User _user;
   bool _isDarkMode;
   bool isNotifications;
-  bool isSync = false;
+  bool _isSync = false;
   bool _isSoundNotifications;
   bool _isLockScreen;
   String _code;
@@ -44,6 +44,7 @@ class SettingsViewModel extends BaseViewModel {
   List<HabitNotification> get notifications => _notifications;
   bool get isSoundNotifications => _isSoundNotifications;
   bool get isLockScreen => _isLockScreen;
+  bool get isSync => _isSync;
 
   SettingsViewModel() {
     _constructor();

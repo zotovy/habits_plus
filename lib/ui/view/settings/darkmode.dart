@@ -87,11 +87,13 @@ class _DarkModeSettingsPageState extends State<DarkModeSettingsPage>
                 duration: Duration(milliseconds: 250),
                 style: isDark
                     ? TextStyle(
-                        fontSize: 24,
-                        color: Theme.of(context).disabledColor,
+                        fontSize: 20,
+                        color: Theme.of(context)
+                            .textSelectionColor
+                            .withOpacity(0.5),
                       )
                     : TextStyle(
-                        fontSize: 24,
+                        fontSize: 20,
                         color: Colors.white,
                       ),
                 child: Text(
@@ -118,12 +120,14 @@ class _DarkModeSettingsPageState extends State<DarkModeSettingsPage>
                 duration: Duration(milliseconds: 250),
                 style: isDark
                     ? TextStyle(
-                        fontSize: 24,
+                        fontSize: 20,
                         color: Colors.white,
                       )
                     : TextStyle(
-                        fontSize: 24,
-                        color: Theme.of(context).disabledColor,
+                        fontSize: 20,
+                        color: Theme.of(context)
+                            .textSelectionColor
+                            .withOpacity(0.5),
                       ),
                 child: Text(
                   AppLocalizations.of(context).translate('darkMode'),
@@ -174,7 +178,7 @@ class _DarkModeSettingsPageState extends State<DarkModeSettingsPage>
             decoration: BoxDecoration(
               color: Theme.of(context).brightness == Brightness.light
                   ? Theme.of(context).primaryColor
-                  : Theme.of(context).disabledColor.withOpacity(0.1),
+                  : Theme.of(context).disabledColor,
               borderRadius: BorderRadius.circular(10),
             ),
             padding: EdgeInsets.all(10),
@@ -243,7 +247,7 @@ class _DarkModeSettingsPageState extends State<DarkModeSettingsPage>
                   borderRadius: BorderRadius.circular(10),
                   color: Theme.of(context).brightness == Brightness.light
                       ? Theme.of(context).primaryColor
-                      : Theme.of(context).disabledColor.withOpacity(0.1),
+                      : Theme.of(context).disabledColor,
                 ),
               ),
               rect: _slideAnimation,

@@ -47,8 +47,10 @@
     "error_email_bad_formated": "The email address is badly formatted",
     "error_incorrect_password": "Invalid email or password",
     "error_email_already_exists": "This email is already in used. Please, choose another email",
-    "error_user_doent_exists": "Invalid error: User does not exist",
+    "error_user_doent_exists": "User does not exist",
     "error_date_picking": "Invalid date, please pick another",
+    "error_network": "Error network. Please connect to the internet.",
+    "invalidError": "Invalid error happend. Please, try later",
 
 
     "intro_skip": "SKIP",
@@ -230,7 +232,19 @@
 
     "delete_lock_title": "Are you sure you want to delete pincode?",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+
+    "sync": "Synchronization",
+    "general": "General",
+    "sync_subtitle": "In order to be able to develop your habits on any devices, you need to log in",
+
+    "reset_password": "Reset password",
+    "reset_password_desc": "We will send you an email with a link to reset your password",
+    
+    "sync_exit_1": "You already log in. Do you want to logout?",
+    "sync_exit_2": "All your data will be saved and linked to your account ",
+    "sync_dialog": "You logged in to an existing account. All your unsaved data will be destroyed. Would you like to continue?"
+    
         
     
     

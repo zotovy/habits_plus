@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "48302977666",
+    "firebase_url": "https://habits-plus.firebaseio.com",
+    "project_id": "habits-plus",
+    "storage_bucket": "habits-plus.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:48302977666:android:739bb6970da4cb58c3ba9b",
+        "android_client_info": {
+          "package_name": "com.example.habits_plus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "48302977666-vmg6l756pn21pcnmgnjou0aips3u3lku.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-4buvKJ-qR8Dh3LSqtrpQ5dtrS56qb28"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "48302977666-vmg6l756pn21pcnmgnjou0aips3u3lku.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

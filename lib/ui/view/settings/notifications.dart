@@ -163,9 +163,7 @@ class _NotificationsSettingsPageState extends State<NotificationsSettingsPage> {
               // Switcher
               CustomSwitch(
                 value: model.isSync,
-                callback: (bool val) {
-                  model.isSync = val;
-                },
+                callback: (bool val) {},
                 isDisable: !model.isSync || !model.isNotifications,
               ),
             ],

@@ -76,6 +76,9 @@ class _StartPageState extends State<StartPage> {
         labelLocalizationPath: 'start_name',
         onSaved: (String val) => _name = val.trim(),
         margin: EdgeInsets.symmetric(horizontal: 28),
+        validator: (String val) => val.trim() == ''
+            ? AppLocalizations.of(context).translate('start_name').toString()
+            : null,
       ),
       SizedBox(height: 7),
 

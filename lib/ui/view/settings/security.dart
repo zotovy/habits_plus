@@ -18,6 +18,7 @@ class LockSettingsPage extends StatefulWidget {
 class _LockSettingsPageState extends State<LockSettingsPage> {
   SettingsViewModel _model = locator<SettingsViewModel>();
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  String _animation = '';
 
   List<Widget> _ui(SettingsViewModel model) {
     return [
@@ -27,7 +28,7 @@ class _LockSettingsPageState extends State<LockSettingsPage> {
         height: 200,
         child: FlareActor(
           'assets/flare/security.flr',
-          animation: 'lightTransition',
+          animation: _animation,
           fit: BoxFit.contain,
         ),
       ),
@@ -169,6 +170,12 @@ class _LockSettingsPageState extends State<LockSettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (Theme.of(context).brightness == Brightness.light) {
+      _animation = 'lightTransition';
+    } else {
+      _animation = 'darkTransition';
+    }
+
     return ChangeNotifierProvider.value(
       value: _model,
       child: Consumer<SettingsViewModel>(

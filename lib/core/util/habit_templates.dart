@@ -24,6 +24,7 @@ void setupHabitTemplates(BuildContext context) {
       timesADay: null,
       title: AppLocalizations.of(context).translate('template_doSport'),
       type: HabitType.Uncountable,
+      comments: [],
     ),
 
     // Eat vegetarian

@@ -1,0 +1,1 @@
+enum InternetConnection { Connected, NotConnected }

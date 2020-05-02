@@ -7,6 +7,7 @@ class AppSettings {
   String pinCode;
   bool hasPinCode;
   Locale locale;
+  bool isSync;
 
   AppSettings({
     this.isDarkMode,
@@ -15,5 +16,6 @@ class AppSettings {
     this.pinCode,
     this.hasPinCode,
     this.locale,
+    this.isSync,
   });
 }

@@ -26,8 +26,8 @@ class DatabaseServices {
   Future<bool> setupSharedPrefferences() async {
     try {
       prefs = await SharedPreferences.getInstance();
-      // await prefs.remove('habits');
-      // await prefs.remove('notifications');
+      // await prefs.remove('isDarkMode');
+      setHasUnsavedData(true);
 
       return true;
     } catch (e) {
@@ -47,6 +47,7 @@ class DatabaseServices {
     String pinCode = getPinCode();
     bool hasPinCode = getPinCodeStatus();
     String _localeCode = getLocale();
+    bool _isSync = isSync();
 
     // init locale
     Locale locale = _localeCode == null
@@ -60,6 +61,7 @@ class DatabaseServices {
       pinCode: pinCode,
       hasPinCode: hasPinCode,
       locale: locale,
+      isSync: _isSync,
     );
   }
 
@@ -424,7 +426,7 @@ class DatabaseServices {
 
       // check if string == null
       if (_ == null) {
-        return null;
+        return null; // error code
       }
 
       // Decode String -> User
@@ -972,6 +974,38 @@ class DatabaseServices {
     }
   }
 
+  bool isSync() {
+    if (checkPref()) {
+      logger.e('SharedPreferences is null!');
+      return null; // Error code
+    }
+
+    try {
+      bool data = prefs.getBool('isSync');
+
+      return data == null ? false : true;
+    } catch (e) {
+      logger.e('Error while get is sync $e');
+      return null; // Error code
+    }
+  }
+
+  bool hasUnsavedData() {
+    if (checkPref()) {
+      logger.e('SharedPreferences is null!');
+      return null; // Error code
+    }
+
+    try {
+      bool data = prefs.getBool('hasUnsavedData');
+
+      return data == null ? false : true;
+    } catch (e) {
+      logger.e('Error while get has unsaved data $e');
+      return null; // Error code
+    }
+  }
+
 // -----------------------------------------------------------------------------
 
   Future<bool> setDarkMode(bool value) async {
@@ -1055,6 +1089,40 @@ class DatabaseServices {
       return true; // Success code
     } catch (e) {
       logger.e('Error while set locale $e');
+      return false; // Error code
+    }
+  }
+
+  Future<bool> setIsSync(bool value) async {
+    if (checkPref()) {
+      logger.e('SharedPreferences is null!');
+      return false; // Error code
+    }
+
+    try {
+      // save
+      await prefs.setBool('isSync', value);
+
+      return true; // Success code
+    } catch (e) {
+      logger.e('Error while set is sync $e');
+      return false; // Error code
+    }
+  }
+
+  Future<bool> setHasUnsavedData(bool value) async {
+    if (checkPref()) {
+      logger.e('SharedPreferences is null!');
+      return false; // Error code
+    }
+
+    try {
+      // save
+      await prefs.setBool('hasUnsavedData', value);
+
+      return true; // Success code
+    } catch (e) {
+      logger.e('Error while set has unsaved data $e');
       return false; // Error code
     }
   }

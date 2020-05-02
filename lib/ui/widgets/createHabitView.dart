@@ -670,7 +670,6 @@ class _HabitVieOnnCreatePageState extends State<HabitViewOnCreatePage> {
 
                                           bool dbcode = await model.createHabit(
                                             habit,
-                                            userId,
                                           );
 
                                           if (!dbcode) {

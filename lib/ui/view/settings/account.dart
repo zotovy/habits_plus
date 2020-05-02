@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:habits_plus/core/models/user.dart';
 import 'package:habits_plus/core/services/images.dart';
 import 'package:habits_plus/core/viewmodels/settings_model.dart';
+import 'package:habits_plus/core/viewmodels/sync_model.dart';
 import 'package:habits_plus/localization.dart';
 import 'package:habits_plus/locator.dart';
 import 'package:habits_plus/ui/widgets/create/confirm_button.dart';
@@ -25,6 +26,7 @@ class AccountSettingsPage extends StatefulWidget {
 class _AccountSettingsPageState extends State<AccountSettingsPage> {
   SettingsViewModel _model = locator<SettingsViewModel>();
   ImageServices _imageServices = locator<ImageServices>();
+  SyncViewModel _syncViewModel = locator<SyncViewModel>();
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -93,6 +95,20 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
       ),
       SizedBox(height: 40),
 
+      // General
+      Container(
+        margin: EdgeInsets.symmetric(horizontal: 15),
+        child: Text(
+          AppLocalizations.of(context).translate('general').toUpperCase(),
+          style: TextStyle(
+            fontSize: 18,
+            color: Theme.of(context).textSelectionColor.withOpacity(0.75),
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+      SizedBox(height: 5),
+
       // Name
       RoundedTextField(
         errorLocalizationPath: 'no_name_error',
@@ -156,7 +172,98 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
           ],
         ),
       ),
-      SizedBox(height: 10),
+      SizedBox(height: 20),
+
+      // General
+      Container(
+        margin: EdgeInsets.symmetric(horizontal: 15),
+        child: Text(
+          AppLocalizations.of(context).translate('sync').toUpperCase(),
+          style: TextStyle(
+            fontSize: 18,
+            color: Theme.of(context).textSelectionColor.withOpacity(0.75),
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+      Container(
+        margin: EdgeInsets.only(left: 15, right: 15, bottom: 5),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            // Text
+            Text(
+              AppLocalizations.of(context).translate('sync'),
+              style: TextStyle(
+                fontSize: 20,
+                color: Theme.of(context).textSelectionHandleColor,
+              ),
+            ),
+
+            // Switcher
+            GestureDetector(
+              onTap: () {},
+              child: AnimatedContainer(
+                duration: Duration(microseconds: 300),
+                padding: EdgeInsets.all(3),
+                height: 30,
+                width: 55,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(100),
+                  color: model.isSync
+                      ? Theme.of(context).primaryColor
+                      : Theme.of(context).disabledColor,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    AnimatedContainer(
+                      duration: Duration(milliseconds: 200),
+                      margin: EdgeInsets.only(left: model.isSync ? 23 : 0),
+                      width: 24,
+                      height: 24,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      GestureDetector(
+        onTap: () async {
+          if (await _syncViewModel.getCurrentUser() == null) {
+            Navigator.pushNamed(context, 'settings/account/sync_login');
+          } else {
+            Navigator.pushNamed(context, 'settings/account/sync_exit');
+          }
+        },
+        child: Container(
+          margin: EdgeInsets.only(left: 15, right: 15, bottom: 5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              // Text
+              Text(
+                AppLocalizations.of(context).translate('sync'),
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Theme.of(context).textSelectionHandleColor,
+                ),
+              ),
+
+              Icon(
+                Icons.chevron_right,
+                color: Theme.of(context).textSelectionColor.withOpacity(0.5),
+              ),
+            ],
+          ),
+        ),
+      ),
 
       // Confirm
       ConfirmButton(
@@ -206,6 +313,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
                 child: SafeArea(
                   child: SingleChildScrollView(
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: _ui(model),
                     ),
                   ),

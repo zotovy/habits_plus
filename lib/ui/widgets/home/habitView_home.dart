@@ -742,8 +742,9 @@ class _HabitViewOnHomePageState extends State<HabitViewOnHomePage>
                       Text(
                         AppLocalizations.of(context).translate('no_habits_2'),
                         style: TextStyle(
-                          color:
-                              Theme.of(context).disabledColor.withOpacity(0.3),
+                          color: Theme.of(context)
+                              .textSelectionColor
+                              .withOpacity(0.3),
                           fontWeight: FontWeight.w600,
                         ),
                       ),

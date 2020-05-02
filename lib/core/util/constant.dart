@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
@@ -7,6 +8,10 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 
 final DateFormat dateFormater = DateFormat('yyyy-MM-dd');
 final TimeOfDay nullTime = TimeOfDay(hour: 3, minute: 59);
+
+// Firebase constant
+final _firestore = Firestore.instance;
+final userRef = _firestore.collection('users');
 
 // UI
 ThemeData lightMode = ThemeData(
@@ -21,7 +26,7 @@ ThemeData lightMode = ThemeData(
 ThemeData darkMode = ThemeData(
   brightness: Brightness.dark,
   primaryColor: Color(0xFF9563FF),
-  disabledColor: Color(0xFFECECEC),
+  disabledColor: Color(0xFF202020),
   backgroundColor: Color(0xFF161616),
   textSelectionColor: Colors.white70,
   textSelectionHandleColor: Colors.white,

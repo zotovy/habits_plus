@@ -12,12 +12,14 @@ import 'package:habits_plus/ui/view/settings/darkmode.dart';
 import 'package:habits_plus/ui/view/settings/languages.dart';
 import 'package:habits_plus/ui/view/settings/notifications.dart';
 import 'package:habits_plus/ui/view/settings/security.dart';
+import 'package:habits_plus/ui/view/settings/sync.dart';
 import 'package:habits_plus/ui/view/shell.dart';
 import 'package:habits_plus/ui/view/create/habit_view1.dart';
 import 'package:habits_plus/ui/view/create/habit_view2.dart';
 import 'package:habits_plus/ui/view/create/habit_view3.dart';
 import 'package:habits_plus/ui/view/create/habit_view4.dart';
 import 'package:habits_plus/ui/view/start.dart';
+import 'package:habits_plus/ui/view/sync/exit.dart';
 
 const String initialRoute = 'login';
 
@@ -38,6 +40,14 @@ class Router {
       case 'settings/account':
         return CupertinoPageRoute(
           builder: (_) => AccountSettingsPage(),
+        );
+      case 'settings/account/sync_login':
+        return CupertinoPageRoute(
+          builder: (_) => SyncPage(),
+        );
+      case 'settings/account/sync_exit':
+        return CupertinoPageRoute(
+          builder: (_) => SyncExitScreen(),
         );
       case 'settings/notifications':
         return CupertinoPageRoute(

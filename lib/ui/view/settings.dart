@@ -9,6 +9,7 @@ import 'package:habits_plus/core/viewmodels/settings_model.dart';
 import 'package:habits_plus/localization.dart';
 import 'package:habits_plus/locator.dart';
 import 'package:habits_plus/ui/view/loading.dart';
+import 'package:habits_plus/ui/view/sync/exit.dart';
 import 'package:habits_plus/ui/widgets/settings/menu_tile.dart';
 import 'package:habits_plus/ui/widgets/settings/user_row.dart';
 import 'package:provider/provider.dart';
@@ -74,7 +75,7 @@ class _SettingsPageState extends State<SettingsPage> {
         margin: EdgeInsets.symmetric(horizontal: 15),
         child: Divider(
           thickness: 1,
-          color: Theme.of(context).disabledColor,
+          color: Theme.of(context).textSelectionColor.withOpacity(0.5),
         ),
       ),
 
