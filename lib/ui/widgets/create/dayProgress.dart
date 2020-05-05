@@ -30,7 +30,7 @@ class _DayProgressWidgetState extends State<DayProgressWidget> {
             borderRadius: BorderRadius.circular(5),
             color: widget.repeatDays[i]
                 ? Theme.of(context).primaryColor
-                : Theme.of(context).disabledColor,
+                : Theme.of(context).textSelectionColor.withOpacity(0.5),
           ),
           child: Center(
             child: Text(

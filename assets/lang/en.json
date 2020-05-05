@@ -243,9 +243,14 @@
     
     "sync_exit_1": "You already log in. Do you want to logout?",
     "sync_exit_2": "All your data will be saved and linked to your account ",
-    "sync_dialog": "You logged in to an existing account. All your unsaved data will be destroyed. Would you like to continue?"
-    
-        
+    "sync_dialog": "You logged in to an existing account. All your unsaved data will be destroyed. Would you like to continue?", "title": "Title",
+    "desc": "Description",
+
+    "delete_comment_title": "Are you sure you want to delete this comment?",
+    "delete_comment_subtitle": "It will be permanently deleted",
+
+    "close_edit_title": "Are you sure you want to close this page?",
+    "close_edit_subtitle": "All your changed data will be permanently deleted"
     
     
 

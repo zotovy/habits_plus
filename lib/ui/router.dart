@@ -4,6 +4,7 @@ import 'package:habits_plus/core/models/habit.dart';
 import 'package:habits_plus/ui/view/create/create.dart';
 import 'package:habits_plus/ui/view/create/create_from_template.dart';
 import 'package:habits_plus/ui/view/detail_habit.dart';
+import 'package:habits_plus/ui/view/edit.dart';
 import 'package:habits_plus/ui/view/home.dart';
 import 'package:habits_plus/ui/view/image_preview.dart';
 import 'package:habits_plus/ui/view/settings.dart';
@@ -108,6 +109,12 @@ class Router {
         Habit _habit = settings.arguments;
         return CupertinoPageRoute(
           builder: (_) => DetailHabitPage(_habit),
+          title: '123',
+        );
+      case 'habit_detail/edit':
+        Habit _habit = settings.arguments;
+        return CupertinoPageRoute(
+          builder: (_) => EditHabitPage(_habit),
           title: '123',
         );
       case 'image_preview':

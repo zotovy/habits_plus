@@ -55,7 +55,7 @@ class CreatePageAppBar extends StatelessWidget implements PreferredSizeWidget {
             child: Icon(
               Icons.close,
               size: 18,
-              color: Theme.of(context).textSelectionColor,
+              color: Colors.redAccent,
             ),
           ),
         )

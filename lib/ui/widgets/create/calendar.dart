@@ -14,6 +14,7 @@ class CalendarRangePicker extends StatefulWidget {
   final bool showTodayAction;
   final bool showCalendarPickerIcon;
   final DateTime initialCalendarDateOverride;
+  final List<DateTime> initialDates;
 
   CalendarRangePicker({
     this.onDateSelected,
@@ -24,6 +25,7 @@ class CalendarRangePicker extends StatefulWidget {
     this.showChevronsToChangeRange: true,
     this.showCalendarPickerIcon: true,
     this.initialCalendarDateOverride,
+    this.initialDates,
   });
 
   @override
@@ -54,6 +56,9 @@ class _CalendarRangePickerState extends State<CalendarRangePicker> {
         Utils.daysInRange(firstDayOfCurrentWeek, lastDayOfCurrentWeek)
             .toList()
             .sublist(0, 7);
+    _left = widget.initialDates[0];
+    _right = widget.initialDates[1];
+    hasSelection = _left != null && _right != null;
   }
 
   Widget get nameAndIconRow {

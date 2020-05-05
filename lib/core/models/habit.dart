@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:habits_plus/core/enums/habitType.dart';
 import 'package:habits_plus/core/models/comment.dart';
@@ -128,6 +129,47 @@ class Habit {
       'progressBin': progressBin
           .map(
             (val) => val.toString(),
+          )
+          .toList(),
+      'timesADay': timesADay,
+    };
+  }
+
+  Map<String, dynamic> toDocument() {
+    DateTime now = DateTime.now();
+    return {
+      'id': id,
+      'title': title,
+      'description': description,
+      'type': type == HabitType.Countable,
+      'goalAmount': goalAmount,
+      'iconCode': iconCode,
+      'almostDone': almostDone,
+      'isDisable': isDisable,
+      'hasReminder': hasReminder,
+      'timeStamp': Timestamp.fromDate(timeStamp),
+      'duration': duration,
+      'timeOfDay': timeOfDay == null
+          ? null
+          : DateTime(
+              now.year,
+              now.month,
+              now.day,
+              timeOfDay.hour,
+              timeOfDay.minute,
+            ),
+      'repeatDays': repeatDays,
+      'comments': comments
+          .map(
+            (val) => val.toJson(),
+          )
+          .toList(),
+      'countableProgress': countableProgress.map(
+        (key, val) => MapEntry(Timestamp.fromDate(key), val),
+      ),
+      'progressBin': progressBin
+          .map(
+            (val) => Timestamp.fromDate(val),
           )
           .toList(),
       'timesADay': timesADay,

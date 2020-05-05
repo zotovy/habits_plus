@@ -23,6 +23,12 @@ class _DarkModeSettingsPageState extends State<DarkModeSettingsPage>
   Animation<RelativeRect> _slideAnimation;
 
   @override
+  void dispose() {
+    _slideController.dispose();
+    super.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
 
@@ -160,15 +166,22 @@ class _DarkModeSettingsPageState extends State<DarkModeSettingsPage>
                 theme.reverseMode();
                 _slideController.reverse();
               });
-              Navigator.push(
-                context,
-                ScaleRoute(
-                  page: CirclesLoading(
-                    true,
-                    duration: Duration(seconds: 2),
-                  ),
+              showDialog(
+                context: context,
+                builder: (_) => CirclesLoading(
+                  true,
+                  duration: Duration(seconds: 2),
                 ),
               );
+              // Navigator.push(
+              //   context,
+              //   ScaleRoute(
+              //     page: CirclesLoading(
+              //       true,
+              //       duration: Duration(seconds: 3),
+              //     ),
+              //   ),
+              // );
             } else {
               Navigator.pop(context);
             }

@@ -76,7 +76,7 @@ class IconGridViewState extends State<IconGridView>
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 300,
+      height: 260,
       child: GridView.count(
         physics: NeverScrollableScrollPhysics(),
         crossAxisCount: 5,
@@ -109,7 +109,9 @@ class IconGridViewState extends State<IconGridView>
                       habitsIcons[i],
                       color: i == _iconIndex
                           ? Theme.of(context).primaryColor
-                          : Theme.of(context).disabledColor,
+                          : Theme.of(context)
+                              .textSelectionColor
+                              .withOpacity(0.35),
                       size: 36,
                     ),
                   ),

@@ -43,6 +43,17 @@ class StatisticViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  void updateViewHabit(Habit habit) {
+    int id = habits.indexWhere((Habit elem) => elem.id == habit.id);
+    habits[id] = habit;
+    setAllHabitsStat();
+    setWeekStats();
+    setMonthStats();
+    setDailyProgress();
+    setTopHabits();
+    notifyListeners();
+  }
+
   void setAllHabitsStat() {
     int _done = 0;
     double _summOfPercentage = 0;

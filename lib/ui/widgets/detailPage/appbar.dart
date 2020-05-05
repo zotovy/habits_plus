@@ -129,7 +129,11 @@ class DetailAppBar extends StatelessWidget implements PreferredSizeWidget {
                         color: Theme.of(context).disabledColor,
                       ),
                     ),
-                    onTap: () => print('edit'),
+                    onTap: () => Navigator.pushNamed(
+                      context,
+                      'habit_detail/edit',
+                      arguments: model.habit,
+                    ),
                   ),
                 ],
               ),

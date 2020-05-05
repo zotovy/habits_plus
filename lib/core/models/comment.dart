@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Comment {
   String id;
   String authorId;
@@ -26,6 +28,18 @@ class Comment {
       'imageBase64String': imageBase64String,
       'content': content,
       'timestamp': timestamp.toString(),
+    };
+  }
+
+  Map<dynamic, dynamic> toDocument() {
+    return {
+      'id': id,
+      'authorId': authorId,
+      'habitId': habitId,
+      'hasImage': hasImage,
+      'imageBase64String': imageBase64String,
+      'content': content,
+      'timestamp': Timestamp.fromDate(timestamp),
     };
   }
 

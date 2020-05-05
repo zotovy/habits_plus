@@ -8,6 +8,7 @@ import '../../../locator.dart';
 
 class CommentTile extends StatefulWidget {
   Comment comment;
+
   CommentTile(this.comment);
 
   @override

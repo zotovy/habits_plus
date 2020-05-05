@@ -225,18 +225,7 @@ class _CreateHabitView4State extends State<CreateHabitView4>
                                             1.5)
                                         .round(),
                                   )
-                                : Color.fromARGB(
-                                    Theme.of(context).backgroundColor.alpha,
-                                    (Theme.of(context).backgroundColor.red *
-                                            0.99)
-                                        .round(),
-                                    (Theme.of(context).backgroundColor.green *
-                                            0.99)
-                                        .round(),
-                                    (Theme.of(context).backgroundColor.blue *
-                                            0.99)
-                                        .round(),
-                                  ),
+                                : Colors.white,
                             boxShadow: [
                               BoxShadow(
                                 blurRadius: 5.0,

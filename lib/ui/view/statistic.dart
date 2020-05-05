@@ -9,6 +9,7 @@ import 'package:habits_plus/locator.dart';
 import 'package:habits_plus/ui/view/drawer.dart';
 import 'package:habits_plus/ui/view/loading.dart';
 import 'package:habits_plus/ui/view/settings.dart';
+// import 'package:habits_plus/ui/widgets/motivations_cards/sync.dart';
 import 'package:habits_plus/ui/widgets/statistic/all_habits_stat.dart';
 import 'package:habits_plus/ui/widgets/statistic/daily_perfomance.dart';
 import 'package:habits_plus/ui/widgets/statistic/moth_stat.dart';
@@ -28,8 +29,11 @@ class _StatisticPageState extends State<StatisticPage> {
 
   List<Widget> _mainView(StatisticViewModel model) {
     return [
-      SizedBox(height: 10),
+      // SizedBox(height: 5),
 
+      // cards
+      // SyncMotivationCard(),
+      // SizedBox(height: 10),
       // "All Habits"
       titleText(context, 'all_habits'),
       SizedBox(height: 10),

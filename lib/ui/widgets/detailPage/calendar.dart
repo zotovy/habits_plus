@@ -531,7 +531,8 @@ class CalendarTile extends StatelessWidget {
               ),
               decoration: isSelected && !isMiddle && !isRight && !isLeft
                   ? BoxDecoration(
-                      color: Theme.of(context).disabledColor.withOpacity(0.35),
+                      color:
+                          Theme.of(context).textSelectionColor.withOpacity(0.4),
                       borderRadius: BorderRadius.circular(10),
                     )
                   : BoxDecoration(

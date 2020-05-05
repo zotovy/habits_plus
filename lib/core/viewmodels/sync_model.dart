@@ -9,6 +9,7 @@ import 'package:habits_plus/core/enums/internet.dart';
 import 'package:habits_plus/core/enums/viewstate.dart';
 import 'package:habits_plus/core/models/userData.dart';
 import 'package:habits_plus/core/services/firebase.dart';
+import 'package:habits_plus/core/services/internet.dart';
 import 'package:habits_plus/core/util/logger.dart';
 import 'package:habits_plus/core/viewmodels/home_model.dart';
 import 'package:habits_plus/core/viewmodels/settings_model.dart';
@@ -42,6 +43,7 @@ class SyncViewModel extends BaseViewModel {
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   DatabaseServices _databaseServices = locator<DatabaseServices>();
   ImageServices _imageServices = locator<ImageServices>();
+  InternetServices _internetConnectionServices = locator<InternetServices>();
   FirebaseServices _firebaseServices = locator<FirebaseServices>();
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   FacebookLogin _facebookSignIn = FacebookLogin();
@@ -58,17 +60,6 @@ class SyncViewModel extends BaseViewModel {
     return _user;
   }
 
-  Future<InternetConnection> hasInternetConnection() async {
-    try {
-      final result = await InternetAddress.lookup('google.com');
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        return InternetConnection.Connected;
-      }
-    } on SocketException catch (_) {
-      return InternetConnection.NotConnected;
-    }
-  }
-
   void setUserToOtherPages(User user) async {
     locator<SettingsViewModel>().user = user;
   }
@@ -81,7 +72,8 @@ class SyncViewModel extends BaseViewModel {
 
     try {
       // Check internet connection
-      if ((await hasInternetConnection()) == InternetConnection.NotConnected) {
+      if ((await _internetConnectionServices.hasInternetConnection()) ==
+          InternetConnection.NotConnected) {
         return LoginResponce(
           error: AuthError.NetworkError,
           success: false,
@@ -277,7 +269,8 @@ class SyncViewModel extends BaseViewModel {
     setState(ViewState.Busy);
     try {
       // Check internet connection
-      if ((await hasInternetConnection()) == InternetConnection.NotConnected) {
+      if ((await _internetConnectionServices.hasInternetConnection()) ==
+          InternetConnection.NotConnected) {
         return LoginResponce(
           error: AuthError.NetworkError,
           success: false,
@@ -390,7 +383,8 @@ class SyncViewModel extends BaseViewModel {
 
     try {
       // Check internet connection
-      if ((await hasInternetConnection()) == InternetConnection.NotConnected) {
+      if ((await _internetConnectionServices.hasInternetConnection()) ==
+          InternetConnection.NotConnected) {
         return LoginResponce(
           error: AuthError.NetworkError,
           success: false,

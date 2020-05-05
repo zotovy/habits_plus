@@ -13,6 +13,7 @@ class RoundedTextField extends StatefulWidget {
   String hint;
   bool needMargin;
   EdgeInsets margin;
+  Function(String val) onChanged;
 
   RoundedTextField({
     this.onSaved,
@@ -25,6 +26,7 @@ class RoundedTextField extends StatefulWidget {
     this.hint,
     this.needMargin = true,
     this.margin = const EdgeInsets.symmetric(horizontal: 15),
+    this.onChanged,
   }) {
     if (hasObscure == null) hasObscure = false;
   }
@@ -59,6 +61,7 @@ class _RoundedTextFieldState extends State<RoundedTextField> {
       ),
       margin: widget.needMargin ? widget.margin : null,
       child: TextFormField(
+        onChanged: widget.onChanged,
         style: TextStyle(
           color: Theme.of(context).textSelectionColor,
         ),
@@ -75,7 +78,7 @@ class _RoundedTextFieldState extends State<RoundedTextField> {
               : null,
           hintText: AppLocalizations.of(context).translate(widget.hint),
           labelStyle: TextStyle(
-            color: Colors.black38,
+            color: Theme.of(context).textSelectionColor,
           ),
           labelText: AppLocalizations.of(context).translate(
             widget.labelLocalizationPath,

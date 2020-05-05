@@ -36,7 +36,7 @@ class _HabitTypeCardState extends State<HabitTypeCard> {
                 borderRadius: BorderRadius.circular(10),
                 color: !isCountable
                     ? Theme.of(context).primaryColor
-                    : Theme.of(context).disabledColor,
+                    : Theme.of(context).textSelectionColor.withOpacity(0.5),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.1),
@@ -105,7 +105,7 @@ class _HabitTypeCardState extends State<HabitTypeCard> {
                 borderRadius: BorderRadius.circular(10),
                 color: isCountable
                     ? Theme.of(context).primaryColor
-                    : Theme.of(context).disabledColor,
+                    : Theme.of(context).textSelectionColor.withOpacity(0.5),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.1),

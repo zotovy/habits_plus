@@ -58,6 +58,15 @@ class HomeViewModel extends BaseViewModel {
     needTransition = value;
   }
 
+  void updateViewHabit(Habit habit, DateTime date) {
+    setState(ViewState.Busy);
+    int id = _habits.indexWhere((Habit elem) => elem.id == habit.id);
+    _habits[id] = habit;
+    setMarkedDates();
+    setToday(date);
+    setState(ViewState.Idle);
+  }
+
   Future fetch() async {
     setState(ViewState.Busy);
     _habits = await _databaseServices.getHabits();

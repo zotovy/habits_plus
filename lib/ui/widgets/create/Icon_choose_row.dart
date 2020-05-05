@@ -43,7 +43,7 @@ class _IconChooseRowState extends State<IconChooseRow>
             habitsIcons[i],
             color: i == currentIconIndex
                 ? Theme.of(context).primaryColor
-                : Theme.of(context).disabledColor,
+                : Theme.of(context).textSelectionColor.withOpacity(0.5),
             size: 42,
           ),
         ),

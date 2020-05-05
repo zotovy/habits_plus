@@ -32,6 +32,11 @@ class DetailPageView extends BaseViewModel {
     notifyListeners();
   }
 
+  set habit(Habit habit) {
+    _habit = habit;
+    notifyListeners();
+  }
+
   void setCommentState(ViewState _state) {
     _commentState = _state;
     notifyListeners();
@@ -68,6 +73,7 @@ class DetailPageView extends BaseViewModel {
     setCommentState(ViewState.Busy);
     bool dbcode = await _databaseServices.saveComment(_comment);
     _comments.add(_comment);
+    habit.comments.add(_comment);
     setCommentState(ViewState.Idle);
 
     return dbcode;
