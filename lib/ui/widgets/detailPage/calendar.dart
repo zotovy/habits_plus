@@ -20,16 +20,11 @@ class _CalendarDetailWidgetState extends State<CalendarDetailWidget> {
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).backgroundColor,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: Theme.of(context).brightness == Brightness.light
-                ? Colors.black12
-                : Colors.white10,
-            offset: Offset(0, 0),
-            blurRadius: 10,
-          ),
-        ],
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: Theme.of(context).primaryColor,
+          width: 1,
+        ),
       ),
       margin: EdgeInsets.all(20),
       padding: EdgeInsets.all(10),

@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:habits_plus/core/util/constant.dart';
 import 'package:habits_plus/core/viewmodels/detail_model.dart';
+import 'package:habits_plus/ui/icons/custom_icons.dart';
 
 import '../../../localization.dart';
 
@@ -62,6 +63,7 @@ class DetailAppBar extends StatelessWidget implements PreferredSizeWidget {
       child: Container(
         color: Theme.of(context).backgroundColor,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             // Up Row
             Container(
@@ -76,7 +78,7 @@ class DetailAppBar extends StatelessWidget implements PreferredSizeWidget {
                       children: <Widget>[
                         // Back Icon
                         Container(
-                          padding: EdgeInsets.only(top: 10),
+                          margin: EdgeInsets.only(top: 10, left: 5),
                           child: GestureDetector(
                             child: Icon(
                               Icons.chevron_left,
@@ -90,10 +92,10 @@ class DetailAppBar extends StatelessWidget implements PreferredSizeWidget {
 
                         // Title & subtitle
                         Container(
+                          margin: EdgeInsets.only(top: 10),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              SizedBox(height: 10),
                               SizedBox(
                                 width: MediaQuery.of(context).size.width - 106,
                                 child: Hero(
@@ -123,10 +125,13 @@ class DetailAppBar extends StatelessWidget implements PreferredSizeWidget {
                   // Edit
                   GestureDetector(
                     child: Container(
-                      padding: EdgeInsets.all(10),
+                      padding: EdgeInsets.all(15),
                       child: Icon(
-                        Icons.edit,
-                        color: Theme.of(context).disabledColor,
+                        CustomIcons.edit,
+                        color: Theme.of(context)
+                            .textSelectionColor
+                            .withOpacity(0.75),
+                        size: 16,
                       ),
                     ),
                     onTap: () => Navigator.pushNamed(

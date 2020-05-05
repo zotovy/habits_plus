@@ -58,12 +58,14 @@ class _DetailHabitPageState extends State<DetailHabitPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                              CalendarDetailWidget(model.habit.type ==
-                                      HabitType.Uncountable
-                                  ? model.habit.progressBin
-                                  : model.habit.countableProgress.keys
-                                      .map((var val) => dateFormater.parse(val))
-                                      .toList()),
+                              CalendarDetailWidget(
+                                model.habit.type == HabitType.Uncountable
+                                    ? model.habit.progressBin
+                                    : model.habit.countableProgress.keys
+                                        .map((var val) =>
+                                            dateFormater.parse(val))
+                                        .toList(),
+                              ),
 
                               // Comments
                               Container(

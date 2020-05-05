@@ -64,7 +64,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
     _comments = widget.habit.comments;
   }
 
-  // ANCHOR:
+  // ANCHOR: isHabitChanged
   /// This function return [true] if user change some habit & [false] if not
   bool isHabitChanged() {
     if (_iconCode != widget.habit.iconCode) return true;
