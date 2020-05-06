@@ -23,35 +23,38 @@ class _SettingsPageState extends State<SettingsPage> {
   SettingsViewModel _model = locator<SettingsViewModel>();
 
   // General
-  List<String> textG = [];
-  List<Color> colorsG = [
+  List<String> text = [];
+  List<Color> colors = [
     Color(0xFF9563FF),
     null, // THis color will show depend on a brightness lvl
     Color(0xFFF0A330),
     Color(0xFF2A8CFE),
     Color(0xFFEF7530),
     Color(0xFF30D158),
+    Color(0xFF707070),
   ];
-  List<IconData> iconsG = [
+  List<IconData> icons = [
     Icons.person,
     EvaIcons.moon,
     Icons.notifications,
     EvaIcons.lock,
     EvaIcons.music,
     Icons.language,
+    EvaIcons.messageCircle,
   ];
 
   List<Widget> _ui(
     BuildContext context,
     SettingsViewModel model,
   ) {
-    List<Function> callbackG = [
+    List<Function> callback = [
       () => Navigator.pushNamed(context, 'settings/account'),
       () => Navigator.pushNamed(context, 'settings/darkmode'),
       () => Navigator.pushNamed(context, 'settings/notifications'),
       () => Navigator.pushNamed(context, 'settings/security'),
       () {},
       () => Navigator.pushNamed(context, 'settings/languages'),
+      () => Navigator.pushNamed(context, 'settings/report_bug'),
     ];
     return [
       // User info
@@ -83,12 +86,38 @@ class _SettingsPageState extends State<SettingsPage> {
       Container(
         child: Column(
           children: List.generate(
-            textG.length,
+            6,
             (int i) => SettingsMenuTile(
-              icon: iconsG[i],
-              color: colorsG[i],
-              text: textG[i],
-              callback: callbackG[i],
+              icon: icons[i],
+              color: colors[i],
+              text: text[i],
+              callback: callback[i],
+              i: i,
+              isDarkMode: model.isDarkMode,
+            ),
+          ),
+        ),
+      ),
+
+      // Divider
+      Container(
+        margin: EdgeInsets.symmetric(horizontal: 15),
+        child: Divider(
+          thickness: 1,
+          color: Theme.of(context).textSelectionColor.withOpacity(0.5),
+        ),
+      ),
+
+      // Secondary
+      Container(
+        child: Column(
+          children: List.generate(
+            text.length - 6,
+            (int i) => SettingsMenuTile(
+              icon: icons[i + 6],
+              color: colors[i + 6],
+              text: text[i + 6],
+              callback: callback[i + 6],
               i: i,
               isDarkMode: model.isDarkMode,
             ),
@@ -101,13 +130,14 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     // Setup provider
-    textG = [
+    text = [
       AppLocalizations.of(context).translate('account'),
       AppLocalizations.of(context).translate('darkmode'),
       AppLocalizations.of(context).translate('notifications'),
       AppLocalizations.of(context).translate('security'),
       AppLocalizations.of(context).translate('app_sound'),
       AppLocalizations.of(context).translate('language'),
+      AppLocalizations.of(context).translate('report_bug'),
     ];
 
     // Build
@@ -117,19 +147,20 @@ class _SettingsPageState extends State<SettingsPage> {
         builder: (_, model, child) {
           return model.state == ViewState.Busy
               ? LoadingPage()
-              : Container(
-                  height: MediaQuery.of(context).size.height * 0.75,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).backgroundColor,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(30),
-                      topRight: Radius.circular(30),
+              : SafeArea(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).backgroundColor,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30),
+                        topRight: Radius.circular(30),
+                      ),
                     ),
-                  ),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: _ui(context, model),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: _ui(context, model),
+                      ),
                     ),
                   ),
                 );

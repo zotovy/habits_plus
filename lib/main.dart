@@ -16,9 +16,7 @@ import 'package:habits_plus/ui/view/intro.dart';
 import 'package:habits_plus/ui/view/loading.dart';
 import 'package:habits_plus/ui/view/lock.dart';
 import 'package:habits_plus/ui/view/shell.dart';
-import 'package:habits_plus/ui/view/settings/sync.dart';
 import 'package:habits_plus/core/util/constant.dart';
-import 'package:habits_plus/ui/view/sync/exit.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 

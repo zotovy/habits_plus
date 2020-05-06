@@ -12,6 +12,7 @@ import 'package:habits_plus/ui/view/settings/account.dart';
 import 'package:habits_plus/ui/view/settings/darkmode.dart';
 import 'package:habits_plus/ui/view/settings/languages.dart';
 import 'package:habits_plus/ui/view/settings/notifications.dart';
+import 'package:habits_plus/ui/view/settings/report_bug.dart';
 import 'package:habits_plus/ui/view/settings/security.dart';
 import 'package:habits_plus/ui/view/settings/sync.dart';
 import 'package:habits_plus/ui/view/shell.dart';
@@ -61,6 +62,10 @@ class Router {
       case 'settings/languages':
         return CupertinoPageRoute(
           builder: (_) => LanguagesSettingsPage(),
+        );
+      case 'settings/report_bug':
+        return CupertinoPageRoute(
+          builder: (_) => ReportBugPage(),
         );
       case 'create':
         return CupertinoPageRoute(builder: (_) => CreateHabitPage());

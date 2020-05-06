@@ -14,6 +14,7 @@ class RoundedTextField extends StatefulWidget {
   bool needMargin;
   EdgeInsets margin;
   Function(String val) onChanged;
+  bool isMultiLine;
 
   RoundedTextField({
     this.onSaved,
@@ -27,6 +28,7 @@ class RoundedTextField extends StatefulWidget {
     this.needMargin = true,
     this.margin = const EdgeInsets.symmetric(horizontal: 15),
     this.onChanged,
+    this.isMultiLine = false,
   }) {
     if (hasObscure == null) hasObscure = false;
   }
@@ -65,8 +67,10 @@ class _RoundedTextFieldState extends State<RoundedTextField> {
         style: TextStyle(
           color: Theme.of(context).textSelectionColor,
         ),
+        keyboardType: widget.isMultiLine ? TextInputType.multiline : null,
+        maxLines: widget.isMultiLine ? 10 : 1,
         obscureText: widget.hasObscure,
-        validator: widget.validator,
+        validator: widget.validator ?? _submit,
         onSaved: widget.onSaved,
         initialValue: widget.text,
         decoration: InputDecoration(

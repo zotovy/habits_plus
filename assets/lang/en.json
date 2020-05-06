@@ -250,8 +250,10 @@
     "delete_comment_subtitle": "It will be permanently deleted",
 
     "close_edit_title": "Are you sure you want to close this page?",
-    "close_edit_subtitle": "All your changed data will be permanently deleted"
-    
+    "close_edit_subtitle": "All your changed data will be permanently deleted",
+
+    "report_bug_text": "You find a bug? Please, describe your problem. It will help us easily fix the problem.", 
+    "no_desc_error": "Please, describe your bug"
     
 
 
