@@ -40,17 +40,41 @@ class BugModel {
   }
 }
 
+class MessageModel {
+  String name;
+  String email;
+  String message;
+  String userId;
+
+  Map<String, dynamic> toDocument() {
+    return {
+      'name': name,
+      'email': email,
+      'message': message,
+      'userId': userId,
+    };
+  }
+
+  MessageModel({
+    this.name,
+    this.email,
+    this.message,
+    this.userId,
+  });
+}
+
 class CommunityServices {
   FirebaseServices _firebaseServices = locator<FirebaseServices>();
   InternetServices _internetConnection = locator<InternetServices>();
   LogServices _logServices = locator<LogServices>();
   DeviceInfoPlugin _deviceInfo = DeviceInfoPlugin();
 
+  /// This function report bug on firebase.
+  /// Return true if success and false if not
   Future<bool> reportBug(BuildContext context, String name, String desc) async {
     try {
       // Check InternetConnection
-      if (!await _internetConnection.hasInternetConnection())
-        return false; //error code
+      if (!await _internetConnection.hasInternetConnection()) return false;
 
       // Get log
       List<String> log = _logServices.log;
@@ -86,11 +110,42 @@ class CommunityServices {
       // save data
       bool code = await _firebaseServices.reportBug(bug);
 
+      _logServices.addLog('report bug (dbcode=$code) (CommunityServices)');
+
       return code;
     } catch (e) {
       logger.e('Error while report bug', e);
       _logServices.addLog('Error while report bug $e');
       return false;
+    }
+  }
+
+  Future<bool> sendMessage(
+    BuildContext context,
+    String name,
+    String email,
+    String message,
+  ) async {
+    try {
+      // Check InternetConnection
+      if (!await _internetConnection.hasInternetConnection()) return false;
+
+      // make model
+      MessageModel model = MessageModel(
+        email: email,
+        message: message,
+        name: name,
+        userId: Provider.of<UserData>(context, listen: false).currentUserId,
+      );
+
+      // save data
+      bool code = await _firebaseServices.sendMessage(model);
+
+      return code;
+    } catch (e) {
+      logger.e('Error while send message', e);
+      _logServices.addLog('Error while send message. $e');
+      return false; // return false
     }
   }
 }

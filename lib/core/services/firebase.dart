@@ -54,6 +54,9 @@ class FirebaseServices {
     }
   }
 
+  // ---------------------------------------------------------------------------
+  // ANCHOR: Community
+
   /// This function set logs to firebase
   /// Return true if success and false if save error happend
   Future<bool> reportBug(BugModel model) async {
@@ -67,13 +70,38 @@ class FirebaseServices {
           .document(id)
           .setData(model.toDocument());
 
-      _logServices.addLog('Successfully report bug (FirebaseServices)');
+      _logServices.addLog('report bug with id="$id" (FirebaseServices)');
       return true; // success code
     } catch (e) {
       logger.e('Error while report bug (FirebaseServices)', e);
       _logServices.addLog('Error while report bug (FirebaseServices) $e');
+      return false;
     }
   }
+
+  /// This function set message to firebase
+  /// Return true if success and false if save error happend
+  Future<bool> sendMessage(MessageModel model) async {
+    try {
+      // generate unique ID
+      String id = Uuid().v4();
+
+      // set data
+      await _firestore
+          .collection('messages')
+          .document(id)
+          .setData(model.toDocument());
+
+      _logServices.addLog('send message with id="$id" (FirebaseServices)');
+      return true; // success code
+    } catch (e) {
+      logger.e('Error while send message (FirebaseServices)', e);
+      _logServices.addLog('Error while send message (FirebaseServices) $e');
+      return false;
+    }
+  }
+
+  // ---------------------------------------------------------------------------
 
   /// Return true if success and false if save error happend
   Future<bool> updateHabit(Habit habit) async {

@@ -63,7 +63,7 @@ class _SettingsMenuTileState extends State<SettingsMenuTile> {
                     color: widget.i == 1
                         ? Theme.of(context).backgroundColor
                         : Colors.white,
-                    size: 28,
+                    size: widget.i == 7 ? 28 : 24,
                   ),
                 ),
               ),

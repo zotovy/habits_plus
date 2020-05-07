@@ -253,7 +253,10 @@
     "close_edit_subtitle": "All your changed data will be permanently deleted",
 
     "report_bug_text": "You find a bug? Please, describe your problem. It will help us easily fix the problem.", 
-    "no_desc_error": "Please, describe your bug"
+    "no_desc_error": "Please, describe your bug",
+    "no_message_error": "Please, enter your message:)",
+    "message": "Message",
+    "send_message": "Send Message"
     
 
 

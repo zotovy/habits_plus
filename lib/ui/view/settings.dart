@@ -8,6 +8,7 @@ import 'package:habits_plus/core/util/constant.dart';
 import 'package:habits_plus/core/viewmodels/settings_model.dart';
 import 'package:habits_plus/localization.dart';
 import 'package:habits_plus/locator.dart';
+import 'package:habits_plus/ui/icons/custom_icons.dart';
 import 'package:habits_plus/ui/view/loading.dart';
 import 'package:habits_plus/ui/view/sync/exit.dart';
 import 'package:habits_plus/ui/widgets/settings/menu_tile.dart';
@@ -32,6 +33,7 @@ class _SettingsPageState extends State<SettingsPage> {
     Color(0xFFEF7530),
     Color(0xFF30D158),
     Color(0xFF707070),
+    Color(0xFF707070),
   ];
   List<IconData> icons = [
     Icons.person,
@@ -40,6 +42,7 @@ class _SettingsPageState extends State<SettingsPage> {
     EvaIcons.lock,
     EvaIcons.music,
     Icons.language,
+    CustomIcons.send,
     EvaIcons.messageCircle,
   ];
 
@@ -55,6 +58,7 @@ class _SettingsPageState extends State<SettingsPage> {
       () {},
       () => Navigator.pushNamed(context, 'settings/languages'),
       () => Navigator.pushNamed(context, 'settings/report_bug'),
+      () => Navigator.pushNamed(context, 'settings/contact_us'),
     ];
     return [
       // User info
@@ -118,7 +122,7 @@ class _SettingsPageState extends State<SettingsPage> {
               color: colors[i + 6],
               text: text[i + 6],
               callback: callback[i + 6],
-              i: i,
+              i: i + 6,
               isDarkMode: model.isDarkMode,
             ),
           ),
@@ -138,6 +142,7 @@ class _SettingsPageState extends State<SettingsPage> {
       AppLocalizations.of(context).translate('app_sound'),
       AppLocalizations.of(context).translate('language'),
       AppLocalizations.of(context).translate('report_bug'),
+      AppLocalizations.of(context).translate('contact_us'),
     ];
 
     // Build
