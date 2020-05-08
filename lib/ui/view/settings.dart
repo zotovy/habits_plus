@@ -34,6 +34,7 @@ class _SettingsPageState extends State<SettingsPage> {
     Color(0xFF30D158),
     Color(0xFF707070),
     Color(0xFF707070),
+    Color(0xFF707070),
   ];
   List<IconData> icons = [
     Icons.person,
@@ -44,6 +45,7 @@ class _SettingsPageState extends State<SettingsPage> {
     Icons.language,
     CustomIcons.send,
     EvaIcons.messageCircle,
+    EvaIcons.person,
   ];
 
   List<Widget> _ui(
@@ -59,6 +61,7 @@ class _SettingsPageState extends State<SettingsPage> {
       () => Navigator.pushNamed(context, 'settings/languages'),
       () => Navigator.pushNamed(context, 'settings/report_bug'),
       () => Navigator.pushNamed(context, 'settings/contact_us'),
+      () => Navigator.pushNamed(context, 'settings/author'),
     ];
     return [
       // User info
@@ -143,7 +146,10 @@ class _SettingsPageState extends State<SettingsPage> {
       AppLocalizations.of(context).translate('language'),
       AppLocalizations.of(context).translate('report_bug'),
       AppLocalizations.of(context).translate('contact_us'),
+      AppLocalizations.of(context).translate('author'),
     ];
+
+    double screenHeight = MediaQuery.of(context).size.height;
 
     // Build
     return ChangeNotifierProvider.value(
@@ -154,12 +160,15 @@ class _SettingsPageState extends State<SettingsPage> {
               ? LoadingPage()
               : SafeArea(
                   child: Container(
+                    height: 735,
                     decoration: BoxDecoration(
                       color: Theme.of(context).backgroundColor,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30),
-                        topRight: Radius.circular(30),
-                      ),
+                      borderRadius: screenHeight >= 676
+                          ? BorderRadius.only(
+                              topLeft: Radius.circular(30),
+                              topRight: Radius.circular(30),
+                            )
+                          : null,
                     ),
                     child: SingleChildScrollView(
                       child: Column(

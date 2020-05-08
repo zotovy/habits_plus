@@ -41,4 +41,8 @@ class CustomIcons {
     0xe006,
     fontFamily: _kFontFam,
   );
+  static const IconData github = const IconData(
+    0xe007,
+    fontFamily: _kFontFam,
+  );
 }

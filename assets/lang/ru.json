@@ -255,7 +255,15 @@
     "no_desc_error": "Пожалуйста, опишите баг",
     "no_message_error": "Пожалуйста, введи сообщение:)",
     "message": "Сообщение",
-    "send_message": "Отправить сообщение"
+    "send_message": "Отправить сообщение",
+    "author": "Автор",
+
+    "zotov_yaroslav": "Ярослав Зотов",
+    "yulia_filippova": "Юлия Филипова",
+    "author_subtitle": "Мобильный разработчик, UI/UX Дизайнер",
+    "another_authors_1": "Иллюстрации",
+    "another_authors_2": "Анимация иллюстраций",
+    "another_authors_3" : "Дизайн-концепт и стайл гайд"
 
 
 

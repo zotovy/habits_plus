@@ -256,7 +256,15 @@
     "no_desc_error": "Please, describe your bug",
     "no_message_error": "Please, enter your message:)",
     "message": "Message",
-    "send_message": "Send Message"
+    "send_message": "Send Message",
+    "author": "Author",
+
+    "zotov_yaroslav": "Yaroslav Zotov",
+    "yulia_filippova": "Yulia Filippova",
+    "author_subtitle": "Mobile developer, UI/UX Designer",
+    "another_authors_1": "Illustrations by",
+    "another_authors_2": "Illustration Animation by",
+    "another_authors_3" : "Design idea & style guide by"
     
 
 

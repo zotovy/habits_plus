@@ -9,6 +9,7 @@ import 'package:habits_plus/ui/view/home.dart';
 import 'package:habits_plus/ui/view/image_preview.dart';
 import 'package:habits_plus/ui/view/settings.dart';
 import 'package:habits_plus/ui/view/settings/account.dart';
+import 'package:habits_plus/ui/view/settings/author.dart';
 import 'package:habits_plus/ui/view/settings/contact_us.dart';
 import 'package:habits_plus/ui/view/settings/darkmode.dart';
 import 'package:habits_plus/ui/view/settings/languages.dart';
@@ -71,6 +72,10 @@ class Router {
       case 'settings/contact_us':
         return CupertinoPageRoute(
           builder: (_) => ContactUsPage(),
+        );
+      case 'settings/author':
+        return CupertinoPageRoute(
+          builder: (_) => AuthorPage(),
         );
       case 'create':
         return CupertinoPageRoute(builder: (_) => CreateHabitPage());

@@ -1,6 +1,7 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:habits_plus/core/services/community.dart';
+import 'package:habits_plus/localization.dart';
 import 'package:habits_plus/locator.dart';
 import 'package:habits_plus/ui/icons/custom_icons.dart';
 import 'package:habits_plus/ui/widgets/confirm_button.dart';
@@ -173,6 +174,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                     children: List.generate(5, (int i) => commentTile(i)),
                   ),
                 ),
+                SizedBox(height: 15),
               ],
             ),
           ),
