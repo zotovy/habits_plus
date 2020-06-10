@@ -164,8 +164,6 @@ class _MainAppState extends State<MainApp> {
             themeMode: snap.data.isDarkMode ? ThemeMode.dark : ThemeMode.light,
             home: Builder(
               builder: (context) {
-                return IntroPage();
-
                 if (snap.data.isUserLogin == true) {
                   locator<HomeViewModel>().fetch();
                   locator<DrawerViewModel>().fetchUser().then((user) {
