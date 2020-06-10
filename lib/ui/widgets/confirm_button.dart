@@ -5,13 +5,18 @@ import 'package:habits_plus/localization.dart';
 class ConfirmButton extends StatelessWidget {
   Function() submit;
   String text;
+  double margin;
 
-  ConfirmButton({this.submit, this.text});
+  ConfirmButton({
+    this.submit,
+    this.text,
+    this.margin = 15,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 15),
+      padding: EdgeInsets.symmetric(horizontal: margin),
       height: 55,
       child: Container(
         decoration: BoxDecoration(

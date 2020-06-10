@@ -17,6 +17,9 @@ import 'package:habits_plus/ui/widgets/create/texts.dart';
 import 'package:habits_plus/ui/widgets/error_snackbar.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/enums/viewstate.dart';
+import '../../widgets/progress_bar.dart';
+
 class CreateFromTemplatePage extends StatefulWidget {
   Habit templateHabit;
 
@@ -33,6 +36,80 @@ class _CreateFromTemplatePageState extends State<CreateFromTemplatePage> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  void onConfirm(CreateViewModel model) async {
+    if (model.state == ViewState.Busy) return null;
+
+    // Check is user choose habit duration
+    if (_formKey.currentState.validate()) {
+      if (widget.templateHabit.duration[0] == null &&
+          widget.templateHabit.duration[1] == null) {
+        _scaffoldKey.currentState.showSnackBar(
+          errorSnackBar(
+            context,
+            'noDurationSelectedError',
+          ),
+        );
+        return null;
+      } else if (widget.templateHabit.duration[0] == null) {
+        widget.templateHabit.duration[0] = widget.templateHabit.duration[1];
+      } else if (widget.templateHabit.duration[1] == null) {
+        widget.templateHabit.duration[1] = widget.templateHabit.duration[0];
+      }
+
+      if (listEquals(
+        [false, false, false, false, false, false, false],
+        widget.templateHabit.repeatDays,
+      )) {
+        _scaffoldKey.currentState.showSnackBar(
+          errorSnackBar(context, 'noDaySelectedError'),
+        );
+        return null;
+      }
+
+      // Save data
+      _formKey.currentState.save();
+
+      // Change null data in habit
+      widget.templateHabit.goalAmount = widget.templateHabit.duration[0]
+              .difference(widget.templateHabit.duration[1])
+              .inDays
+              .abs() +
+          1;
+      widget.templateHabit.timeStamp = DateTime.now();
+      widget.templateHabit.timesADay = 1;
+      widget.templateHabit.comments = [];
+
+      String userId = Provider.of<UserData>(
+        context,
+        listen: false,
+      ).currentUserId;
+      bool dbcode = await model.createHabit(widget.templateHabit);
+
+      if (dbcode) {
+        // plan notifications
+        await locator<NotificationServices>().createNotifications(
+          context,
+          widget.templateHabit,
+        );
+
+        Navigator.pushNamed(context, '/');
+        return null;
+      }
+
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(
+            AppLocalizations.of(context).translate('error_user_doent_exists'),
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+          backgroundColor: Colors.redAccent,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
@@ -42,6 +119,7 @@ class _CreateFromTemplatePageState extends State<CreateFromTemplatePage> {
           return GestureDetector(
             onTap: () => FocusScope.of(context).unfocus(),
             child: Scaffold(
+              appBar: model.state == ViewState.Busy ? ProgressBar() : null,
               key: _scaffoldKey,
               backgroundColor: Theme.of(context).backgroundColor,
               body: Form(
@@ -381,94 +459,7 @@ class _CreateFromTemplatePageState extends State<CreateFromTemplatePage> {
                           SizedBox(height: 20),
 
                           ConfirmButton(
-                            onPress: () async {
-                              // Check is user choose habit duration
-                              if (_formKey.currentState.validate()) {
-                                if (widget.templateHabit.duration[0] == null &&
-                                    widget.templateHabit.duration[1] == null) {
-                                  _scaffoldKey.currentState.showSnackBar(
-                                    errorSnackBar(
-                                      context,
-                                      'noDurationSelectedError',
-                                    ),
-                                  );
-                                  return null;
-                                } else if (widget.templateHabit.duration[0] ==
-                                    null) {
-                                  widget.templateHabit.duration[0] =
-                                      widget.templateHabit.duration[1];
-                                } else if (widget.templateHabit.duration[1] ==
-                                    null) {
-                                  widget.templateHabit.duration[1] =
-                                      widget.templateHabit.duration[0];
-                                }
-
-                                if (listEquals(
-                                  [
-                                    false,
-                                    false,
-                                    false,
-                                    false,
-                                    false,
-                                    false,
-                                    false
-                                  ],
-                                  widget.templateHabit.repeatDays,
-                                )) {
-                                  _scaffoldKey.currentState.showSnackBar(
-                                    errorSnackBar(
-                                        context, 'noDaySelectedError'),
-                                  );
-                                  return null;
-                                }
-
-                                // Save data
-                                _formKey.currentState.save();
-
-                                // Change null data in habit
-                                widget.templateHabit.goalAmount = widget
-                                        .templateHabit.duration[0]
-                                        .difference(
-                                            widget.templateHabit.duration[1])
-                                        .inDays
-                                        .abs() +
-                                    1;
-                                widget.templateHabit.timeStamp = DateTime.now();
-                                widget.templateHabit.timesADay = 1;
-
-                                String userId = Provider.of<UserData>(
-                                  context,
-                                  listen: false,
-                                ).currentUserId;
-                                bool dbcode = await model
-                                    .createHabit(widget.templateHabit);
-
-                                if (dbcode) {
-                                  // plan notifications
-                                  await locator<NotificationServices>()
-                                      .createNotifications(
-                                    context,
-                                    widget.templateHabit,
-                                  );
-
-                                  Navigator.pushNamed(context, '/');
-                                  return null;
-                                }
-
-                                _scaffoldKey.currentState.showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      AppLocalizations.of(context)
-                                          .translate('error_user_doent_exists'),
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    backgroundColor: Colors.redAccent,
-                                  ),
-                                );
-                              }
-                            },
+                            onPress: () => onConfirm(model),
                           ),
 
                           SizedBox(height: 15),

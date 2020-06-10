@@ -7,6 +7,7 @@ import 'package:habits_plus/core/models/locale.dart';
 import 'package:habits_plus/core/models/theme.dart';
 import 'package:habits_plus/core/models/userData.dart';
 import 'package:habits_plus/core/services/database.dart';
+import 'package:habits_plus/core/util/logger.dart';
 import 'package:habits_plus/core/viewmodels/drawer_model.dart';
 import 'package:habits_plus/core/viewmodels/home_model.dart';
 import 'package:habits_plus/core/viewmodels/settings_model.dart';
@@ -52,9 +53,10 @@ final _flareMainFiles = [
 ];
 
 Future<bool> setupLoginFlare() async {
-  for (final filename in _flareLoginFiles) {
-    await cachedActor(filename);
-  }
+  cachedActor(_flareLoginFiles[1]);
+  cachedActor(_flareLoginFiles[2]);
+  cachedActor(_flareLoginFiles[3]);
+  await cachedActor(_flareLoginFiles[0]);
   return true;
 }
 
@@ -162,14 +164,20 @@ class _MainAppState extends State<MainApp> {
             themeMode: snap.data.isDarkMode ? ThemeMode.dark : ThemeMode.light,
             home: Builder(
               builder: (context) {
+                return IntroPage();
+
                 if (snap.data.isUserLogin == true) {
                   locator<HomeViewModel>().fetch();
-                  locator<DrawerViewModel>().fetchUser();
+                  locator<DrawerViewModel>().fetchUser().then((user) {
+                    print(user.id);
+                    locator<DrawerViewModel>().user = user;
+                    Provider.of<UserData>(context, listen: false)
+                        .currentUserId = user.id;
+                  });
                   setupMainFlare();
                   if (snap.data.hasPinCode) {
                     return LockScreen(snap.data.pinCode);
                   } else {
-                    // return SyncExitScreen();
                     return snap.hasData ? MainShell() : LoadingPage();
                   }
                 } else if (snap.data.isUserLogin == false) {

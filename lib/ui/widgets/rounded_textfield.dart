@@ -6,7 +6,7 @@ class RoundedTextField extends StatefulWidget {
   Function onSaved;
   String errorLocalizationPath;
   String labelLocalizationPath;
-  Function validator;
+  String Function(String) validator;
   bool hasObscure = false;
   IconData prefix;
   String text;
@@ -80,7 +80,9 @@ class _RoundedTextFieldState extends State<RoundedTextField> {
                   color: Theme.of(context).textSelectionColor.withOpacity(0.25),
                 )
               : null,
-          hintText: AppLocalizations.of(context).translate(widget.hint),
+          hintText: widget.hint == "password"
+              ? "*******"
+              : AppLocalizations.of(context).translate(widget.hint),
           labelStyle: TextStyle(
             color: Theme.of(context).textSelectionColor,
           ),

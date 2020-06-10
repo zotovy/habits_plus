@@ -5,8 +5,10 @@ import 'package:habits_plus/core/models/app_settings.dart';
 import 'package:habits_plus/core/models/comment.dart';
 import 'package:habits_plus/core/models/habit.dart';
 import 'package:habits_plus/core/models/notification.dart';
+import 'package:habits_plus/core/models/sync.dart';
 import 'package:habits_plus/core/models/task.dart';
 import 'package:habits_plus/core/models/user.dart';
+import 'package:habits_plus/core/services/logs.dart';
 import 'package:habits_plus/core/util/constant.dart';
 import 'package:habits_plus/core/util/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,6 +16,7 @@ import 'package:uuid/uuid.dart';
 
 class DatabaseServices {
   SharedPreferences prefs;
+  LogServices _logServices = LogServices();
 
   // ANCHOR: main setup
 //========================================================================================
@@ -26,13 +29,13 @@ class DatabaseServices {
   Future<bool> setupSharedPrefferences() async {
     try {
       prefs = await SharedPreferences.getInstance();
-      // await prefs.remove('isDarkMode');
+      // prefs.clear();
       setHasUnsavedData(true);
 
       return true;
     } catch (e) {
       logger.e('Error while setup SharedPrefferences $e');
-      return null;
+      return false;
     }
   }
 
@@ -41,13 +44,16 @@ class DatabaseServices {
 
     if (!ready) return null;
 
+    // await _firebaseServices.setupApp();
+
+    bool _isSync = isSync();
+
     bool _isDarkMode = isDarkMode();
     bool isUserLogin = (await getUser()) != null;
     bool isNotifications = getIsNotifications();
     String pinCode = getPinCode();
     bool hasPinCode = getPinCodeStatus();
     String _localeCode = getLocale();
-    bool _isSync = isSync();
 
     // init locale
     Locale locale = _localeCode == null
@@ -98,6 +104,32 @@ class DatabaseServices {
     } catch (e) {
       logger.e('Error while get tasks $e');
       return null; // Error code
+    }
+  }
+
+  /// Function localy set all habits Shared Preferences
+  Future<bool> setTasks(List<Task> tasks) async {
+    if (checkPref()) {
+      logger.e('SharedPreferences is null!');
+      return null;
+    }
+
+    try {
+      // Convert List<Task> --> List<String>
+      List<String> raw = tasks
+          .map(
+            (elem) => json.encode(elem.toJson()),
+          )
+          .toList()
+          .cast<String>();
+
+      // Set habits
+      await prefs.setStringList('tasks', raw);
+
+      return true; // success code
+    } catch (e) {
+      logger.e('Error while set tasks', e);
+      return false; // error code
     }
   }
 
@@ -273,7 +305,31 @@ class DatabaseServices {
     }
   }
 
-  /// Function localy save task Shared Preferences
+  /// Function localy set all habits Shared Preferences
+  Future<bool> setHabits(List<Habit> habits) async {
+    if (checkPref()) {
+      logger.e('SharedPreferences is null!');
+      return null;
+    }
+
+    try {
+      // Convert List<Habit> --> List<String>
+      List<String> raw = habits
+          .map((elem) => json.encode(elem.toJson()))
+          .toList()
+          .cast<String>();
+
+      // Set habits
+      await prefs.setStringList('habits', raw);
+
+      return true; // success code
+    } catch (e) {
+      logger.e('Error while set Habits', e);
+      return false; // error code
+    }
+  }
+
+  /// Function localy save habit Shared Preferences
   Future<bool> saveHabit(Habit habit) async {
     if (checkPref()) {
       logger.e('SharedPreferences is null!');
@@ -659,7 +715,7 @@ class DatabaseServices {
 
       return true; // return success
     } catch (e) {
-      logger.e('Error while create notification id $e');
+      logger.e('Error while create notification', e);
       return null; // Error code
     }
   }
@@ -1124,6 +1180,76 @@ class DatabaseServices {
     } catch (e) {
       logger.e('Error while set has unsaved data $e');
       return false; // Error code
+    }
+  }
+
+  // ANCHOR: need to sync
+  // ---------------------------------------------------------------------------
+
+  List<SyncModel> getNeedToSync() {
+    try {
+      // get
+      List<String> raw = prefs.getStringList('needToSync');
+
+      if (raw == [] || raw == null) return [];
+
+      // Convert List<String> --> List<SyncModel>
+      List<SyncModel> models = raw
+          .map(
+            (String elem) => SyncModel.fromJson(json.decode(elem)),
+          )
+          .toList();
+
+      return models;
+    } catch (e) {
+      _logServices.addError('Error while get need to sync', e);
+      return null;
+    }
+  }
+
+  Future<bool> setNeedToSync(SyncModel model) async {
+    try {
+      // get models
+      List<SyncModel> models = getNeedToSync();
+
+      // add
+      models.add(model);
+
+      // Convert List<SyncModel> --> List<String>
+      List<String> raw = models.map(
+        (SyncModel elem) => json.encode(elem.toJson()),
+      );
+
+      // set
+      prefs.setStringList('needToSync', raw);
+
+      return true;
+    } catch (e) {
+      _logServices.addError('Error while set model to need to sync', e);
+      return false; // error code
+    }
+  }
+
+  Future<bool> deleteNeedToSync(int i) async {
+    try {
+      // get models
+      List<SyncModel> models = getNeedToSync();
+
+      // remove
+      models.removeAt(i);
+
+      // Convert List<SyncModel> --> List<String>
+      List<String> raw = models.map(
+        (SyncModel elem) => json.encode(elem.toJson()),
+      );
+
+      // set
+      prefs.setStringList('needToSync', raw);
+
+      return true;
+    } catch (e) {
+      _logServices.addError('Error while remove model from need to sync', e);
+      return false; // error code
     }
   }
 }

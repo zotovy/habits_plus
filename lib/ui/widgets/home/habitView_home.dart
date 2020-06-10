@@ -18,45 +18,89 @@ class HabitViewOnHomePage extends StatefulWidget {
 }
 
 class _HabitViewOnHomePageState extends State<HabitViewOnHomePage>
-    with TickerProviderStateMixin {
+    with SingleTickerProviderStateMixin {
   // UI
-  List<bool> openedHabits = [false, false];
+  bool isOpen = false;
+  Animation<double> openAnimation;
+  AnimationController openController;
 
   // Services
   HomeViewModel _model = locator<HomeViewModel>();
 
+  @override
+  void initState() {
+    super.initState();
+    openController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 300),
+    );
+    openAnimation = Tween<double>(begin: 0, end: 1).animate(openController);
+  }
+
   Widget _buildMoreHabits(HomeViewModel model) {
-    return Container(
-      child: RichText(
-        text: TextSpan(
-          children: [
-            TextSpan(
-              text: AppLocalizations.of(context).translate('habits_span_1'),
-              style: TextStyle(
-                color: Theme.of(context).textSelectionHandleColor,
-                fontSize: 18,
+    return GestureDetector(
+      onTap: () {
+        setState(() => isOpen = !isOpen);
+        openController.forward();
+      },
+      child: Container(
+        child: RichText(
+          text: TextSpan(
+            children: [
+              TextSpan(
+                text: AppLocalizations.of(context).translate('habits_span_1'),
+                style: TextStyle(
+                  color: Theme.of(context).textSelectionHandleColor,
+                  fontSize: 18,
+                ),
               ),
-            ),
-            TextSpan(
-              text: (model.todayHabits.length - 2).toString() +
-                  AppLocalizations.of(context).translate('habits_span_2'),
+              TextSpan(
+                text: (model.todayHabits.length - 2).toString() +
+                    AppLocalizations.of(context).translate('habits_span_2'),
+                style: TextStyle(
+                  color: Theme.of(context).primaryColor,
+                  fontSize: 18,
+                ),
+              ),
+              TextSpan(
+                text: AppLocalizations.of(context).translate('habits_span_3'),
+                style: TextStyle(
+                  color: Theme.of(context).textSelectionHandleColor,
+                  fontSize: 18,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+//========================================================================================
+/*                                                                                      *
+ *                                         Close                                        *
+ *                                                                                      */
+//========================================================================================
+
+  Widget _buildCloseButton(BuildContext context) => GestureDetector(
+        onTap: () {
+          Future.delayed(Duration(milliseconds: 350)).then(
+            (value) => setState(() => isOpen = false),
+          );
+          openController.reverse();
+        },
+        child: Container(
+          child: Center(
+            child: Text(
+              AppLocalizations.of(context).translate("close"),
               style: TextStyle(
                 color: Theme.of(context).primaryColor,
                 fontSize: 18,
               ),
             ),
-            TextSpan(
-              text: AppLocalizations.of(context).translate('habits_span_3'),
-              style: TextStyle(
-                color: Theme.of(context).textSelectionHandleColor,
-                fontSize: 18,
-              ),
-            ),
-          ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
 //========================================================================================
 /*                                                                                      *
@@ -96,6 +140,7 @@ class _HabitViewOnHomePageState extends State<HabitViewOnHomePage>
         ),
         child: Container(
           padding: EdgeInsets.all(10),
+          margin: EdgeInsets.only(bottom: 15),
           height: 107,
           decoration: BoxDecoration(
             gradient: LinearGradient(colors: [
@@ -400,6 +445,7 @@ class _HabitViewOnHomePageState extends State<HabitViewOnHomePage>
         ),
         child: Container(
           padding: EdgeInsets.all(10),
+          margin: EdgeInsets.only(bottom: 15),
           height: 107,
           decoration: BoxDecoration(
             // color: Theme.of(context).primaryColor,
@@ -700,23 +746,42 @@ class _HabitViewOnHomePageState extends State<HabitViewOnHomePage>
                               ? _buildLigtModeHabitBox(0, model)
                               : _buildDarkModeHabitBox(0, model)
                           : SizedBox.shrink(),
-                      SizedBox(height: 15),
                       model.todayHabits.length >= 2
                           ? Theme.of(context).brightness == Brightness.light
                               ? _buildLigtModeHabitBox(1, model)
                               : _buildDarkModeHabitBox(1, model)
                           : SizedBox.shrink(),
-                      SizedBox(height: 15),
                       Container(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            (model.todayHabits.length - 2) > 0
+                            (model.todayHabits.length - 2) > 0 && !isOpen
                                 ? _buildMoreHabits(model)
                                 : SizedBox.shrink(),
                           ],
                         ),
                       ),
+                      isOpen
+                          ? SizeTransition(
+                              sizeFactor: openAnimation,
+                              child: Container(
+                                child: Column(
+                                  children: List.generate(
+                                    model.todayHabits.length - 2,
+                                    (index) => Theme.of(context).brightness ==
+                                            Brightness.light
+                                        ? _buildLigtModeHabitBox(1, model)
+                                        : _buildDarkModeHabitBox(1, model),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : SizedBox.shrink(),
+                      isOpen
+                          ? SizeTransition(
+                              sizeFactor: openAnimation,
+                              child: _buildCloseButton(context))
+                          : SizedBox.shrink()
                     ],
                   ),
                 )

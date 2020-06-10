@@ -10,6 +10,7 @@ import 'package:habits_plus/ui/widgets/progress_bar.dart';
 import 'package:habits_plus/ui/widgets/textField_create.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../localization.dart';
 
@@ -302,13 +303,9 @@ class _CreateTaskState extends State<CreateTask> {
                                             }
 
                                             // Create new Task obj and get user ID
-                                            print(_title);
-                                            print(_description);
-                                            print(date);
-                                            print(timeRemind);
-                                            print(isEveryDay);
 
                                             Task task = Task(
+                                              id: Uuid().v4(),
                                               title: _title,
                                               description: _description,
                                               timestamp: DateTime

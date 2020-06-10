@@ -16,7 +16,7 @@
     "Sat": "Sat",
     "Sun": "Sun",
 
-    
+
 
     "January_": "January",
     "February_": "February",
@@ -66,7 +66,7 @@
     "login_title": "Login",
     "login_link": "Sign up",
     "login_email_error": "Please, enter your email",
-    "login_password_error ": "Please, enter your password",
+    "login_password_error": "Please, enter your password",
 
     "signup_title": "Sign Up",
     "signup_link": "Login",
@@ -135,38 +135,38 @@
     "title_and_desc": "Title & Description",
     "noHabitTitle_hint": "Your Title",
     "noHabitDesc_hint": "Your description",
-    "createHabit1_desc1": "Title & Description will displayed \non main habit page. Please, enter your title \n& description in text fields below ",
+    "createHabit1_desc1": "Title & Description will displayed  on main habit page. Please, enter your title  & description in text fields below ",
     "choose_your_icon": "Choose your Icon",
     "createHabit1_desc2": "We have a lot of icons to any needs. Choose one, which suitable for you",
     "calendar": "Calendar",
-    "calendar_desc": "Now you need to specify the days\nyou will develop your habit.",
+    "calendar_desc": "Now you need to specify the days you will develop your habit.",
     "choose_time_period": "Choose time period",
-    "time_period": "You also need to specify what period\nyou will develop your habit.",
+    "time_period": "You also need to specify what period you will develop your habit.",
     "noDaySelectedError": "Sorry, you need to select days, in which you will develop your habit:)",
     "noDurationSelectedError": "Sorry, you need to select period when you will develop your habit:)",
     "habit_type": "Habit Type",
-    "habit_type_desc": "There are two types of Habits.\nYou need to choose one",
+    "habit_type_desc": "There are two types of Habits. You need to choose one",
     "create_card1_title": "Yes or No",
     "create_card1_desc": "Mark habits with simple yes or no",
-    "create_card1_example": "-Do you training today?\n-Yes",
+    "create_card1_example": "-Do you training today? -Yes",
     "create_card2_title": "Nums",
     "create_card2_desc": "Write numbers in habit",
-    "create_card2_example": "-How many sigarettes do you smoke today?\n-10",
+    "create_card2_example": "-How many sigarettes do you smoke today? -10",
     "push_notification": "Push Notification",
     "push_time": "now",
     "push_today_at": "Today at 12:00 PM",
     "push_today_at_template": "Today at ",
-    "push_desc": "Let's finish. Last step is setting your\npush notification. You can easily\nspecify time or turn it off.",
+    "push_desc": "Let's finish. Last step is setting your push notification. You can easily specify time or turn it off.",
     "time": "Time",
     "noTimeChoosenError": "You need to specify your notification time or turn it off",
     "finish": "Finish",
 
-    
+
     "templates": "Templates",
     "template_doSport": "Do sport",
     "template_eatVegetarian": "Eat vegetarian",
     "template_wakeUpAt5AM": "Wake up at 5 AM",
-    "template_dontHangOutInInstagram": "Don't hang out in instagram", 
+    "template_dontHangOutInInstagram": "Don't hang out in instagram",
     "template_createPostEveryday": "Create Post everyday",
     "error_noTextFieldData": "This field is required:(",
 
@@ -240,10 +240,10 @@
 
     "reset_password": "Reset password",
     "reset_password_desc": "We will send you an email with a link to reset your password",
-    
-    "sync_exit_1": "You already log in. Do you want to logout?",
-    "sync_exit_2": "All your data will be saved and linked to your account ",
-    "sync_dialog": "You logged in to an existing account. All your unsaved data will be destroyed. Would you like to continue?", "title": "Title",
+
+    "sync_exit_1": "You already log in. Do you want to logout? All your data will be saved and linked to your account ",
+    "sync_dialog": "You logged in to an existing account. All your unsaved data will be destroyed. Would you like to continue?",
+    "title": "Title",
     "desc": "Description",
 
     "delete_comment_title": "Are you sure you want to delete this comment?",
@@ -252,7 +252,7 @@
     "close_edit_title": "Are you sure you want to close this page?",
     "close_edit_subtitle": "All your changed data will be permanently deleted",
 
-    "report_bug_text": "You find a bug? Please, describe your problem. It will help us easily fix the problem.", 
+    "report_bug_text": "You find a bug? Please, describe your problem. It will help us easily fix the problem.",
     "no_desc_error": "Please, describe your bug",
     "no_message_error": "Please, enter your message:)",
     "message": "Message",
@@ -264,8 +264,15 @@
     "author_subtitle": "Mobile developer, UI/UX Designer",
     "another_authors_1": "Illustrations by",
     "another_authors_2": "Illustration Animation by",
-    "another_authors_3" : "Design idea & style guide by"
-    
+    "another_authors_3": "Design idea & style guide by",
+
+    "close": "Close",
+
+    "settings": "Settings",
+
+    "login_existing_email": "You're enter email which already in used. Need to enter password"
+
+
 
 
 

@@ -46,11 +46,11 @@ class _ContactUsPageState extends State<ContactUsPage> {
   ];
 
   List<String> links = [
-    'https://www.instagram.com/',
-    'https://t.me/test_habits_plus',
-    'https://www.facebook.com/',
-    'https://twitter.com/',
-    'https://vk.com/thelimee'
+    'https://www.instagram.com/habitter/',
+    'https://t.me/habitter',
+    'https://www.facebook.com/yaroslav.zotov.10',
+    'https://twitter.com/Habitterapp',
+    'https://vk.com/habitter'
   ];
 
   List<IconData> icons = [

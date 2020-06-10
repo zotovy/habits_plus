@@ -15,6 +15,7 @@ import 'package:habits_plus/ui/widgets/rounded_textfield.dart';
 import 'package:habits_plus/ui/widgets/switch.dart';
 import 'package:habits_plus/ui/widgets/texts.dart';
 import 'package:provider/provider.dart';
+import "package:habits_plus/ui/widgets/loading_modal.dart";
 
 import '../../locator.dart';
 
@@ -102,8 +103,14 @@ class _EditHabitPageState extends State<EditHabitPage> {
     widget.habit.timeOfDay = _time;
     widget.habit.title = _title;
 
+    // Show loading dialog
+    showDialog(context: context, builder: (_) => LoadingModal());
+
     // submit
     bool code = await model.save(widget.habit);
+
+    // exit loading dialog
+    Navigator.pop(context);
 
     // show error message
     if (!code) {

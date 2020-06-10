@@ -20,9 +20,12 @@ class DrawerViewModel extends BaseViewModel {
   Future fetchUser() async {
     setState(ViewState.Busy);
     _user = await _databaseServices.getUser();
+
     if (_user == null) {
       _user = userNotFound;
     }
     setState(ViewState.Idle);
+
+    return _user;
   }
 }

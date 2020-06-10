@@ -27,6 +27,9 @@ import 'package:habits_plus/core/viewmodels/base_model.dart';
 import 'package:habits_plus/locator.dart';
 import 'package:provider/provider.dart';
 
+import 'drawer_model.dart';
+import 'statistic_model.dart';
+
 class LoginResponce {
   bool success;
   AuthError error;
@@ -52,13 +55,7 @@ class SyncViewModel extends BaseViewModel {
   User _user;
 
   // ANCHOR: get
-  User get user {
-    if (_user == null) {
-      // fetch
-      _user = _settingsViewModel.user;
-    }
-    return _user;
-  }
+  User get user => _settingsViewModel.user;
 
   void setUserToOtherPages(User user) async {
     locator<SettingsViewModel>().user = user;
@@ -66,7 +63,8 @@ class SyncViewModel extends BaseViewModel {
 
   /// return: user id
   Future<LoginResponce> loginWithEmail(
-      BuildContext context, String email, String password) async {
+      BuildContext context, String email, String password,
+      {bool needDialog = true}) async {
     // setState
     setState(ViewState.Busy);
 
@@ -83,7 +81,7 @@ class SyncViewModel extends BaseViewModel {
 
       // Get unsaved data status
       bool status = _databaseServices.hasUnsavedData();
-      if (status) {
+      if (status && needDialog) {
         // Show dialog
         bool isDialogConfirmed = false;
         await showDialog(
@@ -96,6 +94,7 @@ class SyncViewModel extends BaseViewModel {
 
         if (isDialogConfirmed) {
           // TODO: clear all data in sharedPreferences & login
+          _databaseServices.setIsSync(true);
         } else {
           return LoginResponce(
             error: AuthError.UserExit,
@@ -163,6 +162,9 @@ class SyncViewModel extends BaseViewModel {
         await firebaseUser.sendEmailVerification();
       }
 
+      locator<DrawerViewModel>().user = user;
+      Provider.of<UserData>(context, listen: false).currentUserId = user.id;
+
       // return user
       return LoginResponce(
         error: null,
@@ -208,7 +210,9 @@ class SyncViewModel extends BaseViewModel {
       }
 
       if (errorType != AuthError.PasswordNotValid) {
-        logger.e('Error while loging', [e.toString()]);
+        logger.e(
+          'Error while loging $e',
+        );
       }
 
       return LoginResponce(
@@ -250,6 +254,7 @@ class SyncViewModel extends BaseViewModel {
   Future<void> signOut() async {
     setState(ViewState.Busy);
     await _firebaseAuth.signOut();
+    await _databaseServices.setIsSync(false);
     setState(ViewState.Idle);
   }
 
@@ -269,8 +274,7 @@ class SyncViewModel extends BaseViewModel {
     setState(ViewState.Busy);
     try {
       // Check internet connection
-      if ((await _internetConnectionServices.hasInternetConnection()) ==
-          InternetConnection.NotConnected) {
+      if (!await _internetConnectionServices.hasInternetConnection()) {
         return LoginResponce(
           error: AuthError.NetworkError,
           success: false,
@@ -293,6 +297,7 @@ class SyncViewModel extends BaseViewModel {
 
         if (isDialogConfirmed) {
           // TODO: clear all data in sharedPreferences & login
+          await _databaseServices.setIsSync(true);
         } else {
           return LoginResponce(
             error: AuthError.UserExit,
@@ -361,6 +366,9 @@ class SyncViewModel extends BaseViewModel {
         await fireuser.sendEmailVerification();
       }
 
+      locator<DrawerViewModel>().user = user;
+      Provider.of<UserData>(context, listen: false).currentUserId = user.id;
+
       return LoginResponce(
         error: null,
         success: true,
@@ -407,6 +415,7 @@ class SyncViewModel extends BaseViewModel {
 
         if (isDialogConfirmed) {
           // TODO: clear all data in sharedPreferences & login
+          _databaseServices.setIsSync(true);
         } else {
           return LoginResponce(
             error: AuthError.UserExit,
@@ -470,6 +479,15 @@ class SyncViewModel extends BaseViewModel {
           // }
 
           // return
+
+          locator<DrawerViewModel>().user = user;
+
+          Provider.of<UserData>(context, listen: false).currentUserId = user.id;
+
+          locator<HomeViewModel>().fetch().then((_) {
+            locator<StatisticViewModel>().setupHabits();
+          });
+
           return LoginResponce(
             error: null,
             success: true,

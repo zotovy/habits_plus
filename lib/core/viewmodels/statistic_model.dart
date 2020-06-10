@@ -28,7 +28,13 @@ class StatisticViewModel extends BaseViewModel {
   List<TopHabitStat> get topHabits => _topHabits;
   AllHabitStatData get allHabitStatData => _allHabitStatData;
 
+  set habits(List<Habit> newHabits) {
+    _habits = newHabits;
+    notifyListeners();
+  }
+
   void setupHabits() {
+    setState(ViewState.Busy);
     _habits = _homeViewModel.habits;
     setAllHabitsStat();
     setWeekStats();

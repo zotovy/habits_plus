@@ -31,9 +31,8 @@ class Comment {
     };
   }
 
-  Map<dynamic, dynamic> toDocument() {
+  Map<String, dynamic> toDocument() {
     return {
-      'id': id,
       'authorId': authorId,
       'habitId': habitId,
       'hasImage': hasImage,
@@ -43,7 +42,7 @@ class Comment {
     };
   }
 
-  factory Comment.fromJson(Map<String, dynamic> json) {
+  factory Comment.fromJson(json) {
     return Comment(
       id: json['id'],
       authorId: json['authorId'],

@@ -176,6 +176,37 @@ class Habit {
     };
   }
 
+  factory Habit.fromDocument(DocumentSnapshot snap) {
+    return Habit(
+      almostDone: snap.data['almostDone'],
+      comments: snap.data['comments']
+          .map((elem) => Comment.fromJson(elem))
+          .toList()
+          .cast<Comment>(),
+      countableProgress: snap.data['countableProgress'],
+      description: snap.data['description'],
+      duration: snap.data['duration']
+          .map((elem) => elem.toDate())
+          .toList()
+          .cast<DateTime>(),
+      goalAmount: snap.data['goalAmount'],
+      hasReminder: snap.data['hasReminder'],
+      iconCode: snap.data['iconCode'],
+      id: snap.documentID,
+      isDisable: snap.data['isDisable'],
+      progressBin: snap.data['progressBin']
+          .map((elem) => elem.toDate())
+          .toList()
+          .cast<DateTime>(),
+      repeatDays: snap.data['repeatDays'].cast<bool>(),
+      timeOfDay: TimeOfDay.fromDateTime(snap.data['timeOfDay'].toDate()),
+      timeStamp: snap.data['timeStamp'].toDate(),
+      timesADay: snap.data['timesADay'],
+      title: snap.data['title'],
+      type: snap.data['type'] ? HabitType.Countable : HabitType.Uncountable,
+    );
+  }
+
   bool getDoneProperty(DateTime date) {
     DateTime _date = dateFormater.parse(date.toString());
     return progressBin.contains(_date);

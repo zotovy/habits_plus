@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Task {
@@ -58,11 +59,52 @@ class Task {
               now.day,
               time.hour,
               time.minute,
+            ).toString()
+          : '',
+      'isEveryDay': isEveryDay,
+      'hasTime': hasTime,
+      'done': done,
+    };
+  }
+
+  Map<String, dynamic> toDocument() {
+    DateTime now = DateTime.now();
+    return {
+      'id': id,
+      'title': title,
+      'description': description,
+      'date': Timestamp.fromDate(date),
+      'timestamp': Timestamp.fromDate(timestamp),
+      'time': hasTime
+          ? Timestamp.fromDate(
+              DateTime(
+                now.year,
+                now.month,
+                now.day,
+                time.hour,
+                time.minute,
+              ),
             )
           : '',
       'isEveryDay': isEveryDay,
       'hasTime': hasTime,
       'done': done,
     };
+  }
+
+  factory Task.fromDocument(DocumentSnapshot snap) {
+    return Task(
+      date: snap.data['date'].toDate(),
+      description: snap.data['description'],
+      done: snap.data['done'],
+      hasTime: snap.data['hasTime'],
+      id: snap.data['id'],
+      isEveryDay: snap.data['isEveryDay'],
+      time: snap.data['hasTime']
+          ? TimeOfDay.fromDateTime(snap.data['time'].toDate())
+          : null,
+      timestamp: snap.data['timestamp'].toDate(),
+      title: snap.data['title'],
+    );
   }
 }

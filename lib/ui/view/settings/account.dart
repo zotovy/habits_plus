@@ -186,6 +186,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
           ),
         ),
       ),
+      SizedBox(height: 7),
       Container(
         margin: EdgeInsets.only(left: 15, right: 15, bottom: 5),
         child: Row(
@@ -234,6 +235,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
           ],
         ),
       ),
+      SizedBox(height: 7),
       GestureDetector(
         onTap: () async {
           if (await _syncViewModel.getCurrentUser() == null) {
@@ -249,7 +251,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
             children: <Widget>[
               // Text
               Text(
-                AppLocalizations.of(context).translate('sync'),
+                AppLocalizations.of(context).translate('settings'),
                 style: TextStyle(
                   fontSize: 20,
                   color: Theme.of(context).textSelectionHandleColor,
@@ -264,6 +266,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
           ),
         ),
       ),
+      SizedBox(height: 7),
 
       // Confirm
       ConfirmButton(

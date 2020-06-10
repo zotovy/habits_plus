@@ -2,12 +2,18 @@ import 'package:habits_plus/core/enums/viewstate.dart';
 import 'package:habits_plus/core/models/habit.dart';
 import 'package:habits_plus/core/models/task.dart';
 import 'package:habits_plus/core/services/database.dart';
+import 'package:habits_plus/core/services/firebase.dart';
+import 'package:habits_plus/core/services/internet.dart';
 import 'package:habits_plus/core/util/constant.dart';
 import 'package:habits_plus/core/viewmodels/base_model.dart';
+import 'package:habits_plus/core/viewmodels/settings_model.dart';
+import 'package:habits_plus/core/viewmodels/statistic_model.dart';
 import 'package:habits_plus/locator.dart';
 
 class HomeViewModel extends BaseViewModel {
   DatabaseServices _databaseServices = locator<DatabaseServices>();
+  InternetServices _internetServices = locator<InternetServices>();
+  FirebaseServices _firebaseServices = locator<FirebaseServices>();
 
   List<Habit> _habits = [];
   List<Task> _tasks = [];
@@ -39,6 +45,16 @@ class HomeViewModel extends BaseViewModel {
   bool get hasNotDoneTasks => _hasNotDoneTasks;
   DateTime get currentDate => _currentDate;
 
+  set habits(List<Habit> newHabits) {
+    _habits = newHabits;
+    notifyListeners();
+  }
+
+  set tasks(List<Task> newTasks) {
+    _tasks = newTasks;
+    notifyListeners();
+  }
+
   set hasDoneTasks(bool value) {
     _hasDoneTasks = value;
     notifyListeners();
@@ -69,9 +85,21 @@ class HomeViewModel extends BaseViewModel {
 
   Future fetch() async {
     setState(ViewState.Busy);
-    _habits = await _databaseServices.getHabits();
-    _tasks = await _databaseServices.getTasks();
 
+    if (await _internetServices.hasInternetConnection()) {
+      // TODO: set updates to firebase
+
+      _habits = await _firebaseServices.getHabits();
+      _tasks = await _firebaseServices.getTasks();
+
+      locator<StatisticViewModel>().setupHabits();
+
+      _databaseServices.setHabits(habits);
+      _databaseServices.setTasks(tasks);
+    } else {
+      _habits = await _databaseServices.getHabits();
+      _tasks = await _databaseServices.getTasks();
+    }
     setMarkedDates();
     setToday(DateTime.now());
     setState(ViewState.Idle);
@@ -257,6 +285,7 @@ class HomeViewModel extends BaseViewModel {
   }
 
   void updateHabit(Habit habit, String userId) async {
+    if (await _internetServices.hasInternetConnection()) {}
     await _databaseServices.updateHabit(habit);
   }
 
@@ -266,7 +295,7 @@ class HomeViewModel extends BaseViewModel {
 
   void addToProgressBin(int index, DateTime date) {
     _todayHabits[index].progressBin.add(date);
-
+    _firebaseServices.updateHabit(_todayHabits[index]);
     notifyListeners();
   }
 
@@ -275,7 +304,7 @@ class HomeViewModel extends BaseViewModel {
     _todayHabits[index].progressBin.removeAt(
           _todayHabits[index].progressBin.indexOf(date),
         );
-
+    _firebaseServices.updateHabit(_todayHabits[index]);
     notifyListeners();
   }
 

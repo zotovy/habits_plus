@@ -54,7 +54,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                         children: <Widget>[
                           // Avatar & title
                           Positioned(
-                            top: 0,
+                            top: 16,
                             left: 0,
                             child: _buildAvatarRow(model.user),
                           ),

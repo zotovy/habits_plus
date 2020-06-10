@@ -4,6 +4,7 @@ import 'package:habits_plus/core/models/habit.dart';
 import 'package:habits_plus/core/models/notification.dart';
 import 'package:habits_plus/core/services/database.dart';
 import 'package:habits_plus/core/util/constant.dart';
+import 'package:habits_plus/core/util/logger.dart';
 import 'package:habits_plus/localization.dart';
 import 'package:habits_plus/locator.dart';
 
@@ -36,6 +37,8 @@ class NotificationServices {
       initialisationSettings,
       onSelectNotification: _onSelectNotification,
     );
+
+    // flutterLocalNotificationsPlugin.cancelAll();
   }
 
   // This function delete passed notification
@@ -159,6 +162,9 @@ class NotificationServices {
             // Create notification
             HabitNotification notification = HabitNotification(
               habitId: habit.id,
+              habit: habit,
+              isHabitDelete: false,
+              isOf: false,
               date: thisDate
                   .add(Duration(
                     hours: habit.timeOfDay.hour,

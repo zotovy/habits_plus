@@ -54,7 +54,12 @@ class DetailAppBar extends StatelessWidget implements PreferredSizeWidget {
     String desc = model.habit.description.length > last
         ? model.habit.description.substring(0, last) + '...'
         : model.habit.description;
-    return '$desc $time, $days';
+
+    if (desc != "") {
+      desc += " ";
+    }
+
+    return '$desc$time, $days';
   }
 
   @override

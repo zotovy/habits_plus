@@ -30,7 +30,7 @@ class _SettingsPageState extends State<SettingsPage> {
     null, // THis color will show depend on a brightness lvl
     Color(0xFFF0A330),
     Color(0xFF2A8CFE),
-    Color(0xFFEF7530),
+    // Color(0xFFEF7530), <-- App sound
     Color(0xFF30D158),
     Color(0xFF707070),
     Color(0xFF707070),
@@ -41,7 +41,7 @@ class _SettingsPageState extends State<SettingsPage> {
     EvaIcons.moon,
     Icons.notifications,
     EvaIcons.lock,
-    EvaIcons.music,
+    // EvaIcons.music,  <-- App sound
     Icons.language,
     CustomIcons.send,
     EvaIcons.messageCircle,
@@ -57,13 +57,14 @@ class _SettingsPageState extends State<SettingsPage> {
       () => Navigator.pushNamed(context, 'settings/darkmode'),
       () => Navigator.pushNamed(context, 'settings/notifications'),
       () => Navigator.pushNamed(context, 'settings/security'),
-      () {},
+      // () {},  <-- App sound
       () => Navigator.pushNamed(context, 'settings/languages'),
       () => Navigator.pushNamed(context, 'settings/report_bug'),
       () => Navigator.pushNamed(context, 'settings/contact_us'),
       () => Navigator.pushNamed(context, 'settings/author'),
     ];
     return [
+      SizedBox(height: 16),
       // User info
       SettingsUserRow(
         avatar: model.user.profileImgBase64String == null
@@ -93,7 +94,7 @@ class _SettingsPageState extends State<SettingsPage> {
       Container(
         child: Column(
           children: List.generate(
-            6,
+            5,
             (int i) => SettingsMenuTile(
               icon: icons[i],
               color: colors[i],
@@ -119,13 +120,13 @@ class _SettingsPageState extends State<SettingsPage> {
       Container(
         child: Column(
           children: List.generate(
-            text.length - 6,
+            text.length - 5,
             (int i) => SettingsMenuTile(
-              icon: icons[i + 6],
-              color: colors[i + 6],
-              text: text[i + 6],
-              callback: callback[i + 6],
-              i: i + 6,
+              icon: icons[i + 5],
+              color: colors[i + 5],
+              text: text[i + 5],
+              callback: callback[i + 5],
+              i: i + 5,
               isDarkMode: model.isDarkMode,
             ),
           ),
@@ -142,7 +143,7 @@ class _SettingsPageState extends State<SettingsPage> {
       AppLocalizations.of(context).translate('darkmode'),
       AppLocalizations.of(context).translate('notifications'),
       AppLocalizations.of(context).translate('security'),
-      AppLocalizations.of(context).translate('app_sound'),
+      // AppLocalizations.of(context).translate('app_sound'), <-- App sound
       AppLocalizations.of(context).translate('language'),
       AppLocalizations.of(context).translate('report_bug'),
       AppLocalizations.of(context).translate('contact_us'),
@@ -160,7 +161,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ? LoadingPage()
               : SafeArea(
                   child: Container(
-                    height: 735,
+                    // height: 735,
                     decoration: BoxDecoration(
                       color: Theme.of(context).backgroundColor,
                       borderRadius: screenHeight >= 676

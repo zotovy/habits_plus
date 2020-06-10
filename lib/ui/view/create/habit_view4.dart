@@ -564,7 +564,12 @@ class _CreateHabitView4State extends State<CreateHabitView4>
                               isDisable: false,
                               progressBin: [],
                               repeatDays: widget.progressBin,
-                              timeOfDay: dayTime,
+                              timeOfDay: dayTime == null
+                                  ? TimeOfDay(
+                                      hour: 12,
+                                      minute: 0,
+                                    )
+                                  : dayTime,
                               timeStamp: DateTime.now(),
                               title: widget.title,
                               type: widget.habitType,

@@ -1,5 +1,5 @@
 name: habits_plus
-description: A new Flutter project.
+description: The Best Mobile Habit Tracker & Todo app
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -106,9 +106,9 @@ flutter:
           weight: 300
         - asset: assets/fonts/SFPRODISPLAY-MEDIUM.TTF
           weight: 600
-    - family:  custom_icons
+    - family: custom_icons
       fonts:
-       - asset: assets/fonts/custom_icons.ttf
+        - asset: assets/fonts/custom_icons.ttf
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf

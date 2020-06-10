@@ -17,6 +17,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/services/firebase.dart';
 import '../../locator.dart';
 
 class DetailHabitPage extends StatefulWidget {
@@ -38,6 +39,42 @@ class _DetailHabitPageState extends State<DetailHabitPage> {
 
     _model.initHabit(widget.habit);
     _model.fetchComments(userId);
+  }
+
+  Future<File> pickImage(DetailPageView model) async {
+    File _image = await ImagePicker.pickImage(
+      source: ImageSource.gallery,
+    );
+
+    if (_image != null) {
+      model.commentImage = await ImageCropper.cropImage(
+        sourcePath: _image.path,
+        aspectRatioPresets: [
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio3x2,
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.ratio4x3,
+          CropAspectRatioPreset.ratio16x9
+        ],
+        androidUiSettings: AndroidUiSettings(
+          toolbarTitle: 'Cropper',
+          toolbarColor: Colors.deepOrange,
+          toolbarWidgetColor: Colors.white,
+          initAspectRatio: CropAspectRatioPreset.original,
+          lockAspectRatio: false,
+        ),
+        iosUiSettings: IOSUiSettings(
+          minimumAspectRatio: 1.0,
+        ),
+      );
+    }
+    return model.commentImage;
+  }
+
+  Future onConfirm(DetailPageView model) async {
+    String userId = await locator<FirebaseServices>().userId;
+    model.createComment(userId);
+    model.commentImage = null;
   }
 
   @override
@@ -99,57 +136,13 @@ class _DetailHabitPageState extends State<DetailHabitPage> {
                                           saveImage: (File image) {
                                             model.commentImage = image;
                                           },
-                                          onConfirm: () {
-                                            String userId =
-                                                Provider.of<UserData>(context,
-                                                        listen: false)
-                                                    .currentUserId;
-                                            model.createComment(userId);
-                                            model.commentImage = null;
+                                          onConfirm: () async {
+                                            return await onConfirm(model);
                                           },
                                           image: model.commentImage,
                                           onImageDelete: () =>
                                               model.commentImage = null,
-                                          pickImage: () async {
-                                            File _image =
-                                                await ImagePicker.pickImage(
-                                              source: ImageSource.gallery,
-                                            );
-
-                                            if (_image != null) {
-                                              model.commentImage =
-                                                  await ImageCropper.cropImage(
-                                                sourcePath: _image.path,
-                                                aspectRatioPresets: [
-                                                  CropAspectRatioPreset.square,
-                                                  CropAspectRatioPreset
-                                                      .ratio3x2,
-                                                  CropAspectRatioPreset
-                                                      .original,
-                                                  CropAspectRatioPreset
-                                                      .ratio4x3,
-                                                  CropAspectRatioPreset
-                                                      .ratio16x9
-                                                ],
-                                                androidUiSettings:
-                                                    AndroidUiSettings(
-                                                  toolbarTitle: 'Cropper',
-                                                  toolbarColor:
-                                                      Colors.deepOrange,
-                                                  toolbarWidgetColor:
-                                                      Colors.white,
-                                                  initAspectRatio:
-                                                      CropAspectRatioPreset
-                                                          .original,
-                                                  lockAspectRatio: false,
-                                                ),
-                                                iosUiSettings: IOSUiSettings(
-                                                  minimumAspectRatio: 1.0,
-                                                ),
-                                              );
-                                            }
-                                            return model.commentImage;
-                                          },
+                                          pickImage: () => pickImage(model),
                                         ),
                                       ),
                                     ),

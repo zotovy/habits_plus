@@ -38,11 +38,9 @@ class _SettingsMenuTileState extends State<SettingsMenuTile> {
   Widget build(BuildContext context) {
     return Material(
       child: InkWell(
-        onTap: widget.i != 4
-            ? () {
-                widget.callback();
-              }
-            : () {},
+        onTap: () {
+          widget.callback();
+        },
         child: Container(
           margin: EdgeInsets.symmetric(horizontal: 15, vertical: 7),
           child: Row(
@@ -82,27 +80,11 @@ class _SettingsMenuTileState extends State<SettingsMenuTile> {
               Expanded(
                 child: Align(
                   alignment: Alignment.centerRight,
-                  child: widget.i == 4
-                      ? CupertinoSwitch(
-                          value: widget.i == 1
-                              ? Provider.of<ThemeModel>(context).isDarkMode
-                              : isOn,
-                          onChanged: (bool val) {
-                            setState(() {
-                              isOn = !isOn;
-                            });
-                            widget.i == 1
-                                ? widget.callback(!isOn)
-                                : widget.callback();
-                          },
-                          activeColor: Theme.of(context).primaryColor,
-                        )
-                      : Icon(
-                          Icons.chevron_right,
-                          color: Theme.of(context)
-                              .textSelectionColor
-                              .withOpacity(0.65),
-                        ),
+                  child: Icon(
+                    Icons.chevron_right,
+                    color:
+                        Theme.of(context).textSelectionColor.withOpacity(0.65),
+                  ),
                 ),
               ),
             ],

@@ -71,7 +71,8 @@ class _CommentTileState extends State<CommentTile> {
           setState(() {
             widget.comment.content = content;
             widget.comment.imageBase64String = base64String;
-            widget.comment.hasImage = base64String != null;
+            widget.comment.hasImage =
+                base64String != null && base64String != '';
           });
           widget.onCommentChange(widget.comment);
         },

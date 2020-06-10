@@ -14,7 +14,6 @@ import 'package:habits_plus/core/viewmodels/settings_model.dart';
 import 'package:habits_plus/core/viewmodels/start_model.dart';
 import 'package:habits_plus/core/viewmodels/statistic_model.dart';
 import 'package:habits_plus/core/viewmodels/sync_model.dart';
-
 import 'core/services/database.dart';
 import 'core/viewmodels/create_model.dart';
 

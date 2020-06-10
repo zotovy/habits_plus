@@ -204,6 +204,7 @@ class _SyncPageState extends State<SyncPage> {
 
       // Confirm
       ConfirmButton(
+        margin: 30,
         submit: () => _onSubmit(model),
         text: 'confirm',
       ),
@@ -319,6 +320,8 @@ class _SyncPageState extends State<SyncPage> {
           ],
         ),
       ),
+
+      SizedBox(height: 10),
     ];
   }
 

@@ -2,11 +2,9 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:habits_plus/core/enums/viewstate.dart';
-import 'package:habits_plus/core/util/constant.dart';
 import 'package:habits_plus/core/viewmodels/statistic_model.dart';
 import 'package:habits_plus/localization.dart';
 import 'package:habits_plus/locator.dart';
-import 'package:habits_plus/ui/view/drawer.dart';
 import 'package:habits_plus/ui/view/loading.dart';
 import 'package:habits_plus/ui/view/settings.dart';
 // import 'package:habits_plus/ui/widgets/motivations_cards/sync.dart';
@@ -40,11 +38,13 @@ class _StatisticPageState extends State<StatisticPage> {
 
       // All Habits row statistic
       AllHabitStatWidget(model.allHabitStatData),
-      SizedBox(height: 20),
+      model.topHabits.length == 0 ? SizedBox.shrink() : SizedBox(height: 20),
 
       // "This Week"
-      titleText(context, 'this_week'),
-      SizedBox(height: 10),
+      model.topHabits.length == 0
+          ? SizedBox.shrink()
+          : titleText(context, 'this_week'),
+      model.topHabits.length == 0 ? SizedBox.shrink() : SizedBox(height: 10),
 
       WeekStatWidget(model.weekHabit),
       SizedBox(height: 20),

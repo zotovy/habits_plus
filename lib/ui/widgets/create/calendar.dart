@@ -56,8 +56,8 @@ class _CalendarRangePickerState extends State<CalendarRangePicker> {
         Utils.daysInRange(firstDayOfCurrentWeek, lastDayOfCurrentWeek)
             .toList()
             .sublist(0, 7);
-    _left = widget.initialDates[0];
-    _right = widget.initialDates[1];
+    _left = widget.initialDates == null ? null : widget.initialDates[0];
+    _right = widget.initialDates == null ? null : widget.initialDates[1];
     hasSelection = _left != null && _right != null;
   }
 

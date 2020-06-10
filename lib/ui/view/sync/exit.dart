@@ -1,6 +1,7 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:habits_plus/core/enums/viewstate.dart';
+import 'package:habits_plus/core/services/firebase.dart';
 import 'package:habits_plus/core/services/images.dart';
 import 'package:habits_plus/core/util/constant.dart';
 import 'package:habits_plus/core/viewmodels/sync_model.dart';
@@ -51,12 +52,19 @@ class _SyncExitScreenState extends State<SyncExitScreen> {
       // Email
       model.user.email == null
           ? SizedBox.shrink()
-          : Text(
-              model.user.email,
-              style: TextStyle(
-                color: lightMode.textSelectionColor,
-                fontSize: 18,
-              ),
+          : FutureBuilder(
+              future: locator<FirebaseServices>().getCurrentUser(),
+              builder: (_, data) {
+                return data.hasData
+                    ? Text(
+                        data.data.uid,
+                        style: TextStyle(
+                          color: lightMode.textSelectionColor,
+                          fontSize: 18,
+                        ),
+                      )
+                    : SizedBox.shrink();
+              },
             ),
       SizedBox(height: 5),
 
@@ -82,29 +90,29 @@ class _SyncExitScreenState extends State<SyncExitScreen> {
         ),
       ),
 
-      Container(
-        margin: EdgeInsets.symmetric(horizontal: 30),
-        child: RichText(
-          textAlign: TextAlign.center,
-          text: TextSpan(children: [
-            TextSpan(
-              text: AppLocalizations.of(context).translate('sync_exit_2'),
-              style: TextStyle(
-                fontSize: 18,
-                color: lightMode.textSelectionColor,
-              ),
-            ),
-            TextSpan(
-              text: model.user.email,
-              style: TextStyle(
-                fontSize: 18,
-                color: lightMode.textSelectionHandleColor,
-                fontWeight: FontWeight.w600,
-              ),
-            )
-          ]),
-        ),
-      ),
+      // Container(
+      //   margin: EdgeInsets.symmetric(horizontal: 30),
+      //   child: RichText(
+      //     textAlign: TextAlign.center,
+      //     text: TextSpan(children: [
+      //       TextSpan(
+      //         text: AppLocalizations.of(context).translate('sync_exit_2'),
+      //         style: TextStyle(
+      //           fontSize: 18,
+      //           color: lightMode.textSelectionColor,
+      //         ),
+      //       ),
+      //       TextSpan(
+      //         text: model.user.email,
+      //         style: TextStyle(
+      //           fontSize: 18,
+      //           color: lightMode.textSelectionHandleColor,
+      //           fontWeight: FontWeight.w600,
+      //         ),
+      //       )
+      //     ]),
+      //   ),
+      // ),
       SizedBox(height: 20),
 
       // logout

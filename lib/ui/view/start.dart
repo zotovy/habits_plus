@@ -8,6 +8,7 @@ import 'package:habits_plus/locator.dart';
 import 'package:habits_plus/ui/view/loading.dart';
 import 'package:habits_plus/ui/widgets/confirm_button.dart';
 import 'package:habits_plus/ui/widgets/rounded_textField.dart';
+import 'package:habits_plus/ui/widgets/start/password_dialog.dart';
 import 'package:provider/provider.dart';
 
 class StartPage extends StatefulWidget {
@@ -87,6 +88,20 @@ class _StartPageState extends State<StartPage> {
         prefix: Icons.email,
         hasObscure: false,
         labelLocalizationPath: 'start_email',
+        validator: (val) {
+          if (val.trim() == "") {
+            return null;
+          }
+
+          if (RegExp(
+                  r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+              .hasMatch(val)) {
+            return null;
+          } else {
+            return AppLocalizations.of(context)
+                .translate("error_email_bad_formated");
+          }
+        },
         onSaved: (String val) => _email = val.trim(),
         margin: EdgeInsets.symmetric(horizontal: 28),
       ),
@@ -95,17 +110,47 @@ class _StartPageState extends State<StartPage> {
       // Confirm
       ConfirmButton(
         text: 'confirm',
+        margin: 28,
         submit: () async {
-          _formKey.currentState.save();
-          User _user = User(
-            email: _email,
-            name: _name == '' ? 'User' : _name,
-            isEmailConfirm: false,
-          );
+          if (_formKey.currentState.validate()) {
+            _formKey.currentState.save();
+            User _user = User(
+              email: _email,
+              name: _name == '' ? 'User' : _name,
+              isEmailConfirm: false,
+            );
 
-          await model.setUser(_user);
+            if (_email.trim() != "") {
+              User user = await model.getUserByEmail(_email);
+              if (user != null) {
+                GlobalKey<ScaffoldState> scaffoldKey =
+                    GlobalKey<ScaffoldState>();
 
-          Navigator.pushNamed(context, '');
+                await showDialog(
+                  context: context,
+                  builder: (_) => EnterPasswordDialog(
+                    onClose: () => Navigator.pop(context),
+                    scaffoldKey: scaffoldKey,
+                    submit: (String password) async {
+                      print('password $password');
+                      User user = await model.login(
+                          scaffoldKey, context, _email, password);
+
+                      if (user != null) {
+                        await model.setUser(user);
+                        Navigator.pushNamed(context, '');
+                        return null;
+                      }
+                    },
+                  ),
+                );
+              }
+            } else {
+              await model.setUser(_user);
+
+              Navigator.pushNamed(context, '');
+            }
+          }
         },
       ),
     ];
