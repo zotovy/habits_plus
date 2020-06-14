@@ -695,7 +695,7 @@ class _HabitViewOnHomePageState extends State<HabitViewOnHomePage>
                                   fontWeight: FontWeight.w600,
                                 ),
                           child: Text(
-                            AppLocalizations.of(context).lang == 'en'
+                            AppLocalizations.of(context).lang != 'ru'
                                 ? AppLocalizations.of(context)
                                     .translate(dayNames[i])[0]
                                 : AppLocalizations.of(context)

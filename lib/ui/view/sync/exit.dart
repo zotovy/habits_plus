@@ -52,19 +52,12 @@ class _SyncExitScreenState extends State<SyncExitScreen> {
       // Email
       model.user.email == null
           ? SizedBox.shrink()
-          : FutureBuilder(
-              future: locator<FirebaseServices>().getCurrentUser(),
-              builder: (_, data) {
-                return data.hasData
-                    ? Text(
-                        data.data.uid,
-                        style: TextStyle(
-                          color: lightMode.textSelectionColor,
-                          fontSize: 18,
-                        ),
-                      )
-                    : SizedBox.shrink();
-              },
+          : Text(
+              model.user.name,
+              style: TextStyle(
+                color: lightMode.textSelectionColor,
+                fontSize: 18,
+              ),
             ),
       SizedBox(height: 5),
 

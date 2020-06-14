@@ -139,6 +139,8 @@ class _MainAppState extends State<MainApp> {
             supportedLocales: [
               Locale('en', 'EN'),
               Locale('ru', 'RU'),
+              Locale('pl', 'PL'),
+              Locale('fr', 'FR'),
             ],
             localizationsDelegates: [
               AppLocalizations.delegate,
@@ -167,7 +169,6 @@ class _MainAppState extends State<MainApp> {
                 if (snap.data.isUserLogin == true) {
                   locator<HomeViewModel>().fetch();
                   locator<DrawerViewModel>().fetchUser().then((user) {
-                    print(user.id);
                     locator<DrawerViewModel>().user = user;
                     Provider.of<UserData>(context, listen: false)
                         .currentUserId = user.id;

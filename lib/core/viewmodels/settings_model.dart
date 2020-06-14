@@ -8,7 +8,9 @@ import 'package:habits_plus/core/models/locale.dart';
 import 'package:habits_plus/core/models/notification.dart';
 import 'package:habits_plus/core/models/user.dart';
 import 'package:habits_plus/core/services/database.dart';
+import 'package:habits_plus/core/services/firebase.dart';
 import 'package:habits_plus/core/services/images.dart';
+import 'package:habits_plus/core/services/internet.dart';
 import 'package:habits_plus/core/services/notifications.dart';
 import 'package:habits_plus/core/viewmodels/base_model.dart';
 import 'package:habits_plus/core/viewmodels/drawer_model.dart';
@@ -31,7 +33,7 @@ class SettingsViewModel extends BaseViewModel {
   User _user;
   bool _isDarkMode;
   bool isNotifications;
-  bool _isSync = false;
+  bool _isSync;
   bool _isSoundNotifications;
   bool _isLockScreen;
   String _code;
@@ -61,6 +63,8 @@ class SettingsViewModel extends BaseViewModel {
     /// Setup [_isLockScreen] & [_code]
     _code = _databaseServices.getPinCode();
     _isLockScreen = _databaseServices.getPinCodeStatus();
+
+    _isSync = _databaseServices.isSync();
   }
 
   // ANCHOR set
@@ -344,6 +348,11 @@ class SettingsViewModel extends BaseViewModel {
       setState(ViewState.Busy);
 
       bool dbcode = await _databaseServices.setUser(_user);
+
+      if (_isSync) {
+        locator<FirebaseServices>().setUser(_user);
+      }
+
       setState(ViewState.Idle);
 
       return dbcode;
@@ -358,6 +367,12 @@ class SettingsViewModel extends BaseViewModel {
   set user(User __user) {
     _user = __user;
     locator<DrawerViewModel>().user = _user;
+    notifyListeners();
+  }
+
+  void toggleIsSync() async {
+    _isSync = !_isSync;
+    _databaseServices.setIsSync(_isSync);
     notifyListeners();
   }
 }

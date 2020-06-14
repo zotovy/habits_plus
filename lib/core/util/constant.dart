@@ -58,7 +58,7 @@ const List<String> dayNames = [
   'Mon',
   'Tue',
   'Wed',
-  'Thr',
+  'Thu',
   'Fri',
   'Sat',
   'Sun',

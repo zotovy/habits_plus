@@ -5,6 +5,8 @@ import 'package:habits_plus/core/services/database.dart';
 import 'package:habits_plus/core/services/firebase.dart';
 import 'package:habits_plus/core/viewmodels/base_model.dart';
 import 'package:habits_plus/core/viewmodels/home_model.dart';
+import 'package:habits_plus/core/viewmodels/settings_model.dart';
+import 'package:habits_plus/core/viewmodels/statistic_model.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../locator.dart';
@@ -20,7 +22,9 @@ class CreateViewModel extends BaseViewModel {
 
     bool dbcode = true;
 
-    if (await _firebaseServices.userId != null) {
+    bool isSync = locator<SettingsViewModel>().isSync;
+
+    if (await _firebaseServices.userId != null && isSync) {
       dbcode = await _firebaseServices.createTask(task);
     }
 
@@ -33,7 +37,7 @@ class CreateViewModel extends BaseViewModel {
 
     if (dbcode) {
       // If successed -> add task to home screen
-      locator<HomeViewModel>().addTaskWithOutReload(task);
+      locator<HomeViewModel>().addTask(task);
     }
     setState(ViewState.Idle);
     return dbcode;
@@ -46,7 +50,9 @@ class CreateViewModel extends BaseViewModel {
 
     bool dbcode = true;
 
-    if (await _firebaseServices.userId != null) {
+    bool isSync = locator<SettingsViewModel>().isSync;
+
+    if (await _firebaseServices.userId != null && isSync) {
       dbcode = await _firebaseServices.createHabit(habit);
     }
 
@@ -59,6 +65,7 @@ class CreateViewModel extends BaseViewModel {
     if (dbcode) {
       // If successed -> add habit to home screen
       locator<HomeViewModel>().addHabit(habit);
+      locator<StatisticViewModel>().setupHabits();
     }
     setState(ViewState.Idle);
     return dbcode;

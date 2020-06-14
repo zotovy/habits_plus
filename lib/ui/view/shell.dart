@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:habits_plus/core/enums/viewstate.dart';
-import 'package:habits_plus/core/models/userData.dart';
+import 'package:habits_plus/core/services/firebase.dart';
 import 'package:habits_plus/core/util/constant.dart';
 import 'package:habits_plus/core/viewmodels/home_model.dart';
 import 'package:habits_plus/core/viewmodels/settings_model.dart';
@@ -10,7 +11,6 @@ import 'package:habits_plus/ui/view/drawer.dart';
 import 'package:habits_plus/ui/view/home.dart';
 import 'package:habits_plus/ui/view/statistic.dart';
 import 'package:habits_plus/ui/widgets/shell_widget.dart';
-import 'package:provider/provider.dart';
 
 import '../../locator.dart';
 
@@ -32,10 +32,13 @@ class _MainShellState extends State<MainShell> {
       StatisticPage(),
       HomePage(),
     ];
-    String userId = Provider.of<UserData>(
-      context,
-      listen: false,
-    ).currentUserId;
+
+    locator<FirebaseServices>().checkValidation().then((data) {
+      if (!data) {
+        SystemNavigator.pop();
+      }
+    });
+
     locator<StatisticViewModel>().setState(ViewState.Busy);
     locator<HomeViewModel>().fetch().then((val) {
       locator<StatisticViewModel>().setupHabits();

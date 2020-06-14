@@ -22,6 +22,8 @@ class AppLocalizations {
   Map<String, String> supportedLanguages = {
     'en': "English",
     'ru': "Russian",
+    'pl': "Polish",
+    'fr': "French",
   };
 
   Future<bool> load() async {
@@ -56,7 +58,7 @@ class _AppLocalizationsDelegate
   @override
   bool isSupported(Locale locale) {
     // Include all of your supported language codes here
-    return ['en', 'ru'].contains(locale.languageCode);
+    return ['en', 'ru', 'pl', "fr"].contains(locale.languageCode);
   }
 
   @override

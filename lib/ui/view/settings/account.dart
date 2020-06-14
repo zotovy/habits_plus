@@ -203,7 +203,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
 
             // Switcher
             GestureDetector(
-              onTap: () {},
+              onTap: () => model.toggleIsSync(),
               child: AnimatedContainer(
                 duration: Duration(microseconds: 300),
                 padding: EdgeInsets.all(3),

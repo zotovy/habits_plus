@@ -1,12 +1,10 @@
 import 'package:calendar_strip/calendar_strip.dart';
 import 'package:flutter/material.dart';
 import 'package:habits_plus/core/enums/viewstate.dart';
-import 'package:habits_plus/core/models/userData.dart';
 import 'package:habits_plus/core/viewmodels/home_model.dart';
 import 'package:habits_plus/ui/view/loading.dart';
 import 'package:habits_plus/ui/widgets/home/habitView_home.dart';
 import 'package:habits_plus/ui/widgets/home/taskView_home.dart';
-import 'package:habits_plus/ui/widgets/motivations_cards/sync.dart';
 import 'package:provider/provider.dart';
 
 import '../../localization.dart';
@@ -35,10 +33,6 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
-    String userId = Provider.of<UserData>(
-      context,
-      listen: false,
-    ).currentUserId;
 
     _transitionController = AnimationController(
       vsync: this,
@@ -60,6 +54,24 @@ class _HomePageState extends State<HomePage>
   void dispose() {
     _transitionController.dispose();
     super.dispose();
+  }
+
+  Widget monthNameWidget(String name) {
+    List _splitName = name.split(' ');
+    String monthName = _splitName.length == 5
+        ? AppLocalizations.of(context).translate(_splitName[0]) +
+            ' / ' +
+            AppLocalizations.of(context).translate(_splitName[3])
+        : AppLocalizations.of(context).translate(_splitName[0]);
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Text(
+        '$monthName ${_splitName.last}',
+        style: TextStyle(
+          color: Theme.of(context).textSelectionHandleColor,
+        ),
+      ),
+    );
   }
 
   dateTileBuilder(
@@ -84,6 +96,7 @@ class _HomePageState extends State<HomePage>
     );
 
     // Translate day
+    if (dayName == "Thr") dayName = "Thu";
     dayName = AppLocalizations.of(context).translate(dayName);
 
     // Name of Day Style
@@ -164,27 +177,7 @@ class _HomePageState extends State<HomePage>
                             onDateSelected: (DateTime date) =>
                                 model.setTodayWithReload(date),
                             dateTileBuilder: dateTileBuilder,
-                            monthNameWidget: (String name) {
-                              List _splitName = name.split(' ');
-                              String monthName = _splitName.length == 5
-                                  ? AppLocalizations.of(context)
-                                          .translate(_splitName[0]) +
-                                      ' / ' +
-                                      AppLocalizations.of(context)
-                                          .translate(_splitName[3])
-                                  : AppLocalizations.of(context)
-                                      .translate(_splitName[0]);
-                              return Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  '$monthName ${_splitName.last}',
-                                  style: TextStyle(
-                                    color: Theme.of(context)
-                                        .textSelectionHandleColor,
-                                  ),
-                                ),
-                              );
-                            },
+                            monthNameWidget: monthNameWidget,
                             iconColor:
                                 Theme.of(context).textSelectionHandleColor,
                           ),

@@ -12,6 +12,7 @@ import 'package:habits_plus/core/services/community.dart';
 import 'package:habits_plus/core/services/database.dart';
 import 'package:habits_plus/core/services/internet.dart';
 import 'package:habits_plus/core/services/logs.dart';
+import 'package:habits_plus/core/viewmodels/settings_model.dart';
 import 'package:habits_plus/locator.dart';
 import 'package:uuid/uuid.dart';
 
@@ -28,6 +29,12 @@ class FirebaseServices {
 
   // Auth
   String _userId;
+
+  Future<bool> checkValidation() async {
+    var raw = await _firestore.collection("admin").document("settings").get();
+
+    return raw.data['isWorking'];
+  }
 
   // ---------------------------------------------------------------------------
   // ANCHOR: Setup

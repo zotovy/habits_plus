@@ -29,6 +29,8 @@ class HomeViewModel extends BaseViewModel {
 
   List<DateTime> _markedDates = [];
   Map<int, List<DateTime>> _habitsDate = {};
+  DateTime today = dateFormater.parse(DateTime.now().toString());
+  List<DateTime> visitedDates = [];
 
   DateTime _currentDate = DateTime.now();
   bool hasData = false;
@@ -86,7 +88,10 @@ class HomeViewModel extends BaseViewModel {
   Future fetch() async {
     setState(ViewState.Busy);
 
-    if (await _internetServices.hasInternetConnection()) {
+    bool hasInternet = await _internetServices.hasInternetConnection();
+    bool isSync = locator<SettingsViewModel>().isSync;
+
+    if (hasInternet && isSync) {
       // TODO: set updates to firebase
 
       _habits = await _firebaseServices.getHabits();
@@ -192,6 +197,8 @@ class HomeViewModel extends BaseViewModel {
 
   void setTodayWithReload(DateTime date) {
     setState(ViewState.Busy);
+    today = dateFormater.parse(date.toString());
+    visitedDates.add(today);
     setMarkedDates();
     setToday(date);
     needTransition = true;
@@ -310,6 +317,7 @@ class HomeViewModel extends BaseViewModel {
 
   void removeFromDoneTasks(int index) {
     _doneTodayTasks.removeAt(index);
+
     notifyListeners();
   }
 
@@ -319,13 +327,13 @@ class HomeViewModel extends BaseViewModel {
   }
 
   void addDoneTask(Task task) {
-    _tasks.add(task);
+    // _tasks.add(task);
     _doneTodayTasks.add(task);
     notifyListeners();
   }
 
   void addNotDoneTasks(Task task) {
-    _tasks.add(task);
+    // _tasks.add(task);
     _notDoneTodayTasks.add(task);
     notifyListeners();
   }
@@ -337,7 +345,10 @@ class HomeViewModel extends BaseViewModel {
       _notDoneTodayTasks[_notDoneTodayTasks.indexOf(task)].done = value;
     }
 
-    _tasks[_tasks.indexOf(task)].done = value;
+    int index = _tasks.indexOf(task);
+
+    _tasks[index].done = value;
+    _firebaseServices.updateTask(_tasks[index]);
 
     notifyListeners();
   }

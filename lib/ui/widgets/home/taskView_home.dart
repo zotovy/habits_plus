@@ -28,9 +28,25 @@ class _TaskViewOnHomePageState extends State<TaskViewOnHomePage> {
     _startNotDoneTaskAnimation(model);
   }
 
+  int initialNotDoneTaskListCount = 0;
+  int initialDoneTaskListCount = 0;
+
   /// Start apperance animation, ONLY [doneAnimationController]
   /// Duration is [100] milliseconds
   _startDoneTaskAnimation(HomeViewModel model) async {
+    if (model.visitedDates.contains(model.today)) {
+      // Future.delayed(Duration(milliseconds: 100)).then((value) {
+      initialDoneTaskListCount = model.doneTodayTasks.length;
+      for (var i = 0; i < model.doneTodayTasks.length; i++) {
+        if (_keyDoneTask.currentState != null) {
+          _keyDoneTask.currentState.insertItem(i);
+        }
+      }
+      return null;
+    }
+
+    initialDoneTaskListCount = 0;
+
     /// We need Future to wait, when [build] method is done
     Future.delayed(Duration(milliseconds: 100)).then(
       (value) async {
@@ -47,6 +63,17 @@ class _TaskViewOnHomePageState extends State<TaskViewOnHomePage> {
   /// Start apperance animation, ONLY [notDoneAnimationController]
   /// Duration is [100] milliseconds
   _startNotDoneTaskAnimation(HomeViewModel model) async {
+    if (model.visitedDates.contains(model.today)) {
+      initialNotDoneTaskListCount = model.notDoneTodayTasks.length;
+      for (var i = 0; i < model.doneTodayTasks.length; i++) {
+        if (_keyDoneTask.currentState != null) {
+          _keyDoneTask.currentState.insertItem(i);
+        }
+      }
+    }
+
+    initialNotDoneTaskListCount = 0;
+
     /// We need Future to wait, when [build] method is done
     Future.delayed(Duration(milliseconds: 100)).then(
       (value) async {
@@ -77,7 +104,9 @@ class _TaskViewOnHomePageState extends State<TaskViewOnHomePage> {
               duration: Duration(milliseconds: 200),
               style: task.done
                   ? TextStyle(
-                      color: Theme.of(context).disabledColor.withOpacity(0.5),
+                      color: Theme.of(context)
+                          .textSelectionHandleColor
+                          .withOpacity(0.6),
                       fontSize: 18,
                       decoration: TextDecoration.lineThrough,
                     )
@@ -98,7 +127,9 @@ class _TaskViewOnHomePageState extends State<TaskViewOnHomePage> {
               task.description,
               style: TextStyle(
                 color: task.done
-                    ? Theme.of(context).disabledColor.withOpacity(0.5)
+                    ? Theme.of(context)
+                        .textSelectionHandleColor
+                        .withOpacity(0.4)
                     : Theme.of(context).textSelectionColor,
                 fontSize: 14,
               ),
@@ -206,11 +237,15 @@ class _TaskViewOnHomePageState extends State<TaskViewOnHomePage> {
     Animation<double> animation,
     HomeViewModel model,
   ) {
+    if (model.doneTodayTasks.length <= i) return SizedBox.shrink();
+
     /// This local [AnimationController] will controll
     /// removing the item by [SlideAnimation]
     // Dismissible -> Slide -> Fade -> Size
     return Dismissible(
       onDismissed: (DismissDirection direction) {
+        if (model.doneTodayTasks.length <= i) return null;
+
         // Remove task action
         if (direction == DismissDirection.startToEnd) {
           // Start title disappearance animation
@@ -337,8 +372,13 @@ class _TaskViewOnHomePageState extends State<TaskViewOnHomePage> {
     /// This local [AnimationController] will controll
     /// removing the item by [SlideAnimation]
     // Dismissible -> Slide -> Fade -> Size
+
+    if (model.notDoneTodayTasks.length <= i) return SizedBox.shrink();
+
     return Dismissible(
       onDismissed: (DismissDirection direction) {
+        if (model.notDoneTodayTasks.length <= i) return null;
+
         // Remove task action
         if (direction == DismissDirection.startToEnd) {
           // Start title disappearance animation
@@ -456,6 +496,8 @@ class _TaskViewOnHomePageState extends State<TaskViewOnHomePage> {
   }
 
   removeItemFromDoneList(int i, HomeViewModel model) {
+    if (model.doneTodayTasks.length <= i) return null;
+
     // Remind done variables as local variables
     Task _localTask = model.doneTodayTasks[i];
 
@@ -469,6 +511,8 @@ class _TaskViewOnHomePageState extends State<TaskViewOnHomePage> {
 
     Future.delayed(Duration(milliseconds: 200)).then(
       (_) {
+        if (model.doneTodayTasks.length <= i) return null;
+
         if (model.doneTodayTasks.length == 1) {
           model.hasDoneTasks = false;
         }
@@ -524,6 +568,8 @@ class _TaskViewOnHomePageState extends State<TaskViewOnHomePage> {
     String userId = Provider.of<UserData>(context, listen: false).currentUserId;
     model.updateTask(model.notDoneTodayTasks[i], userId);
 
+    if (model.notDoneTodayTasks.length <= i) return null;
+
     if (model.notDoneTodayTasks.length == 1) {
       model.hasNotDoneTasks = false;
     }
@@ -531,6 +577,8 @@ class _TaskViewOnHomePageState extends State<TaskViewOnHomePage> {
 
     Future.delayed(Duration(milliseconds: 200)).then(
       (_) {
+        if (model.notDoneTodayTasks.length <= i) return null;
+
         model.addDoneTask(model.notDoneTodayTasks[i]);
         model.removeFromNotDoneTasks(i);
         Future.delayed(Duration(milliseconds: 300)).then((_) {
@@ -573,43 +621,38 @@ class _TaskViewOnHomePageState extends State<TaskViewOnHomePage> {
 
   /// First block of main widget
   Widget _buildDoneTaskList(HomeViewModel model) {
-    return model.doneTodayTasks.length == 0
-        ? SizedBox.shrink()
-        : AnimatedList(
-            key: _keyDoneTask,
-            initialItemCount: 0,
-            itemBuilder:
-                (BuildContext context, int index, Animation<double> animation) {
-              return Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onLongPress: () => removeItemFromDoneList(index, model),
-                  child: _buildDoneListTile(context, index, animation, model),
-                ),
-              );
-            },
-          );
+    return AnimatedList(
+      key: _keyDoneTask,
+      initialItemCount: initialDoneTaskListCount,
+      itemBuilder:
+          (BuildContext context, int index, Animation<double> animation) {
+        return Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onLongPress: () => removeItemFromDoneList(index, model),
+            child: _buildDoneListTile(context, index, animation, model),
+          ),
+        );
+      },
+    );
   }
 
   /// Second block of main widget
   Widget _buildNotDoneTaskList(HomeViewModel model) {
-    return model.notDoneTodayTasks.length == 0
-        ? SizedBox.shrink()
-        : AnimatedList(
-            key: _keyNotDoneTask,
-            initialItemCount: 0,
-            itemBuilder:
-                (BuildContext context, int index, Animation<double> animation) {
-              return Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: () => removeItemFromNotDoneList(index, model),
-                  child:
-                      _buildNotDoneListTile(context, index, animation, model),
-                ),
-              );
-            },
-          );
+    return AnimatedList(
+      key: _keyNotDoneTask,
+      initialItemCount: initialNotDoneTaskListCount,
+      itemBuilder:
+          (BuildContext context, int index, Animation<double> animation) {
+        return Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () => removeItemFromNotDoneList(index, model),
+            child: _buildNotDoneListTile(context, index, animation, model),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -629,63 +672,64 @@ class _TaskViewOnHomePageState extends State<TaskViewOnHomePage> {
           // print('done: ${model.doneTodayTasks}');
           // print('not done: ${model.notDoneTodayTasks}');
 
-          return Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
+          try {
+            return Container(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
 //========================================================================================
 /*                                                                                      *
  *                                    NOT DONE TASKS                                    *
  *                                                                                      */
 //========================================================================================
 
-                // Padding
-                model.notDoneTodayTasks.length > 0
-                    ? AnimatedContainer(
-                        duration: Duration(milliseconds: 300),
-                        height: model.hasNotDoneTasks ? 20 : 0,
-                      )
-                    : SizedBox.shrink(),
-
-                // Title
-                AnimatedOpacity(
-                  duration: Duration(milliseconds: 300),
-                  opacity: model.hasNotDoneTasks ? 1 : 0,
-                  child: model.notDoneTodayTasks.length > 0
-                      ? AnimatedDefaultTextStyle(
+                  // Padding
+                  model.notDoneTodayTasks.length > 0
+                      ? AnimatedContainer(
                           duration: Duration(milliseconds: 300),
-                          style: model.hasNotDoneTasks
-                              ? TextStyle(
-                                  fontSize: 18,
-                                  color: Theme.of(context)
-                                      .textSelectionColor
-                                      .withOpacity(0.75),
-                                  fontWeight: FontWeight.w600,
-                                )
-                              : TextStyle(
-                                  fontSize: 0,
-                                  color: Theme.of(context)
-                                      .textSelectionColor
-                                      .withOpacity(0.75),
-                                  fontWeight: FontWeight.w600,
-                                ),
-                          child: Text(
-                            AppLocalizations.of(context)
-                                .translate('todos_title')
-                                .toUpperCase(),
-                          ),
+                          height: model.hasNotDoneTasks ? 20 : 0,
                         )
                       : SizedBox.shrink(),
-                ),
 
-                // List
-                AnimatedContainer(
-                  duration: Duration(milliseconds: 200),
-                  height: model.hasNotDoneTasks
-                      ? 60.0 * model.notDoneTodayTasks.length
-                      : 0,
-                  child: _buildNotDoneTaskList(model),
-                ),
+                  // Title
+                  AnimatedOpacity(
+                    duration: Duration(milliseconds: 300),
+                    opacity: model.hasNotDoneTasks ? 1 : 0,
+                    child: model.notDoneTodayTasks.length > 0
+                        ? AnimatedDefaultTextStyle(
+                            duration: Duration(milliseconds: 300),
+                            style: model.hasNotDoneTasks
+                                ? TextStyle(
+                                    fontSize: 18,
+                                    color: Theme.of(context)
+                                        .textSelectionColor
+                                        .withOpacity(0.75),
+                                    fontWeight: FontWeight.w600,
+                                  )
+                                : TextStyle(
+                                    fontSize: 0,
+                                    color: Theme.of(context)
+                                        .textSelectionColor
+                                        .withOpacity(0.75),
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                            child: Text(
+                              AppLocalizations.of(context)
+                                  .translate('todos_title')
+                                  .toUpperCase(),
+                            ),
+                          )
+                        : SizedBox.shrink(),
+                  ),
+
+                  // List
+                  AnimatedContainer(
+                    duration: Duration(milliseconds: 200),
+                    height: model.hasNotDoneTasks
+                        ? 60.0 * model.notDoneTodayTasks.length
+                        : 0,
+                    child: _buildNotDoneTaskList(model),
+                  ),
 
 //========================================================================================
 /*                                                                                      *
@@ -693,56 +737,60 @@ class _TaskViewOnHomePageState extends State<TaskViewOnHomePage> {
  *                                                                                      */
 //========================================================================================
 
-                // Padding
-                model.doneTodayTasks.length > 0
-                    ? AnimatedContainer(
-                        duration: Duration(milliseconds: 300),
-                        height: model.hasDoneTasks ? 20 : 0,
-                      )
-                    : SizedBox.shrink(),
-
-                // Title
-                AnimatedOpacity(
-                  duration: Duration(milliseconds: 300),
-                  opacity: model.hasDoneTasks ? 1 : 0,
-                  child: model.doneTodayTasks.length > 0
-                      ? AnimatedDefaultTextStyle(
+                  // Padding
+                  model.doneTodayTasks.length > 0
+                      ? AnimatedContainer(
                           duration: Duration(milliseconds: 300),
-                          style: model.hasDoneTasks
-                              ? TextStyle(
-                                  fontSize: 18,
-                                  color: Theme.of(context)
-                                      .textSelectionColor
-                                      .withOpacity(0.75),
-                                  fontWeight: FontWeight.w600,
-                                )
-                              : TextStyle(
-                                  fontSize: 0,
-                                  color: Theme.of(context)
-                                      .textSelectionColor
-                                      .withOpacity(0.75),
-                                  fontWeight: FontWeight.w600,
-                                ),
-                          child: Text(
-                            AppLocalizations.of(context)
-                                .translate('todos_done')
-                                .toUpperCase(),
-                          ),
+                          height: model.hasDoneTasks ? 20 : 0,
                         )
                       : SizedBox.shrink(),
-                ),
 
-                // List
-                AnimatedContainer(
-                  duration: Duration(milliseconds: 200),
-                  height: model.hasDoneTasks
-                      ? 60.0 * model.doneTodayTasks.length
-                      : 0,
-                  child: _buildDoneTaskList(model),
-                )
-              ],
-            ),
-          );
+                  // Title
+                  AnimatedOpacity(
+                    duration: Duration(milliseconds: 300),
+                    opacity: model.hasDoneTasks ? 1 : 0,
+                    child: model.doneTodayTasks.length > 0
+                        ? AnimatedDefaultTextStyle(
+                            duration: Duration(milliseconds: 300),
+                            style: model.hasDoneTasks
+                                ? TextStyle(
+                                    fontSize: 18,
+                                    color: Theme.of(context)
+                                        .textSelectionColor
+                                        .withOpacity(0.75),
+                                    fontWeight: FontWeight.w600,
+                                  )
+                                : TextStyle(
+                                    fontSize: 0,
+                                    color: Theme.of(context)
+                                        .textSelectionColor
+                                        .withOpacity(0.75),
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                            child: Text(
+                              AppLocalizations.of(context)
+                                  .translate('todos_done')
+                                  .toUpperCase(),
+                            ),
+                          )
+                        : SizedBox.shrink(),
+                  ),
+
+                  // List
+                  AnimatedContainer(
+                    duration: Duration(milliseconds: 200),
+                    height: model.hasDoneTasks
+                        ? 60.0 * model.doneTodayTasks.length
+                        : 0,
+                    child: _buildDoneTaskList(model),
+                  )
+                ],
+              ),
+            );
+          } catch (e) {
+            print(e);
+            return SizedBox.shrink();
+          }
         },
       ),
     );

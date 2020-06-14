@@ -10,12 +10,18 @@
     "Mon": "Mon",
     "Tue": "Tue",
     "Wed": "Wed",
-    "Thr": "Thr",
     "Thu": "Thu",
     "Fri": "Fri",
     "Sat": "Sat",
     "Sun": "Sun",
 
+    "Mo": "Mon",
+    "Tu": "Tue",
+    "We": "Wed",
+    "Th": "Thu",
+    "Fr": "Fri",
+    "Sa": "Sat",
+    "Su": "Sun",
 
 
     "January_": "January",
